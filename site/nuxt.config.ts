@@ -2,7 +2,7 @@
 
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  modules: ["nuxt-primevue"],
+  modules: ["nuxt-primevue", "@pinia/nuxt"],
   primevue: {},
   css: ["@fontsource/patua-one"],
   app: {

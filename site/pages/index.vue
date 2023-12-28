@@ -1,6 +1,14 @@
 <template>
     <h1>Hello World!</h1>
-    <p>Lorem ipsum...</p>
-    <Divider></Divider>
-    <p>Lorem ipsum...</p>
+    <p>
+        imageUrlTemplate: {{ nrdb.imageUrlTemplate }}
+    </p>
+    <p>
+        cards: {{ nrdb.cards }}
+    </p>
 </template>
+
+<script setup>
+const nrdb = useNrdb();
+await callOnce(nrdb.fetch);
+</script>

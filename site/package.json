@@ -18,6 +18,8 @@
   },
   "dependencies": {
     "@fontsource/patua-one": "^5.0.18",
+    "@pinia/nuxt": "^0.5.1",
+    "pinia": "^2.1.7",
     "primevue": "^3.45.0"
   }
 }
