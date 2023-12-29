@@ -15,7 +15,6 @@ export default defineEventHandler((event) => {
     var days;
     if (query.n) {
         days = parseInt(query.n);
-        console.log("days", days);
         if (isNaN(days)) {
             return {error: "Query parameter n must be an integer."};
         }
