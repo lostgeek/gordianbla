@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
+    "@pinia/nuxt": "^0.5.1",
     "nuxt": "^3.9.0",
     "nuxt-primevue": "^0.2.2",
     "sass": "^1.69.5",
@@ -18,7 +19,6 @@
   },
   "dependencies": {
     "@fontsource/patua-one": "^5.0.18",
-    "@pinia/nuxt": "^0.5.1",
     "pinia": "^2.1.7",
     "primevue": "^3.45.0"
   }
