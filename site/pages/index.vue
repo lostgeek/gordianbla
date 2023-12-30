@@ -4,7 +4,7 @@
     </p>
     <form @submit.prevent="guess">
         <InputGroup>
-            <AutoComplete v-model="selectedCard" optionLabel="stripped_title" :suggestions="suggestions"
+            <AutoComplete ref="titleInput" v-model="selectedCard" optionLabel="stripped_title" :suggestions="suggestions"
                 @complete="autocomplete" placeholder="Enter card name" :delay="200" forceSelection>
                 <template #option="slotProps">
                     <AutoCompleteShowMatch :match="slotProps.option.matches[0]" />
@@ -23,6 +23,8 @@ await callOnce(nrdb.fetch);
 
 const gordian = useGordian();
 await gordian.startPuzzle(30);
+
+const titleInput = ref(null);
 
 var uniqueCards = [];
 var uniqueTitles = [];
@@ -71,4 +73,20 @@ async function guess() {
     selectedCard.value = null;
     await gordian.guess(card);
 }
+
+// Adapted from https://github.com/primefaces/primevue/blob/master/components/lib/autocomplete/AutoComplete.vue#L618
+function customOnEnterKey(event) {
+    if (this.overlayVisible) {
+        if (this.focusedOptionIndex !== -1) {
+            this.onOptionSelect(event, this.visibleOptions[this.focusedOptionIndex]);
+        }
+
+        this.hide();
+        event.preventDefault();
+    }
+}
+
+onMounted(() => {
+    titleInput.value.onEnterKey = customOnEnterKey;
+});
 </script>
