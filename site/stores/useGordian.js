@@ -25,7 +25,9 @@ export const useGordian = defineStore("gordianStore", () => {
     const data = await $fetch(url);
     const ds = new DecompressionStream("gzip");
     const decompressedStream = data.stream().pipeThrough(ds);
-    cardSvg.value = await (await new Response(decompressedStream).blob()).text();
+    cardSvg.value = await (
+      await new Response(decompressedStream).blob()
+    ).text();
 
     const lines = cardSvg.value.split("\n");
     const comment_start = lines.findIndex((l) => l == "<!--");
@@ -92,6 +94,7 @@ export const useGordian = defineStore("gordianStore", () => {
     correctCard.value = nrdb.cards.filter(function (c) {
       return c.title == correctTitle;
     })[0];
+    // ToDo: Add handling for TD cards
 
     guesses.value = [
       { state: "not-guessed" },
@@ -113,7 +116,59 @@ export const useGordian = defineStore("gordianStore", () => {
       return;
     }
 
-    var newGuess = { guessedTitle: card.title };
+    var newGuess = { state: "guessed", guessedTitle: card.title, checks: {} };
+
+    /* Title */
+    newGuess.checks.title = card.title == correctCard.value.title;
+
+    /* Faction */
+    newGuess.checks.faction = (card.faction_code == correctCard.value.faction_code);
+
+    /* Type */
+    newGuess.checks.type = card.type_code == correctCard.value.type_code;
+
+    /* Subtypes */
+    var correctTypes = [];
+    if (correctCard.value.keywords) {
+      correctTypes = correctCard.value.keywords.split(" - ");
+    } 
+
+    var cardTypes = [];
+    if (card.keywords) {
+      cardTypes = card.keywords.split(" - ");
+    }
+
+    // How many of the correct types are present on the guessed card?
+    var hits = correctTypes.filter(value => cardTypes.includes(value));
+
+    var subtypesClass = "";
+    if (correctTypes.length == 0) {
+      if (cardTypes.length == 0) {
+        subtypesClass = "correct";
+      } else {
+        subtypesClass = "incorrect";
+      }
+    } else {
+      subtypesClass = `partial-${hits.length}-${correctTypes.length}`;
+    }
+
+    newGuess.checks.subtype = {
+      hits: hits.length,
+      total: correctTypes.length,
+      class: subtypesClass,
+    };
+
+    /* Cost */
+    var costType = ""; // 'cost', 'advancement_cost' or null
+    if (correctCard.value.cost) {
+      costType = "cost";
+    } else if (correctCard.value.advancement_cost) {
+      costType = "advancement_cost";
+    } else {
+      costType = null; // Should not exist
+    }
+
+    newGuess.checks.cost = (correctCard.value[costType] == card[costType]);
 
     guesses.value[currentGuess.value] = newGuess;
   }

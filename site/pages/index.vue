@@ -1,7 +1,5 @@
 <template>
-    <p v-for="guess in gordian.guesses">
-        {{ guess }}
-    </p>
+    <GuessTable :guesses="gordian.guesses" />
     <form @submit.prevent="guess">
         <InputGroup>
             <AutoComplete ref="titleInput" v-model="selectedCard" optionLabel="stripped_title" :suggestions="suggestions"
@@ -22,7 +20,7 @@ const nrdb = useNrdb();
 await callOnce(nrdb.fetch);
 
 const gordian = useGordian();
-await gordian.startPuzzle(30);
+await gordian.startPuzzle(52);
 
 const titleInput = ref(null);
 
@@ -36,7 +34,7 @@ nrdb.cards.forEach(c => {
     // Filter TD alternate cards
     if (c.pack_code == 'tdc') {
         var parts = c.title.split(" ");
-        if (['2', '3', '4', 'A', 'B'].includes(parts[parts.length-1])) {
+        if (['2', '3', '4', 'A', 'B'].includes(parts[parts.length - 1])) {
             return;
         }
     }
@@ -66,7 +64,7 @@ const autocomplete = (event) => {
 };
 
 async function guess() {
-    if(!selectedCard.value) {
+    if (!selectedCard.value) {
         return;
     }
     const card = selectedCard.value;
