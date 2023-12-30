@@ -108,17 +108,12 @@ export const useGordian = defineStore("gordianStore", () => {
     guesses.value.findIndex((g) => g.state == "not-guessed")
   );
 
-  function guess(title) {
+  function guess(card) {
     if (currentGuess.value == -1) {
       return;
     }
 
-    const guessedCard = nrdb.cards.filter(function(c){return c.title == title;})[0];
-    if(!guessedCard) {
-      return;
-    }
-
-    var newGuess = { guessedTitle: guessedCard.title };
+    var newGuess = { guessedTitle: card.title };
 
     guesses.value[currentGuess.value] = newGuess;
   }
