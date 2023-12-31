@@ -107,8 +107,12 @@ export const useGordian = defineStore("gordianStore", () => {
   }
 
   // Returns -1, if no guesses remaining
-  const currentGuess = computed(() =>
+  const currentGuess = computed((state) =>
     guesses.value.findIndex((g) => g.state == "not-guessed")
+  );
+
+  const solved = computed((state) =>
+    guesses.value.findIndex((g) => g.state == "guessed" && g.checks.title == true) > -1
   );
 
   function guess(card) {
@@ -183,6 +187,7 @@ export const useGordian = defineStore("gordianStore", () => {
     history,
     // getters
     currentGuess,
+    solved,
     // actions
     fetchPuzzle,
     startPuzzle,
