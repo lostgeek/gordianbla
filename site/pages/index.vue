@@ -1,16 +1,23 @@
 <template>
-    <GuessTable :guesses="gordian.guesses" />
-    <form @submit.prevent="guess">
-        <InputGroup>
-            <AutoComplete ref="titleInput" v-model="selectedCard" optionLabel="stripped_title" :suggestions="suggestions"
-                @complete="autocomplete" placeholder="Enter card name" :delay="200" forceSelection>
-                <template #option="slotProps">
-                    <AutoCompleteShowMatch :match="slotProps.option.matches[0]" />
-                </template>
-            </AutoComplete>
-            <Button type="submit" label="Submit" />
-        </InputGroup>
-    </form>
+    <div class="main">
+        <div class="left">
+            <GuessTable :guesses="gordian.guesses" />
+            <form @submit.prevent="guess">
+                <InputGroup>
+                    <AutoComplete ref="titleInput" v-model="selectedCard" optionLabel="stripped_title" :suggestions="suggestions"
+                        @complete="autocomplete" placeholder="Enter card name" :delay="200" forceSelection>
+                        <template #option="slotProps">
+                            <AutoCompleteShowMatch :match="slotProps.option.matches[0]" />
+                        </template>
+                    </AutoComplete>
+                    <Button type="submit" label="Submit" />
+                </InputGroup>
+            </form>
+        </div>
+        <div class="right">
+            <Puzzle :gordian="gordian" :nrdb="nrdb"/>
+        </div>
+    </div>
 </template>
 
 <script setup>
@@ -88,3 +95,37 @@ onMounted(() => {
     titleInput.value.onEnterKey = customOnEnterKey;
 });
 </script>
+
+<style lang="scss">
+.main {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 1rem;
+    gap: 1rem;
+    @media(max-width:1000px) {
+        margin: 0 .5rem;
+        gap: .5rem;
+    }
+    @media(max-width:400px) {
+        margin: 0 .25rem;
+        gap: .25rem;
+    }
+}
+.left {
+    flex-grow: 3;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 1rem;
+    @media(max-width:1000px) {
+        gap: .5rem;
+    }
+    @media(max-width:400px) {
+        gap: .25rem;
+    }
+}
+.right {
+    flex-grow: 1;
+}
+</style>

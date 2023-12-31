@@ -97,23 +97,32 @@ function titleClass(guess) {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    margin: 2rem auto;
-    padding: 0 2rem;
-    gap: 2rem;
-    @media(min-width:321px) {
-        gap: 1rem;
-    }
-    @media(max-width:320px) {
+
+    gap: 1rem;
+    @media(max-width:1000px) {
         gap: .5rem;
+    }
+    @media(max-width:400px) {
+        gap: .25rem;
     }
 }
 
 .guessColumn {
     flex-grow: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    @media(max-width:1000px) {
+        gap: .5rem;
+    }
+    @media(max-width:400px) {
+        gap: .25rem;
+    }
 
     &.title {
         flex-grow: 1;
-        min-width: 5rem;
+        min-width: 7rem;
     }
 
     & .guessHeader {
@@ -121,11 +130,13 @@ function titleClass(guess) {
         text-align: center;
         white-space: nowrap;
 
-        @media(min-width:321px) {
+        font-size: 1.5rem;
+
+        @media(max-width:1000px) {
             font-size: 1rem;
         }
-        @media(max-width:320px) {
-            font-size: .8rem;
+        @media(max-width:400px) {
+            font-size: .6rem;
         }
     }
 
@@ -135,23 +146,22 @@ function titleClass(guess) {
 .guess {
     width: 4rem;
     height: 4rem;
-    @media(max-width:768px) {
+    @media(max-width:1000px) {
         width: 3rem;
         height: 3rem;
     }
-    @media(max-width:320px) {
+    @media(max-width:400px) {
         width: 2rem;
         height: 2rem;
     }
     perspective: 1000px;
-    -webkit-transition: all 1s linear !important;
-    -moz-transition: all 1s linear !important;
-    -o-transition: all 1s linear !important;
-    transition: all 1s linear !important;
+    @media not (prefers-reduced-motion) {
+        -webkit-transition: all 1s linear !important;
+        -moz-transition: all 1s linear !important;
+        -o-transition: all 1s linear !important;
+        transition: all 1s linear !important;
+    }
     transform-style: preserve-3d;
-    margin-top: 1rem;
-    margin-right: auto;
-    margin-left: auto;
 
     &.title {
         width: 100%;
