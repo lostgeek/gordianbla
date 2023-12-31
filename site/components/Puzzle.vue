@@ -1,12 +1,16 @@
 <script setup>
 const props = defineProps(['nrdb', 'gordian']);
 
-const puzzleContainer = ref(null);
+const puzzle = ref(null);
+
+const cardUrl = ref(null);
 
 onMounted(() => {
-    puzzleContainer.value.innerHTML = props.gordian.cardSvg;
+    cardUrl.value = props.nrdb.imageUrlTemplate.replace('{code}', props.gordian.correctCard.code);
 
-    const svgDom = puzzleContainer.value.children[0];
+    puzzle.value.innerHTML = props.gordian.cardSvg;
+
+    const svgDom = puzzle.value.children[0];
 
     var width = svgDom.getAttribute('width');
     var height = svgDom.getAttribute('height');
@@ -41,7 +45,7 @@ const numOfElements = {
 const MAX_ANIMS = 99;
 
 function updateSvg() {
-    const svgDom = puzzleContainer.value.children[0];
+    const svgDom = puzzle.value.children[0];
 
     var elements = svgDom.children[1].children;
 
@@ -72,16 +76,34 @@ function updateSvg() {
 watch(props.gordian.guesses, (newGuesses, oldGuesses) => {
     updateSvg();
 });
+
 </script>
 
 <template>
-    <div class="puzzleContainer" ref="puzzleContainer">
+    <div class="puzzleContainer">
+        <div class="puzzle" :class="(props.gordian.solved) ? 'solved' : null" ref="puzzle">
+        </div>
+        <div class="cardImage" :class="(props.gordian.solved) ? 'solved' : null" ref="cardImage">
+            <img :src="cardUrl" />
+        </div>
     </div>
 </template>
 
 <style lang="scss">
 .puzzleContainer {
     width: 100%;
+    position: relative; // Needed for cardImage to be positioned absolute
+}
+.puzzle {
+    width: 100%;
+    visibility: visible;
+    opacity: 1;
+    transition: visibility 0s 2s, opacity 1s 1s linear;
+
+    &.solved {
+        visibility: hidden;
+        opacity: 0;
+    }
 
     & svg {
         border-radius: 4.7% / 3.6%;
@@ -105,6 +127,22 @@ watch(props.gordian.guesses, (newGuesses, oldGuesses) => {
                 transition-delay: 0.02s*$i;
             }
         }
+    }
+}
+.cardImage {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    visibility: hidden;
+    z-index: -1;
+
+    & img {
+        width: 100%;
+        border-radius: 4.7% / 3.6%;
+    }
+
+    &.solved {
+        visibility: visible;
     }
 }
 </style>
