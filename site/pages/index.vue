@@ -16,7 +16,8 @@ const nrdb = useNrdb();
 await callOnce(nrdb.fetch);
 
 const gordian = useGordian();
-await gordian.startPuzzle(113);
+await gordian.init();
+await gordian.startPuzzle(665);
 </script>
 
 <style lang="scss">
