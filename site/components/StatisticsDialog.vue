@@ -40,7 +40,7 @@
                     <div class="time">{{ nextPuzzle }}</div>
                 </div>
                 <div class="buttons">
-                    <Button icon="fa-solid fa-gamepad" label="Continue practicing" />
+                    <Button icon="fa-solid fa-gamepad" label="Continue practicing" @click="notImplemented" />
                     <Button icon="fa-solid fa-clipboard" label="Copy result" @click="copyResult()" />
                 </div>
             </div>
@@ -51,6 +51,14 @@
 <script setup>
 const props = defineProps(['gordian']);
 const toast = useToast();
+function notImplemented() {
+    toast.add({
+        severity: 'warn',
+        summary: 'Unimplemented',
+        detail: 'Feature has not been implemented yet.',
+        life: 2000
+    });
+}
 
 const stats = computed(() => props.gordian.stats);
 
