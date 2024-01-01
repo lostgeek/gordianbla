@@ -109,6 +109,15 @@ export const useGordian = defineStore("gordianStore", () => {
     guesses.value.findIndex((g) => g.state == "guessed" && g.checks.title == true) > -1
   );
 
+  const stats = computed((state) => {
+    var res = { played: 0, wins: 0, streak: 0, maxStreak: 0, distribution: [0,10,20,30,40,50]};
+
+    // res.played = history.values().filter((x) => console.log(x))
+
+    return res;
+  }
+  );
+
   function guess(card) {
     if (currentGuess.value == -1 || solved.value) {
       return;
@@ -191,6 +200,7 @@ export const useGordian = defineStore("gordianStore", () => {
     // getters
     currentGuess,
     solved,
+    stats,
     // actions
     fetchPuzzle,
     startPuzzle,

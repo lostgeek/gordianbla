@@ -8,6 +8,7 @@
             <Puzzle :gordian="gordian" :nrdb="nrdb" />
         </div>
     </div>
+    <StatisticsDialog :gordian="gordian" />
 </template>
 
 <script setup>

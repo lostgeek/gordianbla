@@ -1,6 +1,7 @@
 <template>
     <Header />
     <slot />
+    <Toast />
 </template>
 
 <style>

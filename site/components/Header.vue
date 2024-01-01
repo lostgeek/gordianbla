@@ -4,12 +4,20 @@
         <div class='buttons right'>
             <Button v-tooltip.bottom="'RSS'" icon="fa-solid fa-rss" size="large" text />
             <Button v-tooltip.bottom="'Rules'" icon="fa-solid fa-scale-balanced" size="large" text />
-            <Button v-tooltip.bottom="'Share'" icon="fa-solid fa-share-nodes" size="large" text />
+            <Button @click="showStatistics" v-tooltip.bottom="'Share'" icon="fa-solid fa-share-nodes" size="large" text />
             <Button v-tooltip.bottom="'Settings'" icon="fa-solid fa-gears" size="large" text />
             <Button v-tooltip.bottom="'About'" icon="fa-solid fa-circle-info" size="large" text />
         </div>
     </div>
 </template>
+
+<script setup>
+const statisticsVisible = useState('statisticsVisible', () => false);
+
+function showStatistics() {
+    statisticsVisible.value = true;
+}
+</script>
 
 <style lang="scss" scoped>
 .header {
