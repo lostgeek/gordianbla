@@ -6,7 +6,6 @@
 // }
 
 export const useGordian = defineStore("gordianStore", () => {
-  const puzzle_id = ref(-1);
   const puzzleAttr = ref({});
   const correctCard = ref(null);
   const cardSvg = ref(null);
@@ -23,19 +22,15 @@ export const useGordian = defineStore("gordianStore", () => {
     }
 
     const data = await $fetch(url);
-    const ds = new DecompressionStream("gzip");
-    const decompressedStream = data.stream().pipeThrough(ds);
-    cardSvg.value = await (
-      await new Response(decompressedStream).blob()
-    ).text();
+    cardSvg.value = await data.text();
 
     const lines = cardSvg.value.split("\n");
-    const comment_start = lines.findIndex((l) => l == "<!--");
-    const comment_end = lines.findIndex((l) => l == "-->");
-    const comment = lines.slice(comment_start + 1, comment_end);
+    const svgStart = lines.findIndex((l) => l.startsWith("<svg"));
+    const comment = lines.slice(0, svgStart);
 
     var metaData = {};
     comment.forEach(function (line) {
+      line = line.replace('<!--', '').replace('-->', '');
       const parts = line.split(": ");
       if (parts.length >= 2) {
         const key = parts.shift();
@@ -79,31 +74,30 @@ export const useGordian = defineStore("gordianStore", () => {
     } else {
       puzzleAttr.value.dailyNumber = -1;
     }
-  }
 
-  async function startPuzzle(id) {
-    if (puzzle_id.value == id) {
-      return;
-    }
-
-    await fetchPuzzle(id);
-    await nrdb.fetch();
-
-    puzzle_id.value = id;
+    // ToDo: Add handling for TD cards
     const correctTitle = puzzleAttr.value.title;
     correctCard.value = nrdb.cards.filter(function (c) {
       return c.title == correctTitle;
     })[0];
-    // ToDo: Add handling for TD cards
+  }
 
-    guesses.value = [
-      { state: "not-guessed" },
-      { state: "not-guessed" },
-      { state: "not-guessed" },
-      { state: "not-guessed" },
-      { state: "not-guessed" },
-      { state: "not-guessed" },
-    ];
+  async function startPuzzle(id=-1) {
+    await fetchPuzzle(id);
+    await nrdb.fetch();
+
+    if (puzzleAttr.value.dailyNumber > -1 && puzzleAttr.value.dailyNumber in history.value) {
+      guesses.value = history.value[puzzleAttr.value.dailyNumber];
+    } else {
+      guesses.value = [
+        { state: "not-guessed" },
+        { state: "not-guessed" },
+        { state: "not-guessed" },
+        { state: "not-guessed" },
+        { state: "not-guessed" },
+        { state: "not-guessed" },
+      ];
+    }
   }
 
   // Returns -1, if no guesses remaining
@@ -175,11 +169,13 @@ export const useGordian = defineStore("gordianStore", () => {
     newGuess.checks.cost = (correctCard.value[costType] == card[costType]);
 
     guesses.value[currentGuess.value] = newGuess;
+    if (puzzleAttr.value.dailyNumber > -1) {
+      history.value[puzzleAttr.value.dailyNumber] = guesses.value;
+    }
   }
 
   return {
     // state
-    puzzle_id,
     puzzleAttr,
     correctCard,
     cardSvg,
@@ -193,4 +189,4 @@ export const useGordian = defineStore("gordianStore", () => {
     startPuzzle,
     guess,
   };
-});
+}, {persist: {storage: localStorage}});
