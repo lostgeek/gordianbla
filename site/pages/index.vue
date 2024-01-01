@@ -2,10 +2,10 @@
     <div class="main">
         <div class="left">
             <GuessTable :guesses="gordian.guesses" />
-            <CardInputField :nrdb="nrdb" :gordian="gordian"/>
+            <CardInputField v-if="!gordian.solved" :nrdb="nrdb" :gordian="gordian" />
         </div>
         <div class="right">
-            <Puzzle :gordian="gordian" :nrdb="nrdb"/>
+            <Puzzle :gordian="gordian" :nrdb="nrdb" />
         </div>
     </div>
 </template>
@@ -24,15 +24,18 @@ await gordian.startPuzzle(113);
     flex-wrap: wrap;
     margin: 0 1rem;
     gap: 1rem;
+
     @media(max-width:1000px) {
         margin: 0 .5rem;
         gap: .5rem;
     }
+
     @media(max-width:400px) {
         margin: 0 .25rem;
         gap: .25rem;
     }
 }
+
 .left {
     flex-grow: 3;
 
@@ -40,14 +43,16 @@ await gordian.startPuzzle(113);
     flex-direction: column;
 
     gap: 1rem;
+
     @media(max-width:1000px) {
         gap: .5rem;
     }
+
     @media(max-width:400px) {
         gap: .25rem;
     }
 }
+
 .right {
     flex-grow: 1;
-}
-</style>
+}</style>

@@ -110,7 +110,7 @@ export const useGordian = defineStore("gordianStore", () => {
   );
 
   function guess(card) {
-    if (currentGuess.value == -1) {
+    if (currentGuess.value == -1 || solved.value) {
       return;
     }
 
