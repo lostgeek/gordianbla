@@ -22,16 +22,14 @@ const titleInput = ref(null);
 var uniqueCards = [];
 var uniqueTitles = [];
 props.nrdb.cards.forEach(c => {
-    if (uniqueTitles.includes(c.stripped_title)) {
-        return;
-    }
-
     // Filter TD alternate cards
     if (c.pack_code == 'tdc') {
         var parts = c.title.split(" ");
-        if (['2', '3', '4', 'A', 'B'].includes(parts[parts.length - 1])) {
-            return;
-        }
+        c.stripped_title = parts.filter(p => !['2', '3', '4', 'A', 'B'].includes(p)).join(' ');
+    }
+
+    if (uniqueTitles.includes(c.stripped_title)) {
+        return;
     }
 
     uniqueTitles.push(c.stripped_title);

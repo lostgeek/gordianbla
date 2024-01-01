@@ -117,7 +117,14 @@ export const useGordian = defineStore("gordianStore", () => {
     var newGuess = { state: "guessed", guessedTitle: card.title, checks: {} };
 
     /* Title */
-    newGuess.checks.title = card.title == correctCard.value.title;
+    if (correctCard.pack_code == 'tdc') {
+      // Filter TD alternate cards
+      if (correctCard.pack_code == 'tdc') {
+          var parts = correctCard.title.split(" ");
+          correctCard.stripped_title = parts.filter(p => !['2', '3', '4', 'A', 'B'].includes(p)).join(' ');
+      }
+    }
+    newGuess.checks.title = card.stripped_title == correctCard.value.stripped_title;
 
     /* Faction */
     newGuess.checks.faction = (card.faction_code == correctCard.value.faction_code);
