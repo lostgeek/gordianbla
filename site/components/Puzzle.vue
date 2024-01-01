@@ -5,6 +5,9 @@ const puzzle = ref(null);
 
 const cardUrl = ref(null);
 
+const puzzleClasses = ref([]);
+const cardImageClasses = ref([]);
+
 onMounted(() => {
     cardUrl.value = props.nrdb.imageUrlTemplate.replace('{code}', props.gordian.correctCard.code);
 
@@ -52,6 +55,12 @@ function updateSvg() {
     var targetElements;
     if (props.gordian.solved) {
         targetElements = elements.length;
+        if(!puzzleClasses.value.includes('solved')) {
+            puzzleClasses.value.push('solved');
+        }
+        if(!cardImageClasses.value.includes('solved')) {
+            cardImageClasses.value.push('solved');
+        }
     } else {
         targetElements = numOfElements[props.gordian.puzzleAttr.mode][props.gordian.currentGuess];
     }
@@ -81,9 +90,9 @@ watch(props.gordian.guesses, (newGuesses, oldGuesses) => {
 
 <template>
     <div class="puzzleContainer">
-        <div class="puzzle" :class="(props.gordian.solved) ? 'solved' : null" ref="puzzle">
+        <div class="puzzle" :class="puzzleClasses" ref="puzzle">
         </div>
-        <div class="cardImage" :class="(props.gordian.solved) ? 'solved' : null" ref="cardImage">
+        <div class="cardImage" :class="cardImageClasses" ref="cardImage">
             <img :src="cardUrl" />
         </div>
     </div>
