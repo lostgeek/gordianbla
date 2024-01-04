@@ -5,7 +5,7 @@
             <CardInputField v-if="!gordian.solved" :nrdb="nrdb" :gordian="gordian" />
         </div>
         <div class="right">
-            <Puzzle :gordian="gordian" :cardUrl="cardUrl" :cardSvg="cardSvg"/>
+            <Puzzle :puzzleMode="puzzleMode" :revealLevel="revealLevel" :cardUrl="cardUrl" :cardSvg="cardSvg" />
         </div>
     </div>
     <StatisticsDialog :gordian="gordian" :user="user" />
@@ -26,12 +26,19 @@ gordian.$subscribe((mutation, state) => {
     if(gordian.puzzleAttr.dailyNumber) {
         user.dailyHistory[gordian.puzzleAttr.dailyNumber] = state.guesses;
     }
-})
 
+const revealLevel = computed(() => {
+    if(gordian.solved) {
+        return 6;
+    } else {
+        return gordian.currentGuess;
+    }
+});
+const puzzleMode = computed(() => gordian.puzzleAttr.mode);
 const cardSvg = ref(null);
 cardSvg.value = await gordian.startPuzzle(nrdb.cards, currentDaily, user.dailyHistory[currentDaily]);
-
 const cardUrl = computed(() => nrdb.imageUrlTemplate.replace('{code}', gordian.correctCard.code));
+
 </script>
 
 <style lang="scss">

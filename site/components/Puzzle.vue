@@ -1,5 +1,10 @@
 <script setup>
-const props = defineProps(['cardUrl', 'cardSvg', 'gordian']);
+const props = defineProps(['puzzleMode', 'revealLevel', 'cardUrl', 'cardSvg',]);
+// puzzleMode: one of these: [combo, triangle, rect, rectangle, 
+//             ellipse, circle, rotatedrect, beziers, rotatedellipse, polygon]
+// revealLevel: Level (n=0-5) to be revealed after n guesses. n=6 stands for full solution
+// cardUrl: URL to actual card image
+// cardSvg: SVG of the gordian puzzle
 
 const puzzle = ref(null);
 
@@ -49,7 +54,7 @@ function updateSvg() {
     var elements = svgDom.children[1].children;
 
     var targetElements;
-    if (props.gordian.solved) {
+    if (props.revealLevel == 6) {
         targetElements = elements.length;
         if(!puzzleClasses.value.includes('solved')) {
             puzzleClasses.value.push('solved');
@@ -58,7 +63,7 @@ function updateSvg() {
             cardImageClasses.value.push('solved');
         }
     } else {
-        targetElements = numOfElements[props.gordian.puzzleAttr.mode][props.gordian.currentGuess];
+        targetElements = numOfElements[props.puzzleMode][props.revealLevel];
     }
 
     var firstHidden = Array.from(elements).findIndex(function (e) { return e.className.baseVal == "hidden"; });
@@ -78,7 +83,7 @@ function updateSvg() {
     }
 }
 
-watch(props.gordian.guesses, (newGuesses, oldGuesses) => {
+watch(() => props.revealLevel, (newLevel, oldLevel) => {
     updateSvg();
 });
 
