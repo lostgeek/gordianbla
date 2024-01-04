@@ -2,7 +2,7 @@
     <div class="main">
         <div class="left">
             <GuessTable :guesses="gordian.guesses" />
-            <CardInputField v-if="!gordian.solved" :nrdb="nrdb" :gordian="gordian" />
+            <CardInputField v-if="!gordian.solved" :cards="nrdb.cards" @submit="(card) => gordian.guess(card)" />
         </div>
         <div class="right">
             <Puzzle :puzzleMode="puzzleMode" :revealLevel="revealLevel" :cardUrl="cardUrl" :cardSvg="cardSvg" />

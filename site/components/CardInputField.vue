@@ -15,13 +15,14 @@
 <script setup>
 import Fuse from 'fuse.js'
 
-const props = defineProps(['nrdb', 'gordian']);
+const props = defineProps(['cards']);
+const emit = defineEmits(['submit']);
 
 const titleInput = ref(null);
 
 var uniqueCards = [];
 var uniqueTitles = [];
-props.nrdb.cards.forEach(c => {
+props.cards.forEach(c => {
     // Filter TD alternate cards
     if (c.pack_code == 'tdc') {
         var parts = c.title.split(" ");
@@ -56,13 +57,13 @@ const autocomplete = (event) => {
     });
 };
 
-async function guess() {
+function guess() {
     if (!selectedCard.value) {
         return;
     }
     const card = selectedCard.value;
     selectedCard.value = null;
-    await props.gordian.guess(card);
+    emit('submit', card);
 }
 
 // Adapted from https://github.com/primefaces/primevue/blob/master/components/lib/autocomplete/AutoComplete.vue#L618
