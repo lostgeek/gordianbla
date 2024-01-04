@@ -41,7 +41,7 @@
                 </div>
                 <div class="buttons">
                     <Button icon="fa-solid fa-gamepad" label="Continue practicing" @click="notImplemented" />
-                    <Button icon="fa-solid fa-clipboard" label="Copy result" @click="copyResult()" />
+                    <Button v-if="gordian.solved.value" icon="fa-solid fa-clipboard" label="Copy result" @click="copyResult()" />
                 </div>
             </div>
         </template>
@@ -49,7 +49,11 @@
 </template>
 
 <script setup>
-const props = defineProps(['user']);
+const props = defineProps(['gordian'])
+
+const user = useUser();
+const stats = user.stats;
+
 const toast = useToast();
 function notImplemented() {
     toast.add({
@@ -60,12 +64,10 @@ function notImplemented() {
     });
 }
 
-const stats = computed(() => props.user.stats);
-
 const statisticsVisible = useState('statisticsVisible', () => false);
 
 function barStyle(occurance) {
-    return { width: `${occurance / Math.max.apply(null, stats.value.distribution) * 100}%` };
+    return { width: `${occurance / Math.max.apply(null, stats.distribution) * 100}%` };
 }
 
 const nextPuzzle = ref("");
@@ -86,19 +88,18 @@ setInterval(function () {
 
 function copyResult() {
     var text="";
-    text = "gordianbla.de - " + props.gordian.puzzleAttr.dailyNumber + "\n";
-    text += "Guesses: " + props.gordian.currentGuess + "/6";
+    text = "gordianbla.de - " + props.gordian.puzzleAttr.value.dailyNumber + "\n";
+    text += "Guesses: " + props.gordian.currentGuess.value + "/6";
     text += "\n";
 
-    for (const g of props.gordian.guesses) {
+    for (const g of props.gordian.guesses.value) {
         if (g.state != 'not-guessed') {
             if (g.checks.faction) {
                 text += "🟩";
             } else {
-                if (false) // check light mode
+                if (false) // check light mode 
                     text += "⬜";
-                else
-                    text += "⬛";
+                else text += "⬛";
             }
 
             if (g.checks.type) {

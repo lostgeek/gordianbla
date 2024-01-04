@@ -1,4 +1,4 @@
-export const useGordian = defineStore("gordianStore", () => {
+export function useGordian() {
   const puzzleAttr = ref({});
   const correctCard = ref(null);
 
@@ -198,4 +198,4 @@ export const useGordian = defineStore("gordianStore", () => {
     startPuzzle,
     guess,
   };
-});
+}

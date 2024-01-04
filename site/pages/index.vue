@@ -1,14 +1,14 @@
 <template>
     <div class="main">
         <div class="left">
-            <GuessTable :guesses="gordian.guesses" />
-            <CardInputField v-if="!gordian.solved" :cards="nrdb.cards" @submit="(card) => gordian.guess(card)" />
+            <GuessTable :guesses="gordian.guesses.value" />
+            <CardInputField v-if="!gordian.solved.value" :cards="nrdb.cards" @submit="(card) => gordian.guess(card)" />
         </div>
         <div class="right">
             <Puzzle :puzzleMode="puzzleMode" :revealLevel="revealLevel" :cardUrl="cardUrl" :cardSvg="cardSvg" />
         </div>
     </div>
-    <StatisticsDialog :gordian="gordian" :user="user" />
+    <StatisticsDialog :gordian="gordian" />
 </template>
 
 <script setup>
@@ -22,14 +22,12 @@ const user = useUser();
 
 const gordian = useGordian();
 
-const statisticsVisible = useState('statisticsVisible', () => false);
-
-gordian.$subscribe((mutation, state) => {
-    if (gordian.puzzleAttr.dailyNumber) {
-        user.dailyHistory[gordian.puzzleAttr.dailyNumber] = state.guesses;
+watch(gordian.guesses, (oldGuesses, newGuesses) => {
+    if (gordian.puzzleAttr.value.dailyNumber) {
+        user.dailyHistory[gordian.puzzleAttr.value.dailyNumber] = gordian.guesses.value;
     }
 
-    if (gordian.solved) {
+    if (gordian.solved.value) {
         setTimeout(() => {
             statisticsVisible.value = true;
         }, 2500);
@@ -37,17 +35,16 @@ gordian.$subscribe((mutation, state) => {
 });
 
 const revealLevel = computed(() => {
-    if(gordian.solved) {
+    if(gordian.solved.value) {
         return 6;
     } else {
-        return gordian.currentGuess;
+        return gordian.currentGuess.value;
     }
 });
-const puzzleMode = computed(() => gordian.puzzleAttr.mode);
+const puzzleMode = computed(() => gordian.puzzleAttr.value.mode);
 const cardSvg = ref(null);
 cardSvg.value = await gordian.startPuzzle(nrdb.cards, currentDaily, user.dailyHistory[currentDaily]);
-const cardUrl = computed(() => nrdb.imageUrlTemplate.replace('{code}', gordian.correctCard.code));
-
+const cardUrl = computed(() => nrdb.imageUrlTemplate.replace('{code}', gordian.correctCard.value.code));
 </script>
 
 <style lang="scss">
