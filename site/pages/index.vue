@@ -13,7 +13,7 @@
 
 <script setup>
 const data = await $fetch('/api/current_daily_puzzle');
-const currentDaily = data.daily;
+const currentDaily = data.daily-2;
 
 const nrdb = useNrdb();
 await callOnce(nrdb.fetch);
@@ -22,10 +22,20 @@ const user = useUser();
 
 const gordian = useGordian();
 
+const statisticsVisible = useState('statisticsVisible', () => false);
+
 gordian.$subscribe((mutation, state) => {
-    if(gordian.puzzleAttr.dailyNumber) {
+    if (gordian.puzzleAttr.dailyNumber) {
         user.dailyHistory[gordian.puzzleAttr.dailyNumber] = state.guesses;
     }
+
+    if (gordian.solved) {
+        setTimeout(() => {
+            console.log(gordian.solved)
+            statisticsVisible.value = true;
+        }, 2500);
+    }
+});
 
 const revealLevel = computed(() => {
     if(gordian.solved) {
@@ -78,4 +88,5 @@ const cardUrl = computed(() => nrdb.imageUrlTemplate.replace('{code}', gordian.c
 
 .right {
     flex-grow: 1;
-}</style>
+}
+</style>

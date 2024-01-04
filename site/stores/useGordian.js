@@ -99,9 +99,22 @@ export const useGordian = defineStore("gordianStore", () => {
     guesses.value.findIndex((g) => g.state == "not-guessed")
   );
 
-  const solved = computed((state) =>
-    guesses.value.findIndex((g) => g.state == "guessed" && g.checks.title == true) > -1
-  );
+  const solved = computed((state) => {
+    if (guesses.value.length == 0) {
+      // guesses not yet initialised
+      return false;
+    }
+    if (currentGuess.value == -1) {
+      // last guess
+      return true;
+    }
+
+    return (
+      guesses.value.findIndex(
+        (g) => g.state == "guessed" && g.checks.title == true
+      ) > -1
+    );
+  });
 
   function guess(card) {
     if (currentGuess.value == -1 || solved.value) {
