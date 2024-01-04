@@ -13,7 +13,7 @@
 
 <script setup>
 const data = await $fetch('/api/current_daily_puzzle');
-const currentDaily = data.daily-2;
+const currentDaily = data.daily;
 
 const nrdb = useNrdb();
 await callOnce(nrdb.fetch);
@@ -31,7 +31,6 @@ gordian.$subscribe((mutation, state) => {
 
     if (gordian.solved) {
         setTimeout(() => {
-            console.log(gordian.solved)
             statisticsVisible.value = true;
         }, 2500);
     }
