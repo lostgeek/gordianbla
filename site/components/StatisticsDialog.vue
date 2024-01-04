@@ -10,7 +10,7 @@
                 <div class="label">Played</div>
             </div>
             <div class="stat">
-                <div class="number">{{ stats.wins / stats.played * 100 }}</div>
+                <div class="number">{{ (stats.wins / stats.played * 100).toFixed(0) }}</div>
                 <div class="label">Win %</div>
             </div>
             <div class="stat">
