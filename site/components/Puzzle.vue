@@ -1,17 +1,13 @@
 <script setup>
-const props = defineProps(['nrdb', 'gordian']);
+const props = defineProps(['cardUrl', 'cardSvg', 'gordian']);
 
 const puzzle = ref(null);
-
-const cardUrl = ref(null);
 
 const puzzleClasses = ref([]);
 const cardImageClasses = ref([]);
 
 onMounted(() => {
-    cardUrl.value = props.nrdb.imageUrlTemplate.replace('{code}', props.gordian.correctCard.code);
-
-    puzzle.value.innerHTML = props.gordian.cardSvg;
+    puzzle.value.innerHTML = props.cardSvg;
 
     const svgDom = puzzle.value.children[0];
 

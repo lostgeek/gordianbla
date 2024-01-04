@@ -1,29 +1,20 @@
 export const useGordian = defineStore("gordianStore", () => {
-  const currentDaily = ref(0);
-  async function init() {
-    const data = await $fetch('/api/current_daily_puzzle');
-    currentDaily.value = data.daily;
-  }
-
   const puzzleAttr = ref({});
   const correctCard = ref(null);
-  const cardSvg = ref(null);
 
   const guesses = ref([]);
-  const history = ref({});
 
-  const nrdb = useNrdb();
-
-  async function fetchPuzzle(id = -1) {
+  async function fetchPuzzle(cards, id) {
+    // Returns SVG of gordian puzzle
     var url = "/api/fetch_daily_puzzle";
     if (id > -1) {
       url += `?n=${id}`;
     }
 
     const data = await $fetch(url);
-    cardSvg.value = await data.text();
+    const cardSvg = await data.text();
 
-    const lines = cardSvg.value.split("\n");
+    const lines = cardSvg.split("\n");
     const svgStart = lines.findIndex((l) => l.startsWith("<svg"));
     const comment = lines.slice(0, svgStart);
 
@@ -76,17 +67,19 @@ export const useGordian = defineStore("gordianStore", () => {
 
     // ToDo: Add handling for TD cards
     const correctTitle = puzzleAttr.value.title;
-    correctCard.value = nrdb.cards.filter(function (c) {
+    correctCard.value = cards.filter(function (c) {
       return c.title == correctTitle;
     })[0];
+
+    return cardSvg;
   }
 
-  async function startPuzzle(id=-1) {
-    await fetchPuzzle(id);
-    await nrdb.fetch();
+  async function startPuzzle(cards, id, initialGuesses=null) {
+    // Returns SVG of gordian puzzle
+    const cardSvg = await fetchPuzzle(cards, id);
 
-    if (puzzleAttr.value.dailyNumber > -1 && puzzleAttr.value.dailyNumber in history.value) {
-      guesses.value = history.value[puzzleAttr.value.dailyNumber];
+    if(initialGuesses) {
+      guesses.value = initialGuesses;
     } else {
       guesses.value = [
         { state: "not-guessed" },
@@ -97,6 +90,8 @@ export const useGordian = defineStore("gordianStore", () => {
         { state: "not-guessed" },
       ];
     }
+
+    return cardSvg;
   }
 
   // Returns -1, if no guesses remaining
@@ -106,51 +101,6 @@ export const useGordian = defineStore("gordianStore", () => {
 
   const solved = computed((state) =>
     guesses.value.findIndex((g) => g.state == "guessed" && g.checks.title == true) > -1
-  );
-
-  const stats = computed((state) => {
-    var res = { played: 0, wins: 0, streak: 0, maxStreak: 0, distribution: [0,10,20,30,40,50]};
-
-    res.played = Object.values(history.value).filter(g => (g.findIndex((x) => x.state == 'guessed')>=0)).length;
-    res.wins = Object.values(history.value).filter(g => (g.findIndex((x) => x.checks.title)>=0)).length;
-
-    var streak = 0;
-    for(var i = currentDaily.value; i >= 0; i--) {
-      if (i in history.value && history.value[i].findIndex((x) => x.checks.title)>=0) {
-        streak++;
-      } else {
-        break;
-      }
-    }
-    res.streak = streak;
-    var maxStreak = 0;
-    var currStreak = 0;
-    for(var i = 0; i >= 0; i--) {
-      if (i in history.value && history.value[i].findIndex((x) => x.checks.title)>=0) {
-        currStreak++;
-      } else {
-        if (currStreak > maxStreak) {
-          maxStreak = currStreak;
-          currStreak = 0;
-        }
-      }
-    }
-    if (currStreak > maxStreak) {
-      maxStreak = currStreak;
-    }
-    res.maxStreak = maxStreak;
-
-    var distribution = [0, 0, 0, 0, 0, 0];
-    Object.values(history.value).forEach(g => {
-      var usedGuesses = g.findIndex((x) => x.checks.title);
-      if(usedGuesses > -1) {
-        distribution[usedGuesses]++;
-      }
-    });
-    res.distribution = distribution;
-
-    return res;
-  }
   );
 
   function guess(card) {
@@ -220,27 +170,19 @@ export const useGordian = defineStore("gordianStore", () => {
     newGuess.checks.cost = (correctCard.value[costType] == card[costType]);
 
     guesses.value[currentGuess.value] = newGuess;
-    if (puzzleAttr.value.dailyNumber > -1) {
-      history.value[puzzleAttr.value.dailyNumber] = guesses.value;
-    }
   }
 
   return {
     // state
-    currentDaily,
     puzzleAttr,
     correctCard,
-    cardSvg,
     guesses,
-    history,
     // getters
     currentGuess,
     solved,
-    stats,
     // actions
-    init,
     fetchPuzzle,
     startPuzzle,
     guess,
   };
-}, {persist: {storage: localStorage}});
+});

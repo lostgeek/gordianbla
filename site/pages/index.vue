@@ -5,19 +5,33 @@
             <CardInputField v-if="!gordian.solved" :nrdb="nrdb" :gordian="gordian" />
         </div>
         <div class="right">
-            <Puzzle :gordian="gordian" :nrdb="nrdb" />
+            <Puzzle :gordian="gordian" :cardUrl="cardUrl" :cardSvg="cardSvg"/>
         </div>
     </div>
-    <StatisticsDialog :gordian="gordian" />
+    <StatisticsDialog :gordian="gordian" :user="user" />
 </template>
 
 <script setup>
+const data = await $fetch('/api/current_daily_puzzle');
+const currentDaily = data.daily;
+
 const nrdb = useNrdb();
 await callOnce(nrdb.fetch);
 
+const user = useUser();
+
 const gordian = useGordian();
-await gordian.init();
-await gordian.startPuzzle(665);
+
+gordian.$subscribe((mutation, state) => {
+    if(gordian.puzzleAttr.dailyNumber) {
+        user.dailyHistory[gordian.puzzleAttr.dailyNumber] = state.guesses;
+    }
+})
+
+const cardSvg = ref(null);
+cardSvg.value = await gordian.startPuzzle(nrdb.cards, currentDaily, user.dailyHistory[currentDaily]);
+
+const cardUrl = computed(() => nrdb.imageUrlTemplate.replace('{code}', gordian.correctCard.code));
 </script>
 
 <style lang="scss">

@@ -49,7 +49,7 @@
 </template>
 
 <script setup>
-const props = defineProps(['gordian']);
+const props = defineProps(['user']);
 const toast = useToast();
 function notImplemented() {
     toast.add({
@@ -60,7 +60,7 @@ function notImplemented() {
     });
 }
 
-const stats = computed(() => props.gordian.stats);
+const stats = computed(() => props.user.stats);
 
 const statisticsVisible = useState('statisticsVisible', () => false);
 
