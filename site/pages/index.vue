@@ -51,9 +51,13 @@ const cardSvg = ref(null);
 cardSvg.value = await gordian.startDailyPuzzle(nrdb.cards, currentDaily, user.dailyHistory[currentDaily]);
 const cardUrl = computed(() => nrdb.imageUrlTemplate.replace('{code}', gordian.puzzleAttr.value.nrdbID));
 
-setTimeout(() => {
-    rulesVisible.value = true;
-}, 1000);
+// Show rules dialog if user has not played a daily yet,
+// i.e. only today's entry in history and current revealLevel is 0.
+if(Object.keys(user.dailyHistory).length == 1 && revealLevel.value == 0) {
+    setTimeout(() => {
+        rulesVisible.value = true;
+    }, 1000);
+}
 </script>
 
 <style lang="scss">
