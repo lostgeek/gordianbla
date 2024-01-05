@@ -70,15 +70,7 @@ export function useGordian() {
     return cardSvg;
   }
 
-  async function startDailyPuzzle(cards, id, initialGuesses=null) {
-    // Returns SVG of gordian puzzle
-
-    var url = "/api/fetch_daily_puzzle";
-    if (id > -1) {
-      url += `?n=${id}`;
-    }
-    const cardSvg = await fetchPuzzle(cards, url);
-
+  function initiateGuesses(initialGuesses=null) {
     if(initialGuesses) {
       guesses.value = initialGuesses;
     } else {
@@ -91,6 +83,19 @@ export function useGordian() {
         { state: "not-guessed" },
       ];
     }
+
+  }
+
+  async function startDailyPuzzle(cards, id, initialGuesses=null) {
+    // Returns SVG of gordian puzzle
+
+    var url = "/api/fetch_daily_puzzle";
+    if (id > -1) {
+      url += `?n=${id}`;
+    }
+    const cardSvg = await fetchPuzzle(cards, url);
+
+    initiateGuesses(initialGuesses);
 
     return cardSvg;
   }
@@ -101,18 +106,7 @@ export function useGordian() {
     var url = `/api/fetch_practice_puzzle?id=${id}`;
     const cardSvg = await fetchPuzzle(cards, url);
 
-    if(initialGuesses) {
-      guesses.value = initialGuesses;
-    } else {
-      guesses.value = [
-        { state: "not-guessed" },
-        { state: "not-guessed" },
-        { state: "not-guessed" },
-        { state: "not-guessed" },
-        { state: "not-guessed" },
-        { state: "not-guessed" },
-      ];
-    }
+    initiateGuesses(initialGuesses);
 
     return cardSvg;
   }
@@ -218,6 +212,7 @@ export function useGordian() {
     solved,
     // actions
     fetchPuzzle,
+    initiateGuesses,
     startDailyPuzzle,
     startPracticePuzzle,
     guess,

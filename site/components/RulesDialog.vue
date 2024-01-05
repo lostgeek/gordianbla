@@ -3,18 +3,21 @@
         mask: {
             style: 'backdrop-filter: blur(2px)'
         }
-    }" :style="{ width: '30rem' }" :breakpoints="{ '320px': '100%' }">
+    }" :style="{ width: '40rem' }" :breakpoints="{ '600px': '100%' }">
     <p>
         Guess the card in 6 tries or fewer.
         With every wrong guess, more and more shapes will be revealed that make up the card.
     </p>
-    <div class="outerPuzzle">
-        <Puzzle :puzzleMode="puzzleMode" :revealLevel="revealLevel" :cardUrl="cardUrl" :cardSvg="cardSvg" />
-        <div class="outerGuessCounter">
-            <Knob class="guessCounter" v-model="revealLevel" :min="0" :max="6" valueTemplate="" /> 
-            {{ guessCounterText }}
+    <Fieldset legend="Example">
+        <div class="exampleMain">
+            <div class="exampleLeft">
+                <GuessTable :guesses="gordian.guesses.value" />
+            </div>
+            <div class="exampleRight">
+                <Puzzle :puzzleMode="puzzleMode" :revealLevel="revealLevel" :cardUrl="cardUrl" :cardSvg="cardSvg" />
+            </div>
         </div>
-    </div>
+    </Fieldset>
     <p>
         After each guess you will see whether you guessed the faction, card type, <a @click="toggleSubtypeOverlay">subtype</a>, and <a @click="toggleCostOverlay">cost</a> correctly.
         <OverlayPanel ref="showSubtypeOverlay" :style="{ width: '20rem' }" :breakpoints="{ '320px': '100%' }">
@@ -39,36 +42,45 @@ const props = defineProps(['cards', 'imageUrlTemplate']);
 
 const gordian = useGordian();
 
-const revealLevel = ref(0);
-const guessCounterText = computed(() => {
-    if(revealLevel.value == 0) {
-        return "Initial state";
-    } else if (revealLevel.value < 6) {
-        const cardinal = ["first", "second", "third", "fourth", "fifth"];
-        return `After ${cardinal[revealLevel.value-1]} guess`;
+const revealLevel = computed(() => {
+    if(gordian.solved.value) {
+        return 6;
     } else {
-        return "Revealed puzzle";
+        return gordian.currentGuess.value;
     }
-    });
+});
 
 const cardSvg = ref(null);
 cardSvg.value = await gordian.startPracticePuzzle(props.cards, '2694c33e-abc0-11ee-a012-4a69bb808f2a');
 const puzzleMode = computed(() => gordian.puzzleAttr.value.mode);
 const cardUrl = computed(() => props.imageUrlTemplate.replace('{code}', gordian.puzzleAttr.value.nrdbID));
 
+const guessCards = ['Creative Commission', 'Conduit', 'Takobi', 'Gordian Blade'];
+
+var animInterval = null;
 onMounted(() => {
     setTimeout((event) => {
-        setInterval((event) => {
-            if (revealLevel.value < 6) {
-                revealLevel.value++;
-            }
-        }, 3000)
+        if (!animInterval) {
+            animInterval = setInterval((event) => {
+                if(revealLevel.value < guessCards.length) {
+                    const card = props.cards.filter((c) => c.stripped_title == guessCards[revealLevel.value])[0];
+                    gordian.guess(card);
+                    console.log(card, gordian.guesses.value);
+                } else {
+                    clearTimeout(animInterval);
+                }
+            }, 3000);
+        }
     }, 2500);
 });
 
 watch(rulesVisible, (newV, oldV) => {
     if(newV == true) {
-        revealLevel.value = 0;
+        gordian.initiateGuesses();
+    } else {
+        if(animInterval) {
+            clearTimeout(animInterval);
+        }
     }
 });
 
@@ -83,25 +95,86 @@ const toggleCostOverlay = (event) => {
 };
 </script>
 
-<style lang="scss" scoped>
-.outerPuzzle {
-    display:flex;
-    justify-content: center;
-    align-items: center;
+<style lang="scss">
+@media(max-width:600px) {
+    .p-fieldset {
+        padding: 0;
+    }
+}
 
-    &>* {
-        width: 50%;
+.exampleMain {
+    display: flex;
+    margin: 0;
+    gap: 1rem;
+}
+
+.exampleLeft {
+    flex-grow: 3;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 1rem;
+    @media(max-width:600px) {
+        gap: 0.25rem!important;
+    }
+    & .guessesDisplay {
+        gap: .5rem!important;
+        @media(max-width:600px) {
+            gap: 0.125rem!important;
+        }
+    }
+    & .guessColumn {
+        gap: .25rem!important;
+        @media(max-width:600px) {
+            gap: 0.125rem!important;
+        }
+
+        & .guessHeader {
+            font-size: .8rem!important;
+            @media(max-width:600px) {
+                font-size: .5rem!important;
+            }
+        }
+
+        &.title {
+            min-width: 3rem!important;
+        }
+
     }
 
-    .puzzleContainer {
-        margin: 0 1rem;
-    }
+    & .guess {
+        width: 1.5rem!important;
+        height: 1.5rem!important;
+        @media(max-width:600px) {
+            width: 1rem!important;
+            height: 1rem!important;
+        }
 
-    .outerGuessCounter {
-        display:flex;
-        flex-direction: column;
-        align-items: center;
+        &.title {
+            width: 100%!important;
+        }
+
+        & .front,
+        & .back {
+            font-size: 1rem!important;
+            @media(max-width:600px) {
+                font-size: .8rem!important;
+            }
+            @media(max-width:400px) {
+                font-size: .5rem!important;
+            }
+        }
     }
+}
+
+
+.exampleRight {
+    width: 10rem;
+    @media(max-width:600px) {
+        width: 5rem!important;
+    }
+    flex-grow: 1;
 }
 
 p {
