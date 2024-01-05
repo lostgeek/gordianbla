@@ -65,7 +65,6 @@ onMounted(() => {
                 if(revealLevel.value < guessCards.length) {
                     const card = props.cards.filter((c) => c.stripped_title == guessCards[revealLevel.value])[0];
                     gordian.guess(card);
-                    console.log(card, gordian.guesses.value);
                 } else {
                     clearTimeout(animInterval);
                 }
