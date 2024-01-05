@@ -4,12 +4,8 @@ export function useGordian() {
 
   const guesses = ref([]);
 
-  async function fetchPuzzle(cards, id) {
+  async function fetchPuzzle(cards, url) {
     // Returns SVG of gordian puzzle
-    var url = "/api/fetch_daily_puzzle";
-    if (id > -1) {
-      url += `?n=${id}`;
-    }
 
     const data = await $fetch(url);
     const cardSvg = await data.text();
@@ -74,9 +70,36 @@ export function useGordian() {
     return cardSvg;
   }
 
-  async function startPuzzle(cards, id, initialGuesses=null) {
+  async function startDailyPuzzle(cards, id, initialGuesses=null) {
     // Returns SVG of gordian puzzle
-    const cardSvg = await fetchPuzzle(cards, id);
+
+    var url = "/api/fetch_daily_puzzle";
+    if (id > -1) {
+      url += `?n=${id}`;
+    }
+    const cardSvg = await fetchPuzzle(cards, url);
+
+    if(initialGuesses) {
+      guesses.value = initialGuesses;
+    } else {
+      guesses.value = [
+        { state: "not-guessed" },
+        { state: "not-guessed" },
+        { state: "not-guessed" },
+        { state: "not-guessed" },
+        { state: "not-guessed" },
+        { state: "not-guessed" },
+      ];
+    }
+
+    return cardSvg;
+  }
+
+  async function startPracticePuzzle(cards, id, initialGuesses=null) {
+    // Returns SVG of gordian puzzle
+
+    var url = `/api/fetch_practice_puzzle?id=${id}`;
+    const cardSvg = await fetchPuzzle(cards, url);
 
     if(initialGuesses) {
       guesses.value = initialGuesses;
@@ -195,7 +218,8 @@ export function useGordian() {
     solved,
     // actions
     fetchPuzzle,
-    startPuzzle,
+    startDailyPuzzle,
+    startPracticePuzzle,
     guess,
   };
 }

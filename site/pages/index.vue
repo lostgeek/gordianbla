@@ -18,6 +18,7 @@ const currentDaily = data.daily;
 
 // Dialogs
 const statisticsVisible = useState('statisticsVisible', () => false);
+const rulesVisible = useState('rulesVisible', () => false);
 
 const nrdb = useNrdb();
 await callOnce(nrdb.fetch);
@@ -47,8 +48,12 @@ const revealLevel = computed(() => {
 });
 const puzzleMode = computed(() => gordian.puzzleAttr.value.mode);
 const cardSvg = ref(null);
-cardSvg.value = await gordian.startPuzzle(nrdb.cards, currentDaily, user.dailyHistory[currentDaily]);
+cardSvg.value = await gordian.startDailyPuzzle(nrdb.cards, currentDaily, user.dailyHistory[currentDaily]);
 const cardUrl = computed(() => nrdb.imageUrlTemplate.replace('{code}', gordian.puzzleAttr.value.nrdbID));
+
+setTimeout(() => {
+    rulesVisible.value = true;
+}, 1000);
 </script>
 
 <style lang="scss">

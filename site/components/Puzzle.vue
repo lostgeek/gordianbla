@@ -151,7 +151,7 @@ watch(() => props.revealLevel, (newLevel, oldLevel) => {
     position: absolute;
     top: 0;
     visibility: hidden;
-    z-index: 1;
+    z-index: -1;
 
     & img {
         width: 100%;
