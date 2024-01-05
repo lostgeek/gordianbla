@@ -3,7 +3,7 @@
         Gordian Blade
         <div class='buttons right'>
             <Button v-tooltip.bottom="'RSS'" icon="fa-solid fa-rss" size="large" text @click="notImplemented" />
-            <Button v-tooltip.bottom="'Rules'" icon="fa-solid fa-scale-balanced" size="large" text @click="notImplemented" />
+            <Button @click="showRules" v-tooltip.bottom="'Rules'" icon="fa-solid fa-scale-balanced" size="large" text />
             <Button @click="showStatistics" v-tooltip.bottom="'Share'" icon="fa-solid fa-share-nodes" size="large" text />
             <Button v-tooltip.bottom="'Settings'" icon="fa-solid fa-gears" size="large" text @click="notImplemented" />
             <Button v-tooltip.bottom="'About'" icon="fa-solid fa-circle-info" size="large" text @click="notImplemented" />
@@ -23,9 +23,13 @@ function notImplemented() {
 }
 
 const statisticsVisible = useState('statisticsVisible', () => false);
+const rulesVisible = useState('rulesVisible', () => false);
 
 function showStatistics() {
     statisticsVisible.value = true;
+}
+function showRules() {
+    rulesVisible.value = true;
 }
 </script>
 

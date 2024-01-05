@@ -63,6 +63,12 @@ function updateSvg() {
             cardImageClasses.value.push('solved');
         }
     } else {
+        if(puzzleClasses.value.includes('solved')) {
+            puzzleClasses.value = puzzleClasses.value.filter((x) => (x !== 'solved'));
+        }
+        if(cardImageClasses.value.includes('solved')) {
+            cardImageClasses.value = cardImageClasses.value.filter((x) => (x !== 'solved'));
+        }
         targetElements = numOfElements[props.puzzleMode][props.revealLevel];
     }
 
@@ -103,6 +109,7 @@ watch(() => props.revealLevel, (newLevel, oldLevel) => {
 .puzzleContainer {
     width: 100%;
     position: relative; // Needed for cardImage to be positioned absolute
+    z-index: 0;
 }
 .puzzle {
     width: 100%;
@@ -144,7 +151,7 @@ watch(() => props.revealLevel, (newLevel, oldLevel) => {
     position: absolute;
     top: 0;
     visibility: hidden;
-    z-index: -1;
+    z-index: 1;
 
     & img {
         width: 100%;

@@ -9,11 +9,15 @@
         </div>
     </div>
     <StatisticsDialog :gordian="gordian" />
+    <RulesDialog :cards="nrdb.cards" :imageUrlTemplate="nrdb.imageUrlTemplate" />
 </template>
 
 <script setup>
 const data = await $fetch('/api/current_daily_puzzle');
 const currentDaily = data.daily;
+
+// Dialogs
+const statisticsVisible = useState('statisticsVisible', () => false);
 
 const nrdb = useNrdb();
 await callOnce(nrdb.fetch);
