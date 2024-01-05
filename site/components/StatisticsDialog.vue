@@ -3,7 +3,8 @@
         mask: {
             style: 'backdrop-filter: blur(2px)'
         }
-    }">
+    }" :style="{ width: '30rem' }" :breakpoints="{ '320px': '100%' }"
+        >
         <div class="statistics">
             <div class="stat">
                 <div class="number">{{ stats.played }}</div>
@@ -162,6 +163,12 @@ function copyResult() {
     display: flex;
     justify-content: center;
     gap: 1rem;
+    @media(max-width:768px) {
+        gap: .5rem;
+    }
+    @media(max-width:320px) {
+        gap: .25rem;
+    }
 
     & .stat {
         width: min-content;
@@ -169,17 +176,30 @@ function copyResult() {
         & .number {
             text-align: center;
             font-size: 3rem;
+            @media(max-width:768px) {
+                font-size: 2.5rem;
+            }
+            @media(max-width:320px) {
+                font-size: 2rem;
+            }
             font-weight: bold;
         }
 
         & .label {
             text-align: center;
+            font-size: 1.5rem;
+            @media(max-width:768px) {
+                font-size: 1.25rem;
+            }
+            @media(max-width:320px) {
+                font-size: 1rem;
+            }
         }
     }
 }
 
 .distribution {
-    width: 50vw;
+    width: 100%;
     max-width: 20rem;
     margin: 1rem auto;
     padding-left: 1.5rem;
@@ -223,8 +243,15 @@ function copyResult() {
 
 .footer {
     display: flex;
+    flex-wrap: wrap;
     gap: 2rem;
-    justify-content: space-between;
+    @media(max-width:768px) {
+        gap: 1rem;
+    }
+    @media(max-width:320px) {
+        gap: .5rem;
+    }
+    justify-content: center;
 
     & .next {
         margin: 2rem;
