@@ -5,7 +5,11 @@
 </template>
 
 <style lang="scss">
-a {
+a.p-component {
+  text-decoration: none;
+}
+
+a:not(.p-component) {
   color: var(--highlight-text-color);
   text-decoration: underline;
   cursor: pointer;
