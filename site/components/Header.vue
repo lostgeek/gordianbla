@@ -6,7 +6,10 @@
             <Button v-tooltip.bottom="'RSS'" icon="fa-solid fa-rss" size="large" text @click="notImplemented" />
             <Button @click="showRules" v-tooltip.bottom="'Rules'" icon="fa-solid fa-scale-balanced" size="large" text />
             <Button @click="showStatistics" v-tooltip.bottom="'Share'" icon="fa-solid fa-share-nodes" size="large" text />
-            <Button v-tooltip.bottom="'Settings'" icon="fa-solid fa-gears" size="large" text @click="notImplemented" />
+            <NuxtLink to="/settings" v-tooltip.bottom="'Settings'" class="p-button p-component p-button-icon-only p-button-text p-button-lg">
+                <span class="p-button-icon fa-solid fa-gears" data-pc-section="icon"></span>
+                <span class="p-button-label" data-pc-section="label">&nbsp;</span>
+            </NuxtLink>
             <NuxtLink to="/about" v-tooltip.left="'About'" class="p-button p-component p-button-icon-only p-button-text p-button-lg">
                 <span class="p-button-icon fa-solid fa-circle-info" data-pc-section="icon"></span>
                 <span class="p-button-label" data-pc-section="label">&nbsp;</span>

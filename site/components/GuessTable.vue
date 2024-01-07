@@ -206,6 +206,7 @@ function titleClass(guess) {
 
     & .front {
         z-index: 2;
+        background: var(--not-guessed-color);
     }
 
     & .back {

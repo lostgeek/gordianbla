@@ -1,5 +1,6 @@
 export const useUser = defineStore("userStore", () => {
   const dailyHistory = ref({});
+  const lightMode = ref(true);
 
   const stats = computed(() => {
     var res = { played: 0, wins: 0, streak: 0, maxStreak: 0, distribution: [0,10,20,30,40,50]};
@@ -51,6 +52,7 @@ export const useUser = defineStore("userStore", () => {
   return {
     // state
     dailyHistory,
+    lightMode,
     // getters
     stats,
   };

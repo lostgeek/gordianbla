@@ -3,5 +3,12 @@ $primaryTextColor:#dedde3 !default;
 $accentColor:#9bb143 !default;
 $accentTextColor:#0d0b13 !default;
 
+:root {
+    --correct-color: var(--green-200);
+    --incorrect-color: var(--surface-300);
+    --not-guessed-color: var(--surface-100);
+    --guess-border: var(--surface-700);
+}
+
 @import '../../variables';
 @import '../../../_compact';
