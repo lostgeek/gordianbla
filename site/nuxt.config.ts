@@ -8,7 +8,11 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "@pinia-plugin-persistedstate/nuxt",
   ],
-  primevue: {},
+  primevue: {
+    options: {
+      ripple: true
+    },
+  },
   css: ["@fontsource/patua-one", "@fontsource/medula-one"],
   app: {
     head: {

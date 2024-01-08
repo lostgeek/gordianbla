@@ -4,11 +4,11 @@
             <NuxtLink class="headerLink" to="/">Gordian Blade</NuxtLink>
         </template>
         <template #item="{ item, props, hasSubmenu }">
-            <NuxtLink class="p-menuitem-link" v-if="item.route" :to="item.route">
+            <NuxtLink v-ripple class="p-ripple p-menuitem-link" v-if="item.route" :to="item.route">
                 <span class="p-menuitem-icon" :class="item.icon" />
                 <span class="p-menuitem-text">{{ item.label }}</span>
             </NuxtLink>
-            <a v-else class="p-menuitem-link" :href="item.url" :target="item.target" v-bind="props.action">
+            <a v-else v-ripple class="p-ripple p-menuitem-link" :href="item.url" :target="item.target" v-bind="props.action">
                 <span class="p-menuitem-icon" :class="item.icon" />
                 <span class="p-menuitem-text">{{ item.label }}</span>
                 <span v-if="hasSubmenu" class="p-submenu-icon fa-solid fa-caret-down" />
