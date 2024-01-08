@@ -5,11 +5,7 @@
 </template>
 
 <style lang="scss">
-a.p-component {
-  text-decoration: none;
-}
-
-a:not(.p-component) {
+a:not(.p-menuitem-link) {
   color: var(--highlight-text-color);
   text-decoration: underline;
   cursor: pointer;

@@ -97,6 +97,7 @@ function titleClass(guess) {
     display: flex;
     flex-direction: row;
     justify-content: center;
+    color: var(--text-color);
 
     gap: 1rem;
     @media(max-width:1000px) {
@@ -156,10 +157,10 @@ function titleClass(guess) {
     }
     perspective: 1000px;
     @media not (prefers-reduced-motion) {
-        -webkit-transition: all 1s linear !important;
-        -moz-transition: all 1s linear !important;
-        -o-transition: all 1s linear !important;
-        transition: all 1s linear !important;
+        -webkit-transition: transform 1s linear !important;
+        -moz-transition: transform 1s linear !important;
+        -o-transition: transform 1s linear !important;
+        transition: transform 1s linear !important;
     }
     transform-style: preserve-3d;
 
