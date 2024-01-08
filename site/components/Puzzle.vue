@@ -21,7 +21,7 @@ onMounted(() => {
     if(height) {
         svgDom.removeAttribute('width');
         svgDom.removeAttribute('height');
-        svgDom.setAttribute('width', '100%');
+        // svgDom.setAttribute('width', '100%');
         svgDom.setAttribute('viewBox', '0 0 '+width+' '+height);
     }
 

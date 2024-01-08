@@ -18,12 +18,15 @@
 </template>
 
 <script setup>
+const loaded = useState('siteLoaded', () => false);
+
 const route = useRoute();
 const items = ref([
     {
         label: 'Rules',
         visible: () => route.path == "/",
         icon: 'fa-solid fa-scale-balanced',
+        active: loaded,
         command: showRules,
     },
     {
