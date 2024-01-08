@@ -139,9 +139,11 @@ watch(() => props.revealLevel, (newLevel, oldLevel) => {
             opacity: 1;
         }
 
-        @for $i from 0 through 99 {
-            & .shown-anim-#{$i} {
-                transition-delay: 0.02s*$i;
+        @media not (prefers-reduced-motion) {
+            @for $i from 0 through 99 {
+                & .shown-anim-#{$i} {
+                    transition-delay: 0.02s*$i;
+                }
             }
         }
     }

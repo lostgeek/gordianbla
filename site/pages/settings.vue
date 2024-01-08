@@ -4,6 +4,8 @@
         <div class="switch-group">
             <InputSwitch id="lightMode" v-model="user.lightMode" />
             <label for="lightMode">Light mode<div class="explanation">For when you need a flashlight shining on your face</div></label>
+            <InputSwitch id="reducedMotion" v-model="reducedMotion" disabled />
+            <label for="reducedMotion">Reduced motion<div class="explanation">This option is set via your operating system. See <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion" target="_blank">here</a> for more information.</div></label>
         </div>
     </div>
 </template>
@@ -14,6 +16,9 @@ const user = useUser();
 watch(() => user.lightMode, (newV, oldV) =>{
     location.reload(); 
 });
+
+const reducedMotion = computed(() => (window.matchMedia(`(prefers-reduced-motion: reduce)`) === true ||
+    window.matchMedia(`(prefers-reduced-motion: reduce)`).matches === true));
 </script>
 
 <style lang="scss" scoped>
