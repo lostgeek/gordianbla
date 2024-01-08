@@ -2,14 +2,14 @@
     <div class="main">
         <div class="left">
             <GuessTable :guesses="gordian.guesses.value" />
-            <CardInputField v-if="!gordian.solved.value" :cards="nrdb.cards" @submit="(card) => gordian.guess(card)" />
+            <CardInputField v-if="nrdb.cards.length > 0 && !gordian.solved.value" :cards="nrdb.cards" @submit="(card) => gordian.guess(card)" />
         </div>
         <div class="right">
-            <Puzzle :puzzleMode="puzzleMode" :revealLevel="revealLevel" :cardUrl="cardUrl" :cardSvg="cardSvg" />
+            <Puzzle v-if="cardSvg" :puzzleMode="puzzleMode" :revealLevel="revealLevel" :cardUrl="cardUrl" :cardSvg="cardSvg" />
         </div>
     </div>
     <StatisticsDialog :gordian="gordian" />
-    <RulesDialog :cards="nrdb.cards" :imageUrlTemplate="nrdb.imageUrlTemplate" />
+    <RulesDialog v-if="nrdb.cards.length > 0" :cards="nrdb.cards" :imageUrlTemplate="nrdb.imageUrlTemplate" />
 </template>
 
 <script setup>
@@ -20,8 +20,9 @@ const currentDaily = data.daily;
 const statisticsVisible = useState('statisticsVisible', () => false);
 const rulesVisible = useState('rulesVisible', () => false);
 
+const toast = useToast();
+
 const nrdb = useNrdb();
-await callOnce(nrdb.fetch);
 
 const user = useUser();
 
@@ -39,6 +40,7 @@ watch(gordian.guesses, (oldGuesses, newGuesses) => {
     }
 });
 
+
 const revealLevel = computed(() => {
     if(gordian.solved.value) {
         return 6;
@@ -48,16 +50,31 @@ const revealLevel = computed(() => {
 });
 const puzzleMode = computed(() => gordian.puzzleAttr.value.mode);
 const cardSvg = ref(null);
-cardSvg.value = await gordian.startDailyPuzzle(nrdb.cards, currentDaily, user.dailyHistory[currentDaily]);
 const cardUrl = computed(() => nrdb.imageUrlTemplate.replace('{code}', gordian.puzzleAttr.value.nrdbID));
 
-// Show rules dialog if user has not played a daily yet,
-// i.e. only today's entry in history and current revealLevel is 0.
-if(Object.keys(user.dailyHistory).length == 1 && revealLevel.value == 0) {
-    setTimeout(() => {
-        rulesVisible.value = true;
-    }, 1000);
-}
+onMounted(async () => {
+    try {
+        await callOnce(nrdb.fetch);
+    } catch ({name, message}) {
+        console.log(name, message);
+        toast.add({
+            severity: 'error',
+            summary: name,
+            detail: message
+        });
+    }
+
+    cardSvg.value = await gordian.startDailyPuzzle(nrdb.cards, currentDaily, user.dailyHistory[currentDaily]);
+
+    // Show rules dialog if user has not played a daily yet,
+    // i.e. only today's entry in history and current revealLevel is 0.
+    if(Object.keys(user.dailyHistory).length == 1 && revealLevel.value == 0) {
+        setTimeout(() => {
+            rulesVisible.value = true;
+        }, 1000);
+    }
+});
+
 </script>
 
 <style lang="scss">
