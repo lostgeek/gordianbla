@@ -52,16 +52,6 @@ const items = ref([
         ],
     },
 ])
-const toast = useToast();
-function notImplemented() {
-    toast.add({
-        severity: 'warn',
-        summary: 'Unimplemented',
-        detail: 'Feature has not been implemented yet.',
-        life: 2000
-    });
-}
-
 const statisticsVisible = useState('statisticsVisible', () => false);
 const rulesVisible = useState('rulesVisible', () => false);
 

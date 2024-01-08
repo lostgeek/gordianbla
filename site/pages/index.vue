@@ -6,7 +6,7 @@
                 <CardInputField v-if="!gordian.solved.value" :cards="nrdb.cards" @submit="(card) => gordian.guess(card)" />
             </div>
             <div class="right">
-                <Puzzle :puzzleMode="puzzleMode" :revealLevel="revealLevel" :cardUrl="cardUrl" :cardSvg="cardSvg" />
+                <Puzzle v-if="cardSvg" :puzzleMode="puzzleMode" :revealLevel="revealLevel" :cardUrl="cardUrl" :cardSvg="cardSvg" />
             </div>
         </div>
         <StatisticsDialog :gordian="gordian" />
@@ -54,7 +54,6 @@ watch(gordian.guesses, (oldGuesses, newGuesses) => {
         }, 2500);
     }
 });
-
 
 const revealLevel = computed(() => {
     if(gordian.solved.value) {
