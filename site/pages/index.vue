@@ -130,6 +130,7 @@ onMounted(async () => {
 
 .right {
     flex-grow: 2;
+    min-width: 10rem;
 }
 
 .puzzleSkeleton {
