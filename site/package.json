@@ -21,6 +21,7 @@
   "dependencies": {
     "@fontsource/medula-one": "^5.0.8",
     "@fontsource/patua-one": "^5.0.18",
+    "feed": "^4.2.2",
     "fuse.js": "^7.0.0",
     "pinia": "^2.1.7",
     "primevue": "^3.45.0"

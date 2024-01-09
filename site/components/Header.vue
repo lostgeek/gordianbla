@@ -46,6 +46,11 @@ const items = ref([
         class: 'open-left',
         items: [
             {
+                label: 'RSS Feeds',
+                icon: 'fa-solid fa-circle-info',
+                route: '/about',
+            },
+            {
                 label: 'About',
                 icon: 'fa-solid fa-circle-info',
                 route: '/about',
