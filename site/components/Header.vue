@@ -43,6 +43,7 @@ const items = ref([
     {
         label: 'More',
         icon: 'fa-solid fa-ellipsis',
+        class: 'open-left',
         items: [
             {
                 label: 'About',
@@ -74,5 +75,11 @@ function showRules() {
     width: 100%;
     margin-bottom: 1rem;
     justify-content: space-between;
+}
+</style>
+
+<style lang="scss">
+.open-left .p-submenu-list {
+    right: 0;
 }
 </style>
