@@ -2,19 +2,17 @@
 # -*- coding: utf-8 -*-
 
 import requests
-import random
 import urllib
+import random
 import tempfile
-import os.path
-import uuid
-
 import subprocess
-from datetime import datetime
-import sys
 import os
 import gzip
+from xml.dom import minidom
+import cairosvg
 
-PARAMETERS = {
+class Generator:
+    available_parameters = {
         'combo': [0, 300],
         'triangle': [1, 450],
         'rect': [2, 600],
@@ -25,65 +23,65 @@ PARAMETERS = {
         'rotatedellipse': [7, 600],
         'polygon': [8, 600],}
 
-def get_card_image(folder, card, scheme):
-    if 'image_url' in card.keys():
-        url = card['image_url']
-    else:
-        url = scheme.format(card['code'])
+    def __init__(self):
+        response = requests.get('http://netrunnerdb.com/api/2.0/public/cards')
+        self.cards = response.json()['data']
+        self.image_url_template = response.json()['imageUrlTemplate'].replace('{code}', '{0}');
 
-    try:
-        urllib.request.urlretrieve(url, os.path.join(folder.name, 'solution.png'))
-    except:
-        try:
-            url = "https://netrunnerdb.com/card_image/large/{0}.png".format(card['code'])
-            urllib.request.urlretrieve(url, os.path.join(folder.name, 'solution.png'))
-        except:
-            url = "https://netrunnerdb.com/card_image/{0}.png".format(card['code'])
-            urllib.request.urlretrieve(url, os.path.join(folder.name, 'solution.png'))
-
-    return os.path.join(folder.name, 'solution.png')
-
-def main():
-    if len(sys.argv) == 1:
-        N = 1
-    else:
-        N = int(sys.argv[1])
-
-    response = requests.get('http://netrunnerdb.com/api/2.0/public/cards')
-    cards = response.json()['data']
-    scheme = response.json()['imageUrlTemplate'].replace('{code}', '{0}');
-    for i in range(N):
-        card = random.choice(cards)
-        folder = tempfile.TemporaryDirectory()
+    def fetch_card_image(self, card, target_filepath):
+        if 'image_url' in card.keys():
+            url = card['image_url']
+        else:
+            url = self.image_url_template.format(card['code'])
 
         try:
-            path = get_card_image(folder, card, scheme)
+            urllib.request.urlretrieve(url, target_filepath)
         except:
-            print(f"Did not find image for {card['title']}")
-            continue
+            raise Exception(f"Fetching image for {card['title']} failed.")
+    
+    def generate_puzzle(self, card, puzzle_filepath, thumbnail_filepath=None, mode=None):
+        if not mode:
+            mode = random.choice(list(self.available_parameters.keys()))
 
-        mode = random.choice(list(PARAMETERS.keys()))
-        params = PARAMETERS[mode]
-        mode_nr = params[0]
-        n = params[1]
-        solution_id = uuid.uuid1()
+        mode_nr, n = self.available_parameters[mode]
 
-        print(f"Creating {card['title']} in {mode}: puzzles/{solution_id}.svg.gz...")
-        started = datetime.now()
+        _, temp_input_filepath = tempfile.mkstemp(suffix=".jpg")
+        _, temp_puzzle_filepath = tempfile.mkstemp(suffix=".svg")
+        
+        self.fetch_card_image(card, temp_input_filepath)
 
-        process = subprocess.Popen(f'go run ./lib/primitive/main.go -i {path} -o ./puzzles/{solution_id}.svg -m {mode_nr} -n {n} -v', stdout=subprocess.PIPE, shell=True)
+        process = subprocess.Popen(f'go run ./lib/primitive/main.go -i {temp_input_filepath} -o {temp_puzzle_filepath} -m {mode_nr} -n {n} -v', \
+            stdout=subprocess.PIPE, shell=True)
         process.communicate()
 
-        with open(f'./puzzles/{solution_id}.svg', 'r+') as infile:
+        with open(temp_puzzle_filepath, 'r+') as infile:
             lines = infile.readlines()
             lines.insert(0, f'<!--\nTitle: {card["title"]}\nNRDB ID: {card["code"]}\nMode: {mode_nr} {mode}\nn: {n}\n-->\n')
-            with gzip.open(f'./puzzles/{solution_id}.svg.gz', 'wb') as outfile:
+            with gzip.open(puzzle_filepath, 'wb') as outfile:
                 outfile.write(bytearray('\n'.join(lines), encoding="utf-8"))
 
-        os.remove(f'./puzzles/{solution_id}.svg')
+        if thumbnail_filepath:
+            self.generate_thumbnail(puzzle_filepath, mode, thumbnail_filepath)
 
+        os.remove(temp_input_filepath)
+        os.remove(temp_puzzle_filepath)
 
-        print("Finished in " + str(datetime.now()-started) + "\n")
+    def generate_thumbnail(self, gz_filepath, mode, thumbnail_filepath):
+        if (mode == 'circles'):
+            level1elements = 20
+        elif (mode == 'beziers'):
+            level1elements = 100
+        else:
+            level1elements = 10
 
-if __name__ == "__main__":
-    main()
+        _, temp_thumb_svg_filepath = tempfile.mkstemp(suffix=".svg")
+        with minidom.parse(gzip.open(gz_filepath, 'r')) as dom:
+            svgElements = dom.childNodes[1].childNodes[3]
+            # Every other child node is empty because of linebreaks in the svg
+            for n in range(len(svgElements.childNodes)-1, level1elements*2+1, -1):
+                svgElements.removeChild(svgElements.childNodes[n])
+            
+            with open(temp_thumb_svg_filepath, 'w') as outfile:
+                dom.writexml(outfile)
+        cairosvg.svg2png(url=temp_thumb_svg_filepath, write_to=thumbnail_filepath)
+        os.remove(temp_thumb_svg_filepath)

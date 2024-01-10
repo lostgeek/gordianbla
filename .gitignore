@@ -28,3 +28,6 @@ logs
 # From primitive library
 go.*
 puzzles
+
+# Python files
+__pycache__
