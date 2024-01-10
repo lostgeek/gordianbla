@@ -4,8 +4,7 @@
             <div class="main">
                 <div class="left">
                     <GuessTable :guesses="gordian.guesses.value" />
-                    <CardInputField v-if="!gordian.solved.value" :cards="nrdb.cards" @submit="(card) => gordian.guess(card)" />
-                    <div><Button icon="fa-solid fa-rectangle-list" class="small" label="Change Format" @click="format=null"/></div>
+                    <CardInputField v-if="!gordian.solved.value" :cards="filteredCards" @submit="(card) => gordian.guess(card)" />
                 </div>
                 <div class="right">
                     <Puzzle v-if="cardSvg" :puzzleMode="puzzleMode" :revealLevel="revealLevel" :cardUrl="cardUrl" :cardSvg="cardSvg" />
@@ -49,12 +48,15 @@ const gordian = useGordian();
 const format = ref(null);
 const formats = ref(null);
 
-watch(gordian.guesses, (oldGuesses, newGuesses) => {
-    if (gordian.solved.value) {
-        toast.add()
+const filteredCards = computed(() => {
+    if (format.value.packs && format.value.packs.length > 0) {
+        return nrdb.cards.filter(c => {
+            return format.value.packs.map(p => p.code).includes(c.pack_code);
+        });
+    } else {
+        return nrdb.cards;
     }
 });
-
 const revealLevel = computed(() => {
     if(gordian.solved.value) {
         return 6;
