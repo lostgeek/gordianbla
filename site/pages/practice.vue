@@ -5,6 +5,10 @@
                 <div class="left">
                     <GuessTable :guesses="gordian.guesses.value" />
                     <CardInputField v-if="!gordian.solved.value" :cards="filteredCards" @submit="(card) => gordian.guess(card)" />
+                    <div class="buttons">
+                        <Button icon="fa-solid fa-left-long" class="small" label="Back" @click="format=null"/>
+                        <Button v-if="gordian.solved.value" icon="fa-solid fa-arrows-rotate" class="small" label="New Puzzle" @click="newPuzzle()"/>
+                    </div>
                 </div>
                 <div class="right">
                     <Puzzle v-if="cardSvg" :puzzleMode="puzzleMode" :revealLevel="revealLevel" :cardUrl="cardUrl" :cardSvg="cardSvg" />
@@ -118,18 +122,22 @@ onMounted(async () => {
     ];
 });
 
+async function newPuzzle() {
+    var packs = null;
+    if(format.value.packs && format.value.packs.length > 0) {
+        packs = format.value.packs.map(p => p.code).join(',');
+    }
+    loaded.value = false;
+    cardSvg.value = await gordian.startPracticePuzzle(nrdb.cards, packs);
+    loaded.value = true;
+}
+
 watch(format, async () => {
     if(!format.value) {
         return;
     }
     try {
-        var packs = null;
-        if(format.value.packs && format.value.packs.length > 0) {
-            packs = format.value.packs.map(p => p.code).join(',');
-        }
-        cardSvg.value = await gordian.startPracticePuzzle(nrdb.cards, packs);
-        loaded.value = true;
-
+        await newPuzzle();
     } catch ({name, message}) {
         console.log(name, message);
         toast.add({
@@ -186,7 +194,9 @@ watch(format, async () => {
         gap: .25rem;
     }
 
-    .small {
+    .buttons {
+        display:flex;
+        gap: 1rem;
     } 
 }
 
