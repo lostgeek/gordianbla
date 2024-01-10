@@ -4,6 +4,7 @@ import zlib from 'node:zlib';
 export default defineEventHandler((event) => {
     const start = new Date("2022-03-05");
     const now = new Date();
+    const currentDaily = Math.floor((now-start) / 1000/60/60/24);
 
     var midnight = new Date();
     midnight.setHours(23, 59, 59, 999);
@@ -18,8 +19,11 @@ export default defineEventHandler((event) => {
         if (isNaN(days)) {
             return {error: "Query parameter n must be an integer."};
         }
+        if (days > currentDaily) {
+            return {error: "Chosen puzzle is in the future."};
+        }
     } else {
-        days = Math.floor((now-start) / 1000/60/60/24);
+        days = currentDaily;
     }
 
     const puzzle_id = days.toString().padStart(5, "0");
