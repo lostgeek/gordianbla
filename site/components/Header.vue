@@ -47,17 +47,17 @@ const items = ref([
         items: [
             {
                 label: 'Practice',
-                icon: 'fa-solid fa-gamepad',
+                icon: 'fa-solid fa-fw fa-gamepad',
                 route: '/practice',
             },
             {
                 label: 'RSS Feeds',
-                icon: 'fa-solid fa-circle-info',
-                route: '/about',
+                icon: 'fa-solid fa-fw fa-rss',
+                route: '/rss',
             },
             {
                 label: 'About',
-                icon: 'fa-solid fa-circle-info',
+                icon: 'fa-solid fa-fw fa-circle-info',
                 route: '/about',
             },
         ],
