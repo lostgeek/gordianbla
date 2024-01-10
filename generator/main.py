@@ -63,6 +63,7 @@ if __name__ == "__main__":
                 new_puzzle_path = os.path.join(puzzle_prefix, card['pack_code'], f"{card['code']}-{i:02}.svg.gz")
                 if not os.path.exists(new_puzzle_path) or i >= 99:
                     break
+                i += 1
 
             thumb_path = os.path.join(thumb_folder, f"{card['code']}-{i:02}.png")
             mode = random.choice(list(g.available_parameters.keys()))
