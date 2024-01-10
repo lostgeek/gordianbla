@@ -1,18 +1,33 @@
-import fs from 'node:fs';
-import zlib from 'node:zlib';
+import fs from "node:fs";
+import zlib from "node:zlib";
 
 export default defineEventHandler((event) => {
-    // Check for query param 'id'
-    var puzzle_id;
+    var packFolders = fs.readdirSync("./assets/practice_puzzles");
 
     const query = getQuery(event);
-    if (query.id && /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/.test(query.id)) {
-        puzzle_id = query.id;
-    } else {
-        // ToDo: Pick random practice puzzle
+    if (query.packs) {
+        if(!/[0-9a-z-,]+/.test(query.packs)) {
+            return {message: "Packs filter malformed."}
+        }
+        const packs = query.packs.split(",");
+        packFolders = packFolders.filter((f) => packs.includes(f));
     }
 
-    var filepath = `./assets/puzzles/${puzzle_id}.svg.gz`;
+    var puzzles = [];
+    packFolders.forEach((f) => {
+        puzzles = puzzles.concat(
+            fs
+                .readdirSync(`./assets/practice_puzzles/${f}`)
+                .filter((x) => x !== "thumb")
+                .map((x) => `./assets/practice_puzzles/${f}/${x}`)
+        );
+    });
+
+    if(puzzles.length == 0) {
+        return {message: "No cards found for selected packs filter."}
+    }
+
+    const filepath = puzzles[Math.floor(Math.random() * puzzles.length)];
     var filebuffer = fs.readFileSync(filepath);
     var uncompressed = zlib.unzipSync(filebuffer);
 
@@ -21,4 +36,4 @@ export default defineEventHandler((event) => {
         "Content-Encoding": "gzip",
     });
     return zlib.gzipSync(uncompressed);
-  })
+});

@@ -100,10 +100,28 @@ export function useGordian() {
     return cardSvg;
   }
 
-  async function startPracticePuzzle(cards, id, initialGuesses=null) {
+  async function startPracticePuzzle(cards, packs, initialGuesses=null) {
     // Returns SVG of gordian puzzle
+    // packs: comma-separated pack codes
 
-    var url = `/api/fetch_practice_puzzle?id=${id}`;
+    var url;
+    if (packs) {
+        url = `/api/fetch_practice_puzzle?packs=${packs}`;
+    } else {
+        url = "/api/fetch_practice_puzzle";
+    }
+    const cardSvg = await fetchPuzzle(cards, url);
+
+    initiateGuesses(initialGuesses);
+
+    return cardSvg;
+  }
+
+  async function startSpecificPuzzle(cards, pack, code, id, initialGuesses=null) {
+    // Returns SVG of gordian puzzle
+    // packs: comma-separated pack codes
+
+    var url = `/api/fetch_puzzle?pack=${pack}&code=${code}&id=${id}`;
     const cardSvg = await fetchPuzzle(cards, url);
 
     initiateGuesses(initialGuesses);
@@ -215,6 +233,7 @@ export function useGordian() {
     initiateGuesses,
     startDailyPuzzle,
     startPracticePuzzle,
+    startSpecificPuzzle,
     guess,
   };
 }

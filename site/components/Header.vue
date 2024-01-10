@@ -24,7 +24,7 @@ const route = useRoute();
 const items = ref([
     {
         label: 'Rules',
-        visible: () => route.path == "/",
+        visible: () => ['/', '/practice'].includes(route.path),
         icon: 'fa-solid fa-scale-balanced',
         active: loaded,
         command: showRules,
@@ -45,6 +45,11 @@ const items = ref([
         icon: 'fa-solid fa-ellipsis',
         class: 'open-left',
         items: [
+            {
+                label: 'Practice',
+                icon: 'fa-solid fa-gamepad',
+                route: '/practice',
+            },
             {
                 label: 'RSS Feeds',
                 icon: 'fa-solid fa-circle-info',
@@ -86,5 +91,6 @@ function showRules() {
 <style lang="scss">
 .open-left .p-submenu-list {
     right: 0;
+    left: initial !important;
 }
 </style>

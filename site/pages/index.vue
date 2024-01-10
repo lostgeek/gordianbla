@@ -93,12 +93,13 @@ onMounted(async () => {
 
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .main {
     display: flex;
     flex-wrap: wrap;
     margin: 0 1rem;
     gap: 1rem;
+    justify-content: center;
 
     @media(max-width:1000px) {
         margin: 0 .5rem;
@@ -112,7 +113,7 @@ onMounted(async () => {
 }
 
 .left {
-    flex-grow: 3;
+    flex-grow: 2;
 
     display: flex;
     flex-direction: column;
@@ -129,8 +130,15 @@ onMounted(async () => {
 }
 
 .right {
-    flex-grow: 2;
-    min-width: 10rem;
+    flex-grow: 5;
+
+    min-width: 15rem;
+    max-width: 26rem;
+
+    @media(max-width:400px) {
+        min-width: 0;
+        width: 100%;
+    }
 }
 
 .puzzleSkeleton {

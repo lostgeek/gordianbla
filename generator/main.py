@@ -18,6 +18,7 @@ if __name__ == "__main__":
 
     parser.add_argument('-type', choices=['daily', 'practice'], help="Puzzle type")
     parser.add_argument('-n', type=int, help="Number of puzzles to generate")
+    parser.add_argument('-title', help="Specific puzzle name")
 
     args = parser.parse_args()
 
@@ -72,3 +73,30 @@ if __name__ == "__main__":
             g.generate_puzzle(card, new_puzzle_path, thumb_path, mode)
 
             print("Finished in " + str(datetime.now()-started) + "\n")
+
+    elif args.title:
+        puzzle_prefix = PRACTICE_PUZZLE_PREFIX
+        started = datetime.now()
+
+        card = next(filter(lambda c: c['stripped_title'] == args.title, g.cards))
+
+        # Create necessary directories
+        thumb_folder = os.path.join(puzzle_prefix, card['pack_code'], 'thumb')
+        os.makedirs(thumb_folder, exist_ok=True)
+
+        # Create filepath in the form <puzzle_prefix>/<pack_code>/<code>-00.svg.gz
+        new_puzzle_path = ""
+        i = 0
+        while True:
+            new_puzzle_path = os.path.join(puzzle_prefix, card['pack_code'], f"{card['code']}-{i:02}.svg.gz")
+            if not os.path.exists(new_puzzle_path) or i >= 99:
+                break
+            i += 1
+
+        thumb_path = os.path.join(thumb_folder, f"{card['code']}-{i:02}.png")
+        mode = random.choice(list(g.available_parameters.keys()))
+
+        print(f"Creating {new_puzzle_path} in {mode}...")
+        g.generate_puzzle(card, new_puzzle_path, thumb_path, mode)
+
+        print("Finished in " + str(datetime.now()-started) + "\n")

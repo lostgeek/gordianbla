@@ -51,7 +51,7 @@ const revealLevel = computed(() => {
 });
 
 const cardSvg = ref(null);
-cardSvg.value = await gordian.startPracticePuzzle(props.cards, '2694c33e-abc0-11ee-a012-4a69bb808f2a');
+cardSvg.value = await gordian.startSpecificPuzzle(props.cards, 'core', '01043', '00');
 const puzzleMode = computed(() => gordian.puzzleAttr.value.mode);
 const cardUrl = computed(() => props.imageUrlTemplate.replace('{code}', gordian.puzzleAttr.value.nrdbID));
 
