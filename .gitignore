@@ -31,3 +31,6 @@ puzzles
 
 # Python files
 __pycache__
+
+# Libraries
+lib
