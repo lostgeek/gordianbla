@@ -15,7 +15,8 @@ export const useUser = defineStore("userStore", () => {
     // Apply offset stats
     res.played += offsetStats.value.played;
     res.wins += offsetStats.value.played;
-    res.maxStreak = Math.max(res.maxStreak, offsetStats.value.maxStreak);
+    // Max streak offset is applied after calculations
+
     for (var i = 0; i < res.distribution.length; i++) {
       res.distribution[i] += offsetStats.value.distribution[i];
     }
@@ -52,6 +53,7 @@ export const useUser = defineStore("userStore", () => {
       maxStreak = currStreak;
     }
     res.maxStreak = Math.max(res.maxStreak, maxStreak);
+    res.maxStreak += offsetStats.value.maxStreak; // Apply offset on the determined maxStreak
 
     Object.values(dailyHistory.value).forEach(g => {
       var usedGuesses = g.findIndex((x) => x.checks && x.checks.title);
