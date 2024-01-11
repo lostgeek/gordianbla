@@ -80,8 +80,7 @@ onMounted(async () => {
 
         cardSvg.value = await gordian.startDailyPuzzle(nrdb.cards, currentDaily, user.dailyHistory[currentDaily]);
 
-        // Show rules dialog if user has not played a daily yet,
-        // i.e. only today's entry in history and current revealLevel is 0.
+        // Show rules dialog if user has not played a daily yet
         if(user.stats.played == 0 && revealLevel.value == 0) {
             setTimeout(() => {
                 rulesVisible.value = true;
