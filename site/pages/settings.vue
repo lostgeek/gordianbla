@@ -24,7 +24,6 @@
 const user = useUser();
 const toast = useToast();
 
-const statisticsVisible = useState('statisticsVisible', () => true);
 const oathSworn = ref(false);
 
 function importOldStats() {
