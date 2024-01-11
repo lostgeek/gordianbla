@@ -10,7 +10,7 @@ useSeoMeta({
   ogTitle: 'Gordian Blade',
   description: 'The daily Netrunner puzzle!',
   ogDescription: 'The daily Netrunner puzzle!',
-  ogImage: 'https://gordianbla.de/favicon.png',
+  ogImage: 'https://gordianbla.de/android-chrome-192x192.png',
   twitterCard: 'summary_large_image',
 })
 </script>
