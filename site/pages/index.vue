@@ -29,7 +29,7 @@
 const loaded = useState('siteLoaded', () => false);
 
 const data = await $fetch('/api/current_daily_puzzle');
-const currentDaily = data.daily-3;
+const currentDaily = data.daily;
 
 // Dialogs
 const statisticsVisible = useState('statisticsVisible', () => false);
