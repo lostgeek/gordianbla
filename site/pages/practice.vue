@@ -112,6 +112,7 @@ onMounted(async () => {
             packs: nrdb.packsInCycles([
                 'system-gateway',
                 'system-update-2021',
+                'borealis',
                 'liberation',
             ])
         },
