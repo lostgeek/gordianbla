@@ -23,6 +23,17 @@ const { data: articles } = await useAsyncData('newsArticles', () => queryContent
     .find(),
     { watch: [first, rows]});
 
+// Update user to note the newest article viewed
+const user = useUser();
+const { data: newestArticle, error } = await useAsyncData('newestArticle', () => queryContent('news')
+    .find(),
+    { transform: (articles) => articles[0] }); // findOne does not work for some reason
+if(!error.value) {
+    if(newestArticle.value.id) {
+        user.newestArticleViewed = newestArticle.value.id;
+    }
+}
+
 function toLocaleDateString(str) {
     const d = new Date(str);
     return d.toLocaleDateString();

@@ -5,6 +5,8 @@ export const useUser = defineStore("userStore", () => {
   const importedStats = ref({ played: 0, wins: 0, streak: 0, maxStreak: 0, distribution: [0,0,0,0,0,0]});
   const offsetStats = ref({ played: 0, wins: 0, maxStreak: 0, distribution: [0,0,0,0,0,0]});
 
+  const newestArticleViewed = ref(0);
+
   const stats = computed(() => {
     // remove all proxies from importedStats
     var res = {... importedStats.value};
@@ -86,6 +88,7 @@ export const useUser = defineStore("userStore", () => {
     lightMode,
     importedStats,
     offsetStats,
+    newestArticleViewed,
     // getters
     stats,
     // actions

@@ -7,10 +7,12 @@
             <NuxtLink v-ripple class="p-ripple p-menuitem-link" v-if="item.route" :to="item.route">
                 <span class="p-menuitem-icon" :class="item.icon" />
                 <span class="p-menuitem-text">{{ item.label }}</span>
+                <Badge v-if="item.badge" :severity="item.badge.severity" :value="item.badge.value" />
             </NuxtLink>
             <a v-else v-ripple class="p-ripple p-menuitem-link" :href="item.url" :target="item.target" v-bind="props.action">
                 <span class="p-menuitem-icon" :class="item.icon" />
                 <span class="p-menuitem-text">{{ item.label }}</span>
+                <Badge v-if="item.badge" :severity="item.badge.severity" :value="item.badge.value" />
                 <span v-if="hasSubmenu" class="p-submenu-icon fa-solid fa-caret-down" />
             </a>
         </template>
@@ -19,6 +21,18 @@
 
 <script setup>
 const loaded = useState('siteLoaded', () => false);
+
+const user = useUser();
+
+const { data: newestArticle } = await useAsyncData('newestArticle', () => queryContent('news')
+    .find(),
+    { transform: (articles) => articles[0] }); // findOne does not work for some reason
+
+const unreadArticles = computed(() => {
+    if(newestArticle.value && newestArticle.value.id > user.newestArticleViewed) {
+        return {severity: 'primary', value: "New update!"};
+    }
+});
 
 const route = useRoute();
 const items = ref([
@@ -38,6 +52,7 @@ const items = ref([
     {
         label: 'News',
         icon: 'fa-solid fa-newspaper',
+        badge: unreadArticles,
         route: '/news',
     },
     {
@@ -90,6 +105,9 @@ function showRules() {
     width: 100%;
     margin-bottom: 1rem;
     justify-content: space-between;
+}
+.p-badge {
+    margin-left: .25rem;
 }
 </style>
 
