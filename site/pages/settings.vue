@@ -33,6 +33,12 @@ function importOldStats() {
             summary: "Import old stats",
             detail: "Old stats found and successfully imported."
         });
+    } else {
+        toast.add({
+            severity: 'error',
+            summary: "Import old stats",
+            detail: "No old stats found."
+        });
     }
 }
 
