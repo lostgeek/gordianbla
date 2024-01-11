@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 $primaryColor:#332c59 !default;
 $primaryTextColor:#dedde3 !default;
 $accentColor:#9bb143 !default;
@@ -8,7 +10,7 @@ $accentTextColor:#0d0b13 !default;
     --incorrect-color: var(--surface-300);
     --not-guessed-color: var(--surface-100);
     --guess-border: var(--surface-700);
-}
+    --background-color: white}
 
 @import '../../variables';
 @import '../../../_compact';
