@@ -10,10 +10,10 @@
         <Panel class="statistics" header="Edit statistics" toggleable :collapsed="true"
             :pt="{
                 content: {
-                    style: 'display:flex; flex-direction:column; align-items: center;'
+                    style: 'display:flex; flex-direction:column; gap: 2rem;'
                 }
-
             }">
+            <div v-if="user.importedStats.played == 0"><Button icon="fa-solid fa-download" label="Import old stats" @click="importOldStats()" /></div>
             <div v-if="!oathSworn"><p>I declare on my honour to never use my powers for cheating.</p><Button icon="fa-solid fa-scroll" label="Swear oath" @click="oathSworn=true"/></div>
             <div><Statistics :editable="oathSworn" /></div>
         </Panel>
@@ -22,8 +22,20 @@
 
 <script setup>
 const user = useUser();
+const toast = useToast();
+
 const statisticsVisible = useState('statisticsVisible', () => true);
 const oathSworn = ref(false);
+
+function importOldStats() {
+    if(user.importOldStats()) {
+        toast.add({
+            severity: 'info',
+            summary: "Import old stats",
+            detail: "Old stats found and successfully imported."
+        });
+    }
+}
 
 watch(() => user.lightMode, (newV, oldV) =>{
     location.reload(); 
@@ -43,7 +55,7 @@ const reducedMotion = computed(() => (window.matchMedia(`(prefers-reduced-motion
         width: 100%;
     }
 
-    & > div:not(:first-child) {
+    &>div:not(:first-child) {
         margin-top: 1rem;
     }
 }

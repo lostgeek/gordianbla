@@ -71,7 +71,7 @@ onMounted(async () => {
         toast.add({
             severity: 'info',
             summary: "Import old stats",
-            detail: "Old stats found and successfully imported."
+            detail: "Old stats found and imported. Welcome to the new Gordian Blade!"
         });
     }
 
