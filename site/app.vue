@@ -7,6 +7,8 @@
 <style lang="scss">
 html {
   background: var(--background-color);
+  background-repeat: no-repeat;
+  background-attachment: fixed; 
   width: 100%;
   height: 100%;
 }
