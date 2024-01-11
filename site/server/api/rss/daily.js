@@ -1,4 +1,5 @@
 import { Feed } from "feed";
+import fs from "node:fs";
 
 export default defineEventHandler((event) => {
   const feed = new Feed({
@@ -17,9 +18,16 @@ export default defineEventHandler((event) => {
 
   const days = Math.floor((now-start) / 1000/60/60/24);
 
+  const dailyFolder = "./assets/daily_puzzles/";
+
   for(var i = days; i>days-30; i--) {
     var d = new Date(start);
     d.setDate(d.getDate() + i);
+
+    const thumbFilepath = dailyFolder + `thumb/${i.toString().padStart(5, "0")}.png`;
+    const stats = fs.statSync(thumbFilepath);
+    const length = stats.size;
+
     feed.addItem({
       title: `Daily Puzzle #${i}`,
       id: "https://gordianbla.de",
@@ -28,7 +36,8 @@ export default defineEventHandler((event) => {
       date: d,
       enclosure: {
         url: `https://gordianbla.de/api/fetch_daily_thumbnail?n=${i}`,
-        type: 'image/png'
+        type: 'image/png',
+        length: length,
       },
     });
   }

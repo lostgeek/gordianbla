@@ -20,6 +20,10 @@ export default defineEventHandler(async (event) => {
     const thumbFilepath = dailyFolder + `thumb/${puzzle_id}.png`;
 
     try {
+        setResponseHeaders(event, {
+            "Content-Type": "image/png",
+        });
+
         const data = fs.readFileSync(thumbFilepath);
         return data;
     } catch (err) {
