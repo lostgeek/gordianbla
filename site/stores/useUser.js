@@ -2,11 +2,25 @@ export const useUser = defineStore("userStore", () => {
   const dailyHistory = ref({});
   const lightMode = ref(false);
 
-  const stats = computed(() => {
-    var res = { played: 0, wins: 0, streak: 0, maxStreak: 0, distribution: [0,10,20,30,40,50]};
+  const importedStats = ref({ played: 0, wins: 0, streak: 0, maxStreak: 0, distribution: [0,0,0,0,0,0]});
+  const offsetStats = ref({ played: 0, wins: 0, maxStreak: 0, distribution: [0,0,0,0,0,0]});
 
-    res.played = Object.values(dailyHistory.value).filter(g => (g.findIndex((x) => x.state == 'guessed')>=0)).length;
-    res.wins = Object.values(dailyHistory.value).filter(g => (g.findIndex((x) => x.checks && x.checks.title)>=0)).length;
+  const stats = computed(() => {
+    // remove all proxies from importedStats
+    var res = {... importedStats.value};
+    res.distribution = [... importedStats.value.distribution];
+
+    // Apply offset stats
+    res.played += offsetStats.value.played;
+    res.wins += offsetStats.value.played;
+    res.maxStreak = Math.max(res.maxStreak, offsetStats.value.maxStreak);
+    for (var i = 0; i < res.distribution.length; i++) {
+      res.distribution[i] += offsetStats.value.distribution[i];
+    }
+
+    // Apply dailyHistory
+    res.played += Object.values(dailyHistory.value).filter(g => (g.findIndex((x) => x.state == 'guessed')>=0)).length;
+    res.wins += Object.values(dailyHistory.value).filter(g => (g.findIndex((x) => x.checks && x.checks.title)>=0)).length;
 
     const maxDaily = Math.max.apply(null, Object.keys(dailyHistory.value));
 
@@ -19,6 +33,7 @@ export const useUser = defineStore("userStore", () => {
       }
     }
     res.streak = streak;
+
     var maxStreak = 0;
     var currStreak = 0;
     for(var i = 0; i >= 0; i--) {
@@ -34,26 +49,46 @@ export const useUser = defineStore("userStore", () => {
     if (currStreak > maxStreak) {
       maxStreak = currStreak;
     }
-    res.maxStreak = maxStreak;
+    res.maxStreak = Math.max(res.maxStreak, maxStreak);
 
-    var distribution = [0, 0, 0, 0, 0, 0];
     Object.values(dailyHistory.value).forEach(g => {
       var usedGuesses = g.findIndex((x) => x.checks && x.checks.title);
       if(usedGuesses > -1) {
-        distribution[usedGuesses]++;
+        res.distribution[usedGuesses]++;
       }
     });
-    res.distribution = distribution;
 
     return res;
   }
   );
 
+  function importOldStats() {
+    // already imported
+    if (importedStats.value.played != 0) {
+      return false;
+    }
+    // no old stats
+    if (! (localStorage.getItem('played') &&localStorage.getItem('wins') && localStorage.getItem('maxStreak') && localStorage.getItem('distribution'))) {
+      return false;
+    }
+
+    importedStats.value.played = parseInt(localStorage.getItem('played'));
+    importedStats.value.wins = parseInt(localStorage.getItem('wins'));
+    importedStats.value.maxStreak = parseInt(localStorage.getItem('maxStreak'));
+    importedStats.value.distribution = localStorage.getItem('distribution').split('-').map(x => parseInt(x));
+
+    return true;
+  }
+
   return {
     // state
     dailyHistory,
     lightMode,
+    importedStats,
+    offsetStats,
     // getters
     stats,
+    // actions
+    importOldStats,
   };
 }, {persist: {storage: localStorage}});

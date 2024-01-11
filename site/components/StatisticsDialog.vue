@@ -5,35 +5,7 @@
         }
     }" :style="{ width: '30rem' }" :breakpoints="{ '320px': '100%' }"
         >
-        <div class="statistics">
-            <div class="stat">
-                <div class="number">{{ stats.played }}</div>
-                <div class="label">Played</div>
-            </div>
-            <div class="stat">
-                <div class="number">{{ (stats.wins / stats.played * 100).toFixed(0) }}</div>
-                <div class="label">Win %</div>
-            </div>
-            <div class="stat">
-                <div class="number">{{ stats.streak }}</div>
-                <div class="label">Current streak</div>
-            </div>
-            <div class="stat">
-                <div class="number">{{ stats.maxStreak }}</div>
-                <div class="label">Max streak</div>
-            </div>
-        </div>
-        <div class="distribution">
-            <div class="bar" v-for="(occurance, index) in stats.distribution" :style="barStyle(occurance)"
-                :class="(occurance == 0) ? 'empty' : null">
-                <span class="index">
-                    {{ index + 1 }}
-                </span>
-                <span class="occurance">
-                    {{ occurance }}
-                </span>
-            </div>
-        </div>
+        <Statistics />
         <template #footer>
             <div class="footer">
                 <div class="next">
@@ -50,10 +22,10 @@
 </template>
 
 <script setup>
-const props = defineProps(['gordian'])
+const props = defineProps(['gordian']);
 
 const user = useUser();
-const stats = user.stats;
+const stats = computed(() => user.stats);
 
 const toast = useToast();
 function notImplemented() {

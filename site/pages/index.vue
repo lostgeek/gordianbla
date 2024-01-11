@@ -29,7 +29,7 @@
 const loaded = useState('siteLoaded', () => false);
 
 const data = await $fetch('/api/current_daily_puzzle');
-const currentDaily = data.daily;
+const currentDaily = data.daily-3;
 
 // Dialogs
 const statisticsVisible = useState('statisticsVisible', () => false);
@@ -67,6 +67,14 @@ const cardSvg = ref(null);
 const cardUrl = computed(() => nrdb.imageUrlTemplate.replace('{code}', gordian.puzzleAttr.value.nrdbID));
 
 onMounted(async () => {
+    if(user.importOldStats()) {
+        toast.add({
+            severity: 'info',
+            summary: "Import old stats",
+            detail: "Old stats found and successfully imported."
+        });
+    }
+
     try {
         await callOnce(nrdb.fetch);
 
@@ -74,7 +82,7 @@ onMounted(async () => {
 
         // Show rules dialog if user has not played a daily yet,
         // i.e. only today's entry in history and current revealLevel is 0.
-        if(Object.keys(user.dailyHistory).length == 1 && revealLevel.value == 0) {
+        if(user.stats.played == 0 && revealLevel.value == 0) {
             setTimeout(() => {
                 rulesVisible.value = true;
             }, 1000);

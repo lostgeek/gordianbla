@@ -7,11 +7,23 @@
             <InputSwitch id="reducedMotion" v-model="reducedMotion" disabled />
             <label for="reducedMotion">Reduced motion<div class="explanation">This option is set via your operating system. See <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion" target="_blank">here</a> for more information.</div></label>
         </div>
+        <Panel class="statistics" header="Edit statistics" toggleable :collapsed="true"
+            :pt="{
+                content: {
+                    style: 'display:flex; flex-direction:column; align-items: center;'
+                }
+
+            }">
+            <div v-if="!oathSworn"><p>I declare on my honour to never use my powers for cheating.</p><Button icon="fa-solid fa-scroll" label="Swear oath" @click="oathSworn=true"/></div>
+            <div><Statistics :editable="oathSworn" /></div>
+        </Panel>
     </div>
 </template>
 
 <script setup>
 const user = useUser();
+const statisticsVisible = useState('statisticsVisible', () => true);
+const oathSworn = ref(false);
 
 watch(() => user.lightMode, (newV, oldV) =>{
     location.reload(); 
@@ -29,6 +41,10 @@ const reducedMotion = computed(() => (window.matchMedia(`(prefers-reduced-motion
 
     @media(max-width:400px) {
         width: 100%;
+    }
+
+    & > div:not(:first-child) {
+        margin-top: 1rem;
     }
 }
 
