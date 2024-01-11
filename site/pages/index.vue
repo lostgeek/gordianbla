@@ -69,7 +69,7 @@ const cardUrl = computed(() => nrdb.imageUrlTemplate.replace('{code}', gordian.p
 onMounted(async () => {
     if(user.importOldStats()) {
         toast.add({
-            severity: 'info',
+            severity: 'success',
             summary: "Import old stats",
             detail: "Old stats found and imported. Welcome to the new Gordian Blade!"
         });

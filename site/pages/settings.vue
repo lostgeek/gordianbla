@@ -14,7 +14,7 @@
                 }
             }">
             <div v-if="user.importedStats.played == 0"><Button icon="fa-solid fa-download" label="Import old stats" @click="importOldStats()" /></div>
-            <div v-if="!oathSworn"><p>I declare on my honour to never use my powers for cheating.</p><Button icon="fa-solid fa-scroll" label="Swear oath" @click="oathSworn=true"/></div>
+            <div v-if="!oathSworn"><p>I declare on my honour that I will never use my powers for cheating.</p><Button icon="fa-solid fa-scroll" label="Swear oath" @click="oathSworn=true"/></div>
             <div><Statistics :editable="oathSworn" /></div>
         </Panel>
     </div>
@@ -30,7 +30,7 @@ const oathSworn = ref(false);
 function importOldStats() {
     if(user.importOldStats()) {
         toast.add({
-            severity: 'info',
+            severity: 'success',
             summary: "Import old stats",
             detail: "Old stats found and successfully imported."
         });
