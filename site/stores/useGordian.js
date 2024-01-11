@@ -206,16 +206,25 @@ export function useGordian() {
     };
 
     /* Cost */
-    var costType = ""; // 'cost', 'advancement_cost' or null
+    var targetCostType = ""; // 'cost', 'advancement_cost' or null
     if (correctCard.value.cost) {
-      costType = "cost";
+      targetCostType = "cost";
     } else if (correctCard.value.advancement_cost) {
-      costType = "advancement_cost";
+      targetCostType = "advancement_cost";
     } else {
-      costType = null; // Should not exist
+      targetCostType = null; // Should not exist
     }
 
-    newGuess.checks.cost = (correctCard.value[costType] == card[costType]);
+    var guessedCostType = ""; // 'cost', 'advancement_cost' or null
+    if (card.cost) {
+      guessedCostType = "cost";
+    } else if (card.advancement_cost) {
+      guessedCostType = "advancement_cost";
+    } else {
+      guessedCostType = null; // Should not exist
+    }
+
+    newGuess.checks.cost = (correctCard.value[targetCostType] == card[guessedCostType]);
 
     guesses.value[currentGuess.value] = newGuess;
   }
