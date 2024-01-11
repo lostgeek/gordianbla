@@ -36,6 +36,11 @@ const items = ref([
         command: showStatistics,
     },
     {
+        label: 'News',
+        icon: 'fa-solid fa-newspaper',
+        route: '/news',
+    },
+    {
         label: 'Settings',
         icon: 'fa-solid fa-gears',
         route: '/settings',

@@ -4,6 +4,17 @@
   </NuxtLayout>
 </template>
 
+<script setup>
+useSeoMeta({
+  title: 'Gordian Blade',
+  ogTitle: 'Gordian Blade',
+  description: 'The daily Netrunner puzzle!',
+  ogDescription: 'The daily Netrunner puzzle!',
+  ogImage: 'https://gordianbla.de/favicon.png',
+  twitterCard: 'summary_large_image',
+})
+</script>
+
 <style lang="scss">
 html {
   background: var(--background-color);
@@ -11,6 +22,12 @@ html {
   background-attachment: fixed; 
   width: 100%;
   height: 100%;
+  color: var(--text-color);
+}
+
+p {
+  hyphens: auto;
+  text-align: justify;
 }
 
 a:not(.p-menuitem-link) {
