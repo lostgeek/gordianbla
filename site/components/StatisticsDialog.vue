@@ -13,7 +13,6 @@
                     <div class="time">{{ nextPuzzle }}</div>
                 </div>
                 <div class="buttons">
-                    <Button icon="fa-solid fa-gamepad" label="Continue practicing" @click="notImplemented" />
                     <Button v-if="gordian.solved.value" icon="fa-solid fa-clipboard" label="Copy result" @click="copyResult()" />
                 </div>
             </div>
@@ -28,14 +27,6 @@ const user = useUser();
 const stats = computed(() => user.stats);
 
 const toast = useToast();
-function notImplemented() {
-    toast.add({
-        severity: 'warn',
-        summary: 'Unimplemented',
-        detail: 'Feature has not been implemented yet.',
-        life: 2000
-    });
-}
 
 const statisticsVisible = useState('statisticsVisible', () => false);
 
@@ -130,7 +121,7 @@ function copyResult() {
 
 <style lang="scss" scoped>
 .statistics {
-    font-family: 'Patua One', cursive;
+    font-family: 'Patua One';
     margin: 1rem auto;
     display: flex;
     justify-content: center;
@@ -214,6 +205,7 @@ function copyResult() {
 }
 
 .footer {
+    font-family: 'Patua One';
     display: flex;
     flex-wrap: wrap;
     gap: 2rem;
