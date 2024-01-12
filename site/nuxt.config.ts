@@ -72,6 +72,6 @@ export default defineNuxtConfig({
   },
   pages: true,
   plausible: {
-    apiHost: "https://plausible.lostgeek.de",
+    apiHost: "https://gordianbla.de",
   }
 });
