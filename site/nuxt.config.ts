@@ -17,20 +17,13 @@ export default defineNuxtConfig({
   css: ["@fontsource/patua-one", "@fontsource/medula-one"],
   app: {
     head: {
-      // script: [
-      //   {
-      //     src: "/fontawesome/js/brands.min.js",
-      //     defer: true,
-      //   },
-      //   {
-      //     src: "/fontawesome/js/solid.min.js",
-      //     defer: true,
-      //   },
-      //   {
-      //     src: "/fontawesome/js/fontawesome.min.js",
-      //     defer: true,
-      //   },
-      // ],
+      script: [
+        {
+          src: "https://plausible.lostgeek.de/js/script.js",
+          defer: true,
+          'data-domain': "gordianbla.de",
+        },
+      ],
       link: [
         {
           rel: "stylesheet",
