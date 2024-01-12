@@ -71,6 +71,7 @@ const revealLevel = computed(() => {
 const puzzleMode = computed(() => gordian.puzzleAttr.value.mode);
 const cardSvg = ref(null);
 const cardUrl = computed(() => nrdb.imageUrlTemplate.replace('{code}', gordian.puzzleAttr.value.nrdbID));
+
 onMounted(async () => {
     try {
         await callOnce(nrdb.fetch);
@@ -121,6 +122,13 @@ onMounted(async () => {
             packs: null
         },
     ];
+
+    // Analytics
+    watch(gordian.guesses, (newG, oldG) => {
+        if (gordian.solved.value) {
+            useTrackEvent('solve_practice', {props: {format: format.value.name}});
+        }
+    }, {deep: true});
 });
 
 async function newPuzzle() {
@@ -148,7 +156,6 @@ watch(format, async () => {
         });
     }
 });
-
 </script>
 
 <style lang="scss" scoped>

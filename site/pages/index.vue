@@ -43,17 +43,22 @@ const user = useUser();
 
 const gordian = useGordian();
 
-watch(gordian.guesses, (oldGuesses, newGuesses) => {
+watch(gordian.guesses, (newG, oldG) => {
     if (gordian.puzzleAttr.value.dailyNumber) {
         user.dailyHistory[gordian.puzzleAttr.value.dailyNumber] = gordian.guesses.value;
     }
 
     if (gordian.solved.value) {
+        // Analytics
+        if(oldG.length > 0) { // If this is not the page loading to a finished puzzle
+            useTrackEvent('solve_daily', {props: {format: "default"}});
+        }
+
         setTimeout(() => {
             statisticsVisible.value = true;
         }, 2500);
     }
-});
+}, {deep: true});
 
 const revealLevel = computed(() => {
     if(gordian.solved.value) {
@@ -89,7 +94,6 @@ onMounted(async () => {
 
         loaded.value = true;
     } catch ({name, message}) {
-        console.log(name, message);
         toast.add({
             severity: 'error',
             summary: name,

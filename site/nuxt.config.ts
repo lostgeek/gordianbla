@@ -8,6 +8,7 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "@pinia-plugin-persistedstate/nuxt",
     "@nuxt/content",
+    "@nuxtjs/plausible",
   ],
   primevue: {
     options: {
@@ -17,13 +18,6 @@ export default defineNuxtConfig({
   css: ["@fontsource/patua-one", "@fontsource/medula-one"],
   app: {
     head: {
-      script: [
-        {
-          src: "https://plausible.lostgeek.de/js/script.js",
-          defer: true,
-          'data-domain': "gordianbla.de",
-        },
-      ],
       link: [
         {
           rel: "stylesheet",
@@ -77,4 +71,7 @@ export default defineNuxtConfig({
     },
   },
   pages: true,
+  plausible: {
+    apiHost: "https://plausible.lostgeek.de",
+  }
 });
