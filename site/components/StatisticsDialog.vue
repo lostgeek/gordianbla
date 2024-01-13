@@ -61,7 +61,7 @@ function copyResult() {
             if (g.checks.faction) {
                 text += "🟩";
             } else {
-                if (false) // check light mode 
+                if (user.lightMode)
                     text += "⬜";
                 else text += "⬛";
             }
@@ -69,7 +69,7 @@ function copyResult() {
             if (g.checks.type) {
                 text += "🟩";
             } else {
-                if (false) // check light mode
+                if (user.lightMode)
                     text += "⬜";
                 else
                     text += "⬛";
@@ -79,7 +79,7 @@ function copyResult() {
                 if (g.state == 'correct') {
                     text += "🟩";
                 } else {
-                    if (false) // check light mode
+                    if (user.lightMode)
                         text += "⬜";
                     else
                         text += "⬛";
@@ -88,7 +88,7 @@ function copyResult() {
                 if (g.checks.subtype.hits == g.checks.subtype.total) {
                     text += "🟩";
                 } else {
-                    if (false) // check light mode
+                    if (user.lightMode)
                         text += "⬜";
                     else
                         text += "⬛";
@@ -97,16 +97,16 @@ function copyResult() {
             if (g.checks.cost) {
                 text += "🟩";
             } else {
-                if (false) // check light mode
+                if (user.lightMode)
                     text += "⬜";
                 else
                     text += "⬛";
             }
 
-            if (g.state == 'correct') {
+            if (g.checks.title) {
                 text += "🟩";
             } else {
-                if (false) // check light mode
+                if (user.lightMode)
                     text += "⬜";
                 else
                     text += "⬛";
