@@ -1,5 +1,5 @@
 <template>
-    <Menubar :model="items" breakpoint="750px">
+    <Menubar class="header" :model="items" breakpoint="750px">
         <template #start>
             <NuxtLink class="headerLink" to="/">Gordian Blade</NuxtLink>
         </template>
@@ -109,11 +109,17 @@ function showRules() {
 .p-badge {
     margin-left: .25rem;
 }
-</style>
 
-<style lang="scss">
-.open-left .p-submenu-list {
+.header:deep(.open-left .p-submenu-list) {
     right: 0;
     left: initial !important;
+}
+
+@media(max-width:750px) {
+    .header:deep(.p-menuitem-icon) {
+        // copied from .fa-fw
+        text-align: center;
+        width: 1.25em;
+    }
 }
 </style>
