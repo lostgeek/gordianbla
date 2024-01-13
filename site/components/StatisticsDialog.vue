@@ -3,8 +3,7 @@
         mask: {
             style: 'backdrop-filter: blur(2px)'
         }
-    }" :style="{ width: '30rem' }" :breakpoints="{ '320px': '100%' }"
-        >
+    }" :style="{ width: '30rem' }" :breakpoints="{ '320px': '100%' }">
         <Statistics />
         <template #footer>
             <div class="footer">
@@ -12,12 +11,16 @@
                     Next puzzle: <span class="time">{{ nextPuzzle }}</span>
                 </div>
                 <div class="buttons">
-                    <Button v-if="gordian.solved.value" icon="fa-solid fa-clipboard" label="Copy result" @click="copyResult()" />
+                    <Button v-if="gordian.solved.value" icon="fa-solid fa-clipboard" label="Copy result"
+                        @click="copyResult()" />
+                    <div>
+                        <Checkbox v-model="discordSpoiler" :binary="true" inputId="discordSpoiler" name="discordSpoiler"/>
+                        <label for="discordSpoiler"> Discord spoiler </label>
+                    </div>
                 </div>
             </div>
         </template>
-    </Dialog>
-</template>
+</Dialog></template>
 
 <script setup>
 const props = defineProps(['gordian']);
@@ -48,6 +51,8 @@ setInterval(function () {
     tmp += ":" + String(Math.floor(diff / 1000 % 60)).padStart(2, '0');
     nextPuzzle.value = tmp;
 }, 1000);
+
+const discordSpoiler = ref(false);
 
 function copyResult() {
     var text="";
@@ -110,6 +115,14 @@ function copyResult() {
                 else
                     text += "⬛";
             }
+
+            if (discordSpoiler.value) {
+                const maxLen = 40;
+                const paddedText = g.guessedTitle
+                    .padStart(Math.floor((g.guessedTitle.length + maxLen) / 2))
+                    .padEnd(maxLen);
+                text += `||\`${paddedText}\`||`;
+            }
             text += "\n";
         }
     }
@@ -120,13 +133,13 @@ function copyResult() {
 
 <style lang="scss" scoped>
 .footer {
-    font-family: 'Patua One';
     display: flex;
     justify-content: space-between;
     align-items: baseline;
     width: 100%;
 
     & .next {
+        font-family: 'Patua One';
         font-size: 1.2rem;
         height: 100%;
 
@@ -135,13 +148,10 @@ function copyResult() {
         }
     }
 
-    & .buttons {
-        flex-grow: 0;
-        flex-shrink: 1;
+    .buttons {
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        align-items: center;
+        align-items: flex-start;
         gap: .5rem;
     }
 }
