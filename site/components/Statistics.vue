@@ -1,55 +1,59 @@
 <template>
-    <div class="statistics">
-        <div class="stat">
-            <div class="number">{{ stats.played }}</div>
-            <div v-if="editable" class="buttons">
-                <Button class="minus" icon="fa-solid fa-fw fa-minus" @click="user.offsetStats.played--" />
-                <Button class="plus" icon="fa-solid fa-fw fa-plus" @click="user.offsetStats.played++" />
-                <Button class="reset" size="small" icon="fa-solid fa-fw fa-rotate-left" label="Reset"
-                    @click="user.offsetStats.played = 0" 
-                    :disabled="user.offsetStats.played == 0" />
+    <div class="outer">
+        <div class="statistics">
+            <div class="stat">
+                <div class="number">{{ stats.played }}</div>
+                <div v-if="editable" class="buttons">
+                    <Button class="minus" icon="fa-solid fa-fw fa-minus" @click="user.offsetStats.played--" />
+                    <Button class="plus" icon="fa-solid fa-fw fa-plus" @click="user.offsetStats.played++" />
+                    <Button class="reset" size="small" icon="fa-solid fa-fw fa-rotate-left" label="Reset"
+                        @click="user.offsetStats.played = 0" 
+                        :disabled="user.offsetStats.played == 0" />
+                </div>
+                <div class="label">Played</div>
             </div>
-            <div class="label">Played</div>
-        </div>
-        <div class="stat">
-            <div class="number">{{ (stats.wins / stats.played * 100).toFixed(0) }}</div>
-            <div v-if="editable" class="buttons"></div>
-            <div class="label">Win %</div>
-        </div>
-        <div class="stat">
-            <div class="number">{{ stats.streak }}</div>
-            <div v-if="editable" class="buttons"></div>
-            <div class="label">Current streak</div>
-        </div>
-        <div class="stat">
-            <div class="number">{{ stats.maxStreak }}</div>
-            <div v-if="editable" class="buttons">
-                <Button class="minus" icon="fa-solid fa-fw fa-minus" @click="user.offsetStats.maxStreak--" />
-                <Button class="plus" icon="fa-solid fa-fw fa-plus" @click="user.offsetStats.maxStreak++" />
-                <Button class="reset" size="small" icon="fa-solid fa-fw fa-rotate-left" label="Reset"
-                    @click="user.offsetStats.maxStreak = 0" 
-                    :disabled="user.offsetStats.maxStreak == 0" />
+            <div class="stat">
+                <div class="number">{{ (stats.wins / stats.played * 100).toFixed(0) }}</div>
+                <div v-if="editable" class="buttons"></div>
+                <div class="label">Win %</div>
             </div>
-            <div class="label">Max streak</div>
-        </div>
-    </div>
-    <div class="distribution" :class="(editable) ? 'editable' : null">
-        <div class="bar" v-for="(occurance, index) in stats.distribution" :style="barStyle(occurance)"
-            :class="(occurance == 0) ? 'empty' : null">
-            <span class="index">
-                {{ index + 1 }}
-            </span>
-            <span class="occurance">
-                {{ occurance }}
-            </span>
-            <div v-if="editable" class="buttons">
-                <Button class="minus" icon="fa-solid fa-fw fa-minus" @click="user.offsetStats.distribution[index]--" />
-                <Button class="plus" icon="fa-solid fa-fw fa-plus" @click="user.offsetStats.distribution[index]++" />
-                <Button class="reset" icon="fa-solid fa-fw fa-rotate-left"
-                 @click="user.offsetStats.distribution[index] = 0"
-                 :disabled="user.offsetStats.distribution[index] == 0"
-                  />
+            <div class="stat">
+                <div class="number">{{ stats.streak }}</div>
+                <div v-if="editable" class="buttons"></div>
+                <div class="label">Current streak</div>
             </div>
+            <div class="stat">
+                <div class="number">{{ stats.maxStreak }}</div>
+                <div v-if="editable" class="buttons">
+                    <Button class="minus" icon="fa-solid fa-fw fa-minus" @click="user.offsetStats.maxStreak--" />
+                    <Button class="plus" icon="fa-solid fa-fw fa-plus" @click="user.offsetStats.maxStreak++" />
+                    <Button class="reset" size="small" icon="fa-solid fa-fw fa-rotate-left" label="Reset"
+                        @click="user.offsetStats.maxStreak = 0" 
+                        :disabled="user.offsetStats.maxStreak == 0" />
+                </div>
+                <div class="label">Max streak</div>
+            </div>
+        </div>
+        <div class="distribution" :class="(editable) ? 'editable' : null">
+            <template v-for="(occurance, index) in stats.distribution">
+                <div class="index">
+                    {{ index + 1 }}
+                </div>
+                <div class="bar" :style="barStyle(occurance)"
+                    :class="(occurance == 0) ? 'empty' : null">
+                    <span class="occurance">
+                        {{ occurance }}
+                    </span>
+                </div>
+                <div v-if="editable" class="buttons">
+                    <Button class="minus" icon="fa-solid fa-fw fa-minus" @click="user.offsetStats.distribution[index]--" />
+                    <Button class="plus" icon="fa-solid fa-fw fa-plus" @click="user.offsetStats.distribution[index]++" />
+                    <Button class="reset" icon="fa-solid fa-fw fa-rotate-left"
+                    @click="user.offsetStats.distribution[index] = 0"
+                    :disabled="user.offsetStats.distribution[index] == 0"
+                    />
+                </div>
+            </template>
         </div>
     </div>
 </template>
@@ -69,19 +73,33 @@ function barStyle(occurance) {
 </script>
 
 <style lang="scss" scoped>
+.outer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+
+    @media(max-height:600px) {
+        gap: .5rem;
+    }
+
+    @media(max-height:400px) {
+        gap: .25rem;
+    }
+}
 .statistics {
     font-family: 'Patua One', cursive;
-    margin: 1rem auto;
     display: flex;
     justify-content: center;
     gap: 2rem;
 
-    @media(max-width:768px) {
-        gap: .5rem;
+    @media(max-width:600px) {
+        gap: 1rem;
     }
 
-    @media(max-width:320px) {
-        gap: .25rem;
+    @media(max-width:400px) {
+        gap: .5rem;
     }
 
     & .stat {
@@ -91,11 +109,11 @@ function barStyle(occurance) {
             text-align: center;
             font-size: 3rem;
 
-            @media(max-width:768px) {
+            @media(max-height:600px) {
                 font-size: 2.5rem;
             }
 
-            @media(max-width:320px) {
+            @media(max-height:400px) {
                 font-size: 2rem;
             }
 
@@ -105,13 +123,13 @@ function barStyle(occurance) {
         & .label {
             text-align: center;
             font-size: 1rem;
-
-            @media(max-width:768px) {
-                font-size: 1.25rem;
+            
+            @media(max-height:600px) {
+                font-size: .9rem;
             }
 
-            @media(max-width:320px) {
-                font-size: 1rem;
+            @media(max-height:400px) {
+                font-size: .8rem;
             }
         }
 
@@ -144,58 +162,56 @@ function barStyle(occurance) {
 
 .distribution {
     font-family: 'Patua One', cursive;
-    position: relative;
-    max-width: 20rem;
-    margin: 1rem auto;
-    width: 100%;
-    @media(max-width:600px) {
-        width: 50%;
-    }
+
+    display: grid;
+    grid-template-columns: 2rem 1fr;
+
     &.editable {
-        left: -2rem;
+        grid-template-columns: 2rem 1fr 6rem;
     }
 
-    & .bar {
-        height: 1.5rem;
-        background: var(--correct-color);
-        margin: 1rem 0;
-        min-width: 2rem;
+    width: 85%;
 
-        &.empty {
-            background: var(--not-guessed-color);
+    white-space: nowrap;
+    font-weight: bold;
+
+    row-gap: .5rem;
+    @media(max-height:600px) {
+        row-gap: .25rem;
+    }
+
+    & .index, & .bar {
+        font-size: 1.2rem;
+        height: 1.5rem;
+        line-height: 1.5rem;
+
+        @media(max-height:600px) {
+            font-size: 1rem;
+            height: 1.2rem;
+            line-height: 1.2rem;
+        }
+        @media(max-height:400px) {
+            font-size: .9rem;
+            height: 1rem;
+            line-height: 1rem;
         }
     }
 
-    & .index,
-    & .occurance {
-        white-space: nowrap;
-        font-size: 1.2rem;
-        line-height: 1.5rem;
-        font-weight: bold;
-    }
 
     & .index {
-        float: left;
-        position: relative;
-        left: -1.5rem;
+        text-align: center;
     }
 
-    & .occurance {
-        float: right;
-        margin-right: .5rem
-    }
+    & .bar {
+        text-align: right;
+        padding-right: .75rem;
+        min-width: 2rem;
+        background: var(--correct-color);
 
-    & .buttons {
-        position: absolute;
-        right: 0;
-        transform: translateX(100%) translateX(.5rem);
-        display: flex;
-        gap: .25rem;
-
-        .reset {
-            width: min-content;
-            aspect-ratio: 1/1;
-            padding: 3px 2px;
+        &.empty {
+            text-align:center;
+            padding-right: 0;
+            background: var(--not-guessed-color);
         }
     }
 }
@@ -207,5 +223,14 @@ function barStyle(occurance) {
 }
 .reset {
     padding: .25rem .4rem;
+}
+.distribution .buttons {
+    padding-left: 1rem;
+
+    .reset {
+        width: min-content;
+        aspect-ratio: 1/1;
+        padding: 3px 2px;
+    }
 }
 </style>
