@@ -1,5 +1,5 @@
 <template>
-    <Menubar class="header" :model="items" breakpoint="750px">
+    <Menubar class="header" :model="items" breakpoint="850px">
         <template #start>
             <NuxtLink class="headerLink" to="/">Gordian Blade</NuxtLink>
         </template>
@@ -115,7 +115,7 @@ function showRules() {
     left: initial !important;
 }
 
-@media(max-width:750px) {
+@media(max-width:850px) {
     .header:deep(.p-menuitem-icon) {
         // copied from .fa-fw
         text-align: center;
