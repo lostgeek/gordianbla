@@ -130,9 +130,20 @@ export function useGordian() {
   }
 
   // Returns -1, if no guesses remaining
-  const currentGuess = computed((state) =>
-    guesses.value.findIndex((g) => g.state == "not-guessed")
-  );
+  const currentGuess = computed((state) => {
+    const result = guesses.value.findIndex((g) => g.state == "not-guessed");
+    if (result >= 0) {
+      return result;
+    }
+
+    if(guesses.value.length == 0) {
+      // Not initialised yet
+      return -1; 
+    } else {
+      // Final guess made
+      return 6;
+    }
+  });
 
   const solved = computed((state) => {
     if (guesses.value.length == 0) {
