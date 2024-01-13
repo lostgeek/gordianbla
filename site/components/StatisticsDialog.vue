@@ -9,8 +9,7 @@
         <template #footer>
             <div class="footer">
                 <div class="next">
-                    Next puzzle
-                    <div class="time">{{ nextPuzzle }}</div>
+                    Next puzzle: <span class="time">{{ nextPuzzle }}</span>
                 </div>
                 <div class="buttons">
                     <Button v-if="gordian.solved.value" icon="fa-solid fa-clipboard" label="Copy result" @click="copyResult()" />
@@ -120,113 +119,19 @@ function copyResult() {
 </script>
 
 <style lang="scss" scoped>
-.statistics {
-    font-family: 'Patua One';
-    margin: 1rem auto;
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    @media(max-width:768px) {
-        gap: .5rem;
-    }
-    @media(max-width:320px) {
-        gap: .25rem;
-    }
-
-    & .stat {
-        width: min-content;
-
-        & .number {
-            text-align: center;
-            font-size: 3rem;
-            @media(max-width:768px) {
-                font-size: 2.5rem;
-            }
-            @media(max-width:320px) {
-                font-size: 2rem;
-            }
-            font-weight: bold;
-        }
-
-        & .label {
-            text-align: center;
-            font-size: 1.5rem;
-            @media(max-width:768px) {
-                font-size: 1.25rem;
-            }
-            @media(max-width:320px) {
-                font-size: 1rem;
-            }
-        }
-    }
-}
-
-.distribution {
-    width: 100%;
-    max-width: 20rem;
-    margin: 1rem auto;
-    padding-left: 1.5rem;
-
-    & .bar {
-        height: 1.5rem;
-        background: var(--correct-color);
-        margin: 1rem 0;
-        min-width: 2rem;
-
-        &.empty {
-            background: var(--empty-color);
-        }
-    }
-
-    & .index,
-    & .occurance {
-        white-space: nowrap;
-        font-size: 1.2rem;
-        line-height: 1.5rem;
-        font-weight: bold;
-    }
-
-    & .index {
-        float: left;
-        position: relative;
-        left: -1.5rem;
-    }
-
-    & .occurance {
-        float: right;
-        margin-right: .5rem
-    }
-
-    & .bar.empty .occurance {
-        float: none;
-        text-align: center;
-        margin: 0;
-    }
-}
-
 .footer {
     font-family: 'Patua One';
     display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-    @media(max-width:768px) {
-        gap: 1rem;
-    }
-    @media(max-width:320px) {
-        gap: .5rem;
-    }
-    justify-content: center;
+    justify-content: space-between;
+    align-items: baseline;
+    width: 100%;
 
     & .next {
-        margin: 2rem;
-        font-size: 1.5rem;
-        text-align: center;
-
-        flex-grow: 1;
-        flex-shrink: 0;
+        font-size: 1.2rem;
+        height: 100%;
 
         & .time {
-            font-size: 2rem;
+            font-size: 1.4rem;
         }
     }
 

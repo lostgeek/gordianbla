@@ -143,6 +143,7 @@ function barStyle(occurance) {
 }
 
 .distribution {
+    font-family: 'Patua One', cursive;
     position: relative;
     max-width: 20rem;
     margin: 1rem auto;
