@@ -70,14 +70,14 @@ watch(gordian.guesses, (newG, oldG) => {
     }
 
     if (gordian.finished.value) {
-        // Analytics
         if(oldG.length > 0) { // If this is not the page loading to a finished puzzle
+            // Analytics
             useTrackEvent('solve_daily', {props: {format: format.value}});
-        }
 
-        setTimeout(() => {
-            statisticsVisible.value = true;
-        }, 2500);
+            setTimeout(() => {
+                statisticsVisible.value = true;
+            }, 2500);
+        }
     }
 }, {deep: true});
 
