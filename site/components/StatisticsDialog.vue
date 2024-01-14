@@ -32,6 +32,13 @@ const toast = useToast();
 
 const statisticsVisible = useState('statisticsVisible', () => false);
 
+const formatLabel = {
+    eternal: 'Eternal',
+    standard: 'Standard',
+    neo: 'Neo (All-NSG)',
+    startup: 'Startup',
+};
+
 const nextPuzzle = ref("");
 setInterval(function () {
     const now = new Date();
@@ -50,9 +57,8 @@ setInterval(function () {
 
 function copyResult() {
     var text="";
-    text = "gordianbla.de - " + props.gordian.puzzleAttr.value.dailyNumber + "\n";
-    text += "Guesses: " + props.gordian.currentGuess.value + "/6";
-    text += "\n";
+    text = `gordianbla.de - ${formatLabel[props.format]} - ${props.gordian.puzzleAttr.value.dailyNumber}\n`;
+    text += `Guesses: ${props.gordian.currentGuess.value}/6\n`;
 
     for (const g of props.gordian.guesses.value) {
         if (g.state != 'not-guessed') {
