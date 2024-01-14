@@ -14,13 +14,14 @@
                     <Button v-if="gordian.solved.value" icon="fa-solid fa-clipboard" label="Copy result"
                         @click="copyResult()" />
                     <div>
-                        <Checkbox v-model="discordSpoiler" :binary="true" inputId="discordSpoiler" name="discordSpoiler"/>
+                        <Checkbox v-model="user.exportSettings.discordSpoiler" :binary="true" inputId="discordSpoiler" name="discordSpoiler"/>
                         <label for="discordSpoiler"> Discord spoiler </label>
                     </div>
                 </div>
             </div>
         </template>
-</Dialog></template>
+    </Dialog>
+</template>
 
 <script setup>
 const props = defineProps(['gordian']);
@@ -51,8 +52,6 @@ setInterval(function () {
     tmp += ":" + String(Math.floor(diff / 1000 % 60)).padStart(2, '0');
     nextPuzzle.value = tmp;
 }, 1000);
-
-const discordSpoiler = ref(false);
 
 function copyResult() {
     var text="";
@@ -116,7 +115,7 @@ function copyResult() {
                     text += "⬛";
             }
 
-            if (discordSpoiler.value) {
+            if (user.exportSettings.discordSpoiler) {
                 const maxLen = 40;
                 const paddedText = g.guessedTitle
                     .padStart(Math.floor((g.guessedTitle.length + maxLen) / 2))

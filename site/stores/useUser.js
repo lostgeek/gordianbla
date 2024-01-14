@@ -84,6 +84,8 @@ export const useUser = defineStore("userStore", () => {
     return true;
   }
 
+  const exportSettings = ref({discordSpoiler: false});
+
   return {
     // state
     dailyHistory,
@@ -91,6 +93,7 @@ export const useUser = defineStore("userStore", () => {
     importedStats,
     offsetStats,
     newestArticleViewed,
+    exportSettings,
     // getters
     stats,
     // actions
