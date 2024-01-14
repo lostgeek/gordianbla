@@ -78,6 +78,11 @@ export const useUser = defineStore("userStore", () => {
       return false;
     }
 
+    // No games played in imported stats
+    if (parseInt(localStorage.getItem('played')) == 0) {
+      return false;
+    }
+
     importedStats.value.played = parseInt(localStorage.getItem('played'));
     importedStats.value.wins = parseInt(localStorage.getItem('wins'));
     importedStats.value.maxStreak = parseInt(localStorage.getItem('maxStreak'));
