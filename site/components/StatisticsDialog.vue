@@ -4,14 +4,14 @@
             style: 'backdrop-filter: blur(2px)'
         }
     }" :style="{ width: '30rem' }" :breakpoints="{ '320px': '100%' }">
-        <Statistics />
+        <Statistics :format="format" />
         <template #footer>
             <div class="footer">
                 <div class="next">
                     Next puzzle: <span class="time">{{ nextPuzzle }}</span>
                 </div>
-                <div class="buttons">
-                    <Button v-if="gordian.solved.value" icon="fa-solid fa-clipboard" label="Copy result"
+                <div class="buttons" v-if="gordian.solved.value">
+                    <Button icon="fa-solid fa-clipboard" label="Copy result"
                         @click="copyResult()" />
                     <div>
                         <Checkbox v-model="user.exportSettings.discordSpoiler" :binary="true" inputId="discordSpoiler" name="discordSpoiler"/>
@@ -24,18 +24,13 @@
 </template>
 
 <script setup>
-const props = defineProps(['gordian']);
+const props = defineProps(['format', 'gordian']);
 
 const user = useUser();
-const stats = computed(() => user.stats);
 
 const toast = useToast();
 
 const statisticsVisible = useState('statisticsVisible', () => false);
-
-function barStyle(occurance) {
-    return { width: `${occurance / Math.max.apply(null, stats.distribution) * 100}%` };
-}
 
 const nextPuzzle = ref("");
 setInterval(function () {

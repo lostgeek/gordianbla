@@ -1,5 +1,16 @@
 export default defineEventHandler((event) => {
-    const start = new Date("2022-03-05");
+    const query = getQuery(event);
+    const format = (query.format) ? query.format : 'eternal';
+
+    var start;
+    if (format === 'eternal') {
+        start = new Date("2022-03-05");
+    } else if (['standard', 'neo', 'startup'].includes(format)) {
+        start = new Date("2024-01-13");
+    } else {
+        return {message: "Format not found."};
+    }
+
     const now = new Date();
 
     var midnight = new Date();
@@ -8,7 +19,6 @@ export default defineEventHandler((event) => {
     var maxAge = Math.floor((midnight-now)/1000);
 
     // Check for query param 'n'
-    const query = getQuery(event);
     var days;
     if (query.n) {
         days = parseInt(query.n);

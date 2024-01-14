@@ -2,6 +2,15 @@ import fs from "node:fs";
 
 export default defineEventHandler(async (event) => {
     const query = getQuery(event);
+    const format = (query.format) ? query.format : 'eternal';
+
+    if (format === 'eternal') {
+        start = new Date("2022-03-05");
+    } else if (['standard', 'neo', 'startup'].includes(format)) {
+        start = new Date("2024-01-13");
+    } else {
+        return {message: "Format not found."};
+    }
 
     var days;
     if (query.n) {
@@ -15,7 +24,13 @@ export default defineEventHandler(async (event) => {
 
     const puzzle_id = days.toString().padStart(5, "0");
 
-    const dailyFolder = "./assets/daily_puzzles/";
+    var format_folder;
+    if (format === 'eternal') {
+        format_folder = 'daily_puzzles';
+    } else if (['standard', 'neo', 'startup'].includes(format)) {
+        format_folder = `daily_${format}_puzzles`;
+    }
+    const dailyFolder = `./assets/${format_folder}/`;
 
     const thumbFilepath = dailyFolder + `thumb/${puzzle_id}.png`;
 

@@ -1,11 +1,13 @@
 export const useUser = defineStore("userStore", () => {
-  const dailyHistory = ref({});
   const lightMode = ref(false);
+  const newestArticleViewed = ref(0);
+  const exportSettings = ref({discordSpoiler: false});
+
+  // Eternal daily
+  const dailyHistory = ref({});
 
   const importedStats = ref({ played: 0, wins: 0, streak: 0, maxStreak: 0, distribution: [0,0,0,0,0,0]});
   const offsetStats = ref({ played: 0, wins: 0, maxStreak: 0, distribution: [0,0,0,0,0,0]});
-
-  const newestArticleViewed = ref(0);
 
   const stats = computed(() => {
     // remove all proxies from importedStats
@@ -84,11 +86,77 @@ export const useUser = defineStore("userStore", () => {
     return true;
   }
 
-  const exportSettings = ref({discordSpoiler: false});
+  // Other formats daily
+  const dailyStandardHistory = ref({});
+  const dailyNeoHistory = ref({});
+  const dailyStartupHistory = ref({});
+
+  function createFormatStats(format) {
+    var res = { played: 0, wins: 0, streak: 0, maxStreak: 0, distribution: [0,0,0,0,0,0]};
+    var history;
+    if (format == 'standard') {
+      history = dailyStandardHistory.value;
+    } else if (format == 'neo') {
+      history = dailyNeoHistory.value;
+    } else if (format == 'startup') {
+      history = dailyStartupHistory.value;
+    } else {
+      return null;
+    }
+
+    // Apply dailyHistory
+    res.played += Object.values(history).filter(g => (g.findIndex((x) => x.state == 'guessed')>=0)).length;
+    res.wins += Object.values(history).filter(g => (g.findIndex((x) => x.checks && x.checks.title)>=0)).length;
+
+    const maxDaily = Math.max.apply(null, Object.keys(history));
+
+    var streak = 0;
+    for(var i = maxDaily; i >= 0; i--) {
+      if (i in history && history[i].findIndex((x) => x.checks && x.checks.title)>=0) {
+        streak++;
+      } else {
+        break;
+      }
+    }
+    res.streak = streak;
+
+    var maxStreak = 0;
+    var currStreak = 0;
+    for(var i = 0; i >= 0; i--) {
+      if (i in history && history[i].findIndex((x) => x.checks && x.checks.title)>=0) {
+        currStreak++;
+      } else {
+        if (currStreak > maxStreak) {
+          maxStreak = currStreak;
+          currStreak = 0;
+        }
+      }
+    }
+    if (currStreak > maxStreak) {
+      maxStreak = currStreak;
+    }
+    res.maxStreak = maxStreak;
+
+    Object.values(history).forEach(g => {
+      var usedGuesses = g.findIndex((x) => x.checks && x.checks.title);
+      if(usedGuesses > -1) {
+        res.distribution[usedGuesses]++;
+      }
+    });
+
+    return res;
+  }
+
+  const standardStats = computed(() => createFormatStats('standard'));
+  const neoStats = computed(() => createFormatStats('neo'));
+  const startupStats = computed(() => createFormatStats('startup'));
 
   return {
     // state
     dailyHistory,
+    dailyStandardHistory,
+    dailyNeoHistory,
+    dailyStartupHistory,
     lightMode,
     importedStats,
     offsetStats,
@@ -96,6 +164,9 @@ export const useUser = defineStore("userStore", () => {
     exportSettings,
     // getters
     stats,
+    standardStats,
+    neoStats,
+    startupStats,
     // actions
     importOldStats,
   };

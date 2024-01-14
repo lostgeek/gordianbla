@@ -86,12 +86,19 @@ export function useGordian() {
 
   }
 
-  async function startDailyPuzzle(cards, id, initialGuesses=null) {
+  async function startDailyPuzzle(cards, id, format=null, initialGuesses=null) {
     // Returns SVG of gordian puzzle
 
     var url = "/api/fetch_daily_puzzle";
+    var params = [];
     if (id > -1) {
-      url += `?n=${id}`;
+      params.push(`n=${id}`);
+    }
+    if (format) {
+      params.push(`format=${format}`);
+    }
+    if (params.length > 0) {
+      url += '?' + params.join('&')
     }
     const cardSvg = await fetchPuzzle(cards, url);
 

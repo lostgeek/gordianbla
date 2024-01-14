@@ -28,6 +28,45 @@ class Generator:
         self.cards = response.json()['data']
         self.image_url_template = response.json()['imageUrlTemplate'].replace('{code}', '{0}');
 
+        response = requests.get('https://netrunnerdb.com/api/2.0/public/packs');
+        self.packs = response.json()['data']
+        
+        self.formats = { \
+            'standard': \
+                self.packs_in_cycles([ \
+                    'kitara', \
+                    'reign-and-reverie', \
+                    'magnum-opus', \
+                    'ashes', \
+                    'magnum-opus-reprint', \
+                    'system-gateway', \
+                    'system-update-2021', \
+                    'borealis', \
+                    'liberation', \
+                ]), \
+            'neo': \
+                self.packs_in_cycles([ \
+                    'ashes', \
+                    'system-gateway', \
+                    'system-update-2021', \
+                    'borealis', \
+                    'liberation', \
+                ]), \
+            'startup': \
+                self.packs_in_cycles([ \
+                    'system-gateway', \
+                    'system-update-2021', \
+                    'borealis', \
+                    'liberation', \
+                ]),
+            }
+    
+    def packs_in_cycles(self, cycle_codes):
+        return [p['code'] for p in self.packs if p['cycle_code'] in cycle_codes]
+    
+    def get_random_card(self, format='eternal'):
+        return random.choice(self.cards.filter(lambda c: (c['pack_code'] in self.formats[format])))
+
     def fetch_card_image(self, card, target_filepath):
         if 'image_url' in card.keys():
             url = card['image_url']

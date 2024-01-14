@@ -60,16 +60,25 @@
 
 <script setup>
 const props = defineProps({
+    format: { default: 'eternal' },
     editable: { default: false },
 });
-
 const user = useUser();
-const stats = computed(() => user.stats);
+const stats = computed(() => {
+    if(props.format === 'eternal') {
+        return user.stats;
+    } else if(props.format === 'standard') {
+        return user.standardStats;
+    } else if(props.format === 'neo') {
+        return user.neoStats;
+    } else if(props.format === 'startup') {
+        return user.startupStats;
+    }
+});
 
 function barStyle(occurance) {
     return { width: `${occurance / Math.max.apply(null, stats.value.distribution) * 100}%` };
 }
-
 </script>
 
 <style lang="scss" scoped>
@@ -196,7 +205,6 @@ function barStyle(occurance) {
             line-height: 1rem;
         }
     }
-
 
     & .index {
         text-align: center;

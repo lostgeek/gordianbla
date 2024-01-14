@@ -4,7 +4,7 @@
             <div class="main">
                 <div class="left">
                     <GuessTable :guesses="gordian.guesses.value" />
-                    <CardInputField v-if="!gordian.practice.value" :cards="filteredCards" @submit="(card) => gordian.guess(card)" />
+                    <CardInputField v-if="!gordian.finished.value" :cards="filteredCards" @submit="(card) => gordian.guess(card)" />
                     <div class="buttons">
                         <Button icon="fa-solid fa-left-long" class="small" label="Back" @click="format=null"/>
                         <Button v-if="gordian.finished.value" icon="fa-solid fa-arrows-rotate" class="small" label="New Puzzle" @click="newPuzzle()"/>
@@ -76,7 +76,6 @@ onMounted(async () => {
     try {
         await callOnce(nrdb.fetch);
     } catch ({name, message}) {
-        console.log(name, message);
         toast.add({
             severity: 'error',
             summary: name,
@@ -85,43 +84,23 @@ onMounted(async () => {
     }
     formats.value = [
         {
-            name: 'Standard',
-            packs: nrdb.packsInCycles([
-                'kitara',
-                'reign-and-reverie',
-                'magnum-opus',
-                'ashes',
-                'magnum-opus-reprint',
-                'system-gateway',
-                'system-update-2021',
-                'borealis',
-                'liberation',
-            ])
+            name: "Eternal",
+            packs: nrdb.packsInFormat.eternal
         },
         {
-            name: 'Neo (All-NSG)',
-            packs: nrdb.packsInCycles([
-                'ashes',
-                'system-gateway',
-                'system-update-2021',
-                'borealis',
-                'liberation',
-            ])
+            name: "Standard",
+            packs: nrdb.packsInFormat.standard
         },
         {
-            name: 'Startup',
-            packs: nrdb.packsInCycles([
-                'system-gateway',
-                'system-update-2021',
-                'borealis',
-                'liberation',
-            ])
+            name: "Neo (All-NSG)",
+            packs: nrdb.packsInFormat.neo
         },
         {
-            name: 'Eternal',
-            packs: null
+            name: "Startup",
+            packs: nrdb.packsInFormat.startup
         },
     ];
+
 
     // Analytics
     watch(gordian.guesses, (newG, oldG) => {
@@ -148,7 +127,6 @@ watch(format, async () => {
     try {
         await newPuzzle();
     } catch ({name, message}) {
-        console.log(name, message);
         toast.add({
             severity: 'error',
             summary: name,

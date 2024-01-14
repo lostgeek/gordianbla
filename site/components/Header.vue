@@ -1,7 +1,7 @@
 <template>
     <Menubar class="header" :model="items" breakpoint="850px">
         <template #start>
-            <NuxtLink class="headerLink" to="/">Gordian Blade</NuxtLink>
+            <NuxtLink class="headerLink" to="/daily/eternal">Gordian Blade</NuxtLink>
         </template>
         <template #item="{ item, props, hasSubmenu }">
             <NuxtLink v-ripple class="p-ripple p-menuitem-link" v-if="item.route" :to="item.route">
@@ -37,15 +37,37 @@ const unreadArticles = computed(() => {
 const route = useRoute();
 const items = ref([
     {
+        label: 'Daily Puzzle',
+        icon: 'fa-solid fa-calendar',
+        items: [
+            {
+                label: 'Eternal',
+                route: '/daily/eternal',
+            },
+            {
+                label: 'Standard',
+                route: '/daily/standard',
+            },
+            {
+                label: 'Neo (All-NSG)',
+                route: '/daily/neo',
+            },
+            {
+                label: 'Startup',
+                route: '/daily/startup',
+            },
+        ],
+    },
+    {
         label: 'Rules',
-        visible: () => ['/', '/practice'].includes(route.path),
+        visible: () => (route.path.startsWith("/daily") || route.path == '/practice'),
         icon: 'fa-solid fa-scale-balanced',
         active: loaded,
         command: showRules,
     },
     {
         label: 'Statistics',
-        visible: () => route.path == "/",
+        visible: () => route.path.startsWith("/daily"),
         icon: 'fa-solid fa-chart-simple',
         command: showStatistics,
     },
