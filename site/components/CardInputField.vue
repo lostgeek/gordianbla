@@ -1,7 +1,9 @@
 <template>
     <form @submit.prevent="guess">
         <InputGroup>
-            <AutoComplete ref="titleInput" v-model="selectedCard" optionLabel="stripped_title" :suggestions="suggestions"
+            <AutoComplete ref="titleInput" v-model="selectedCard"
+                :virtualScrollerOptions="{ itemSize: 38 }"
+                optionLabel="stripped_title" :suggestions="suggestions"
                 @complete="autocomplete" placeholder="Enter card name" :delay="200" forceSelection>
                 <template #option="slotProps">
                     <AutoCompleteShowMatch :match="slotProps.option.matches[0]" />
@@ -48,9 +50,8 @@ const suggestions = ref([]);
 
 const selectedCard = ref("");
 const autocomplete = (event) => {
-    var results = fuse.search(event.query);
     // include matches in card data
-    suggestions.value = results.map(el => {
+    suggestions.value = fuse.search(event.query).map(el => {
         var card = el.item;
         card.matches = el.matches;
         return card;

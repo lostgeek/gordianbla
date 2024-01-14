@@ -27,11 +27,10 @@ while(i < text.length) {
 }
 </script>
 
-<style>
-span.match {
+<style lang="scss" scoped>
+.match {
     color: var(--highlight-text-color);
     background-color: var(--highlight-bg);
     border-radius: 3px;
-    
 }
 </style>
