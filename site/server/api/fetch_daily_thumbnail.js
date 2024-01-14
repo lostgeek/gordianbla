@@ -4,6 +4,7 @@ export default defineEventHandler(async (event) => {
     const query = getQuery(event);
     const format = (query.format) ? query.format : 'eternal';
 
+    var start;
     if (format === 'eternal') {
         start = new Date("2022-03-05");
     } else if (['standard', 'neo', 'startup'].includes(format)) {
@@ -11,6 +12,9 @@ export default defineEventHandler(async (event) => {
     } else {
         return {message: "Format not found."};
     }
+
+    const now = new Date();
+    const currentDaily = Math.floor((now-start) / 1000/60/60/24);
 
     var days;
     if (query.n) {
@@ -20,6 +24,10 @@ export default defineEventHandler(async (event) => {
         }
     } else {
         return { message: "Daily number 'n' not specified." };
+    }
+
+    if (days > currentDaily) {
+        return {error: "Chosen puzzle is in the future."};
     }
 
     const puzzle_id = days.toString().padStart(5, "0");

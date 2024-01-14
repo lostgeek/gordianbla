@@ -1,8 +1,12 @@
 <template>
     <div class="rss">
         <h1>RSS Feeds</h1>
+        <h2>Daily puzzles</h2>
         <ul>
-            <li><NuxtLink to="/api/rss/daily" target="_blank">Daily Puzzle</NuxtLink></li>
+            <li><NuxtLink to="/api/rss/daily" target="_blank">Eternal (default)</NuxtLink></li>
+            <li><NuxtLink to="/api/rss/daily/standard" target="_blank">Standard</NuxtLink></li>
+            <li><NuxtLink to="/api/rss/daily/neo" target="_blank">Neo (All-NSG)</NuxtLink></li>
+            <li><NuxtLink to="/api/rss/daily/startup" target="_blank">Startup</NuxtLink></li>
         </ul>
     </div>
 </template>
