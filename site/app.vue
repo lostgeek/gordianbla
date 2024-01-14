@@ -19,7 +19,7 @@ useSeoMeta({
 html {
   background: var(--background-color);
   background-repeat: no-repeat;
-  background-attachment: fixed; 
+  background-attachment: fixed;
   width: 100%;
   height: 100%;
   color: var(--text-color);
@@ -28,6 +28,12 @@ html {
 p {
   hyphens: auto;
   text-align: justify;
+}
+
+h1>a, h2>a, h3>a, h4>a, h5>a, h6>a {
+  color: var(--text-color)!important;
+  text-decoration: none!important;
+  cursor: pointer!important;
 }
 
 a:not(.p-menuitem-link) {
