@@ -4,10 +4,10 @@
             <div class="main">
                 <div class="left">
                     <GuessTable :guesses="gordian.guesses.value" />
-                    <CardInputField v-if="!gordian.solved.value" :cards="filteredCards" @submit="(card) => gordian.guess(card)" />
+                    <CardInputField v-if="!gordian.practice.value" :cards="filteredCards" @submit="(card) => gordian.guess(card)" />
                     <div class="buttons">
                         <Button icon="fa-solid fa-left-long" class="small" label="Back" @click="format=null"/>
-                        <Button v-if="gordian.solved.value" icon="fa-solid fa-arrows-rotate" class="small" label="New Puzzle" @click="newPuzzle()"/>
+                        <Button v-if="gordian.finished.value" icon="fa-solid fa-arrows-rotate" class="small" label="New Puzzle" @click="newPuzzle()"/>
                     </div>
                 </div>
                 <div class="right">
@@ -62,7 +62,7 @@ const filteredCards = computed(() => {
     }
 });
 const revealLevel = computed(() => {
-    if(gordian.solved.value) {
+    if(gordian.finished.value) {
         return 6;
     } else {
         return gordian.currentGuess.value;
@@ -125,7 +125,7 @@ onMounted(async () => {
 
     // Analytics
     watch(gordian.guesses, (newG, oldG) => {
-        if (gordian.solved.value) {
+        if (gordian.finished.value) {
             useTrackEvent('solve_practice', {props: {format: format.value.name}});
         }
     }, {deep: true});

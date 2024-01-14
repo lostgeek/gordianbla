@@ -130,6 +130,7 @@ export function useGordian() {
   }
 
   // Returns -1, if no guesses remaining
+  // Returns null, if guesses not initialised
   const currentGuess = computed((state) => {
     const result = guesses.value.findIndex((g) => g.state == "not-guessed");
     if (result >= 0) {
@@ -138,7 +139,7 @@ export function useGordian() {
 
     if(guesses.value.length == 0) {
       // Not initialised yet
-      return -1; 
+      return null; 
     } else {
       // Final guess made
       return 6;
@@ -150,16 +151,16 @@ export function useGordian() {
       // guesses not yet initialised
       return false;
     }
-    if (currentGuess.value == -1) {
-      // last guess
-      return true;
-    }
 
     return (
       guesses.value.findIndex(
         (g) => g.state == "guessed" && g.checks.title == true
       ) > -1
     );
+  });
+
+  const finished = computed((state) => {
+    return solved.value || currentGuess.value == 6;
   });
 
   function guess(card) {
@@ -248,6 +249,7 @@ export function useGordian() {
     // getters
     currentGuess,
     solved,
+    finished,
     // actions
     fetchPuzzle,
     initiateGuesses,

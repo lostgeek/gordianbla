@@ -3,7 +3,7 @@
         <div class="main">
             <div class="left">
                 <GuessTable :guesses="gordian.guesses.value" />
-                <CardInputField v-if="!gordian.solved.value" :cards="nrdb.cards" @submit="(card) => gordian.guess(card)" />
+                <CardInputField v-if="!gordian.finished.value" :cards="nrdb.cards" @submit="(card) => gordian.guess(card)" />
             </div>
             <div class="right">
                 <Puzzle v-if="cardSvg" :puzzleMode="puzzleMode" :revealLevel="revealLevel" :cardUrl="cardUrl" :cardSvg="cardSvg" />
@@ -48,7 +48,7 @@ watch(gordian.guesses, (newG, oldG) => {
         user.dailyHistory[gordian.puzzleAttr.value.dailyNumber] = gordian.guesses.value;
     }
 
-    if (gordian.solved.value) {
+    if (gordian.finished.value) {
         // Analytics
         if(oldG.length > 0) { // If this is not the page loading to a finished puzzle
             useTrackEvent('solve_daily', {props: {format: "default"}});
@@ -61,7 +61,7 @@ watch(gordian.guesses, (newG, oldG) => {
 }, {deep: true});
 
 const revealLevel = computed(() => {
-    if(gordian.solved.value) {
+    if(gordian.finished.value) {
         return 6;
     } else {
         return gordian.currentGuess.value;
