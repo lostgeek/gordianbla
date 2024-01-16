@@ -9,6 +9,7 @@ export default defineNuxtConfig({
     "@pinia-plugin-persistedstate/nuxt",
     "@nuxt/content",
     "@nuxtjs/plausible",
+    '@vueuse/nuxt',
   ],
   primevue: {
     options: {

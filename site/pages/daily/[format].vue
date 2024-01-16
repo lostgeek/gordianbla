@@ -1,31 +1,42 @@
 <template>
-    <div v-if="loaded">
-        <div class="main">
-            <div class="left">
+    <Splitter :layout="getLayout">
+        <SplitterPanel>
+            <div class="left" v-if="loaded">
                 <GuessTable :guesses="gordian.guesses.value" />
                 <CardInputField v-if="!gordian.finished.value" :cards="cards" @submit="(card) => gordian.guess(card)" />
             </div>
-            <div class="right">
-                <Puzzle v-if="cardSvg" :puzzleMode="puzzleMode" :revealLevel="revealLevel" :cardUrl="cardUrl" :cardSvg="cardSvg" />
-            </div>
-        </div>
-        <StatisticsDialog :format="format" :gordian="gordian" />
-        <RulesDialog :cards="cards" :imageUrlTemplate="nrdb.imageUrlTemplate" />
-    </div>
-    <div v-else>
-        <div class="main">
-            <div class="left">
+            <div class="left" v-else>
                 <GuessTable :guesses='[{state: "not-guessed" }, { state: "not-guessed" }, { state: "not-guessed" }, { state: "not-guessed" }, { state: "not-guessed" }, { state: "not-guessed" }]' />
                 <Skeleton width="100%" height="3rem" />
             </div>
-            <div class="right">
+        </SplitterPanel>
+        <SplitterPanel :size="30">
+            <div class="right" v-if="loaded">
+                <Puzzle v-if="cardSvg" :puzzleMode="puzzleMode" :revealLevel="revealLevel" :cardUrl="cardUrl" :cardSvg="cardSvg" />
+            </div>
+            <div class="right" v-else>
                 <Skeleton class="puzzleSkeleton" width="100%" height="auto"/>
             </div>
-        </div>
-    </div>
+        </SplitterPanel>
+    </Splitter>
+    <StatisticsDialog :format="format" :gordian="gordian" />
+    <RulesDialog :cards="nrdb.cards" :imageUrlTemplate="nrdb.imageUrlTemplate" />
 </template>
 
 <script setup>
+const breakpoints = useBreakpoints({
+  vert: 700,
+})
+
+const layoutBreakpoint = breakpoints.greater('vert');
+const getLayout = computed( () => {
+    if (layoutBreakpoint.value) { 
+        return 'horizontal';
+    } else {
+        return 'vertical';
+    }
+});
+
 const route = useRoute();
 const loaded = useState('siteLoaded', () => false);
 if(!['eternal', 'standard', 'neo', 'startup'].includes(route.params.format)) {
@@ -136,46 +147,24 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
-.main {
-    display: flex;
-    flex-wrap: wrap;
-    margin: 0 1rem;
-    gap: 1rem;
-    justify-content: center;
-
-    @media(max-width:1000px) {
-        margin: 0 .5rem;
-        gap: .5rem;
-    }
-
-    @media(max-width:400px) {
-        margin: 0 .25rem;
-        gap: .25rem;
-    }
-}
-
-.left {
-    flex-grow: 2;
-
+:deep(.left) {
+    padding: 1rem;
     display: flex;
     flex-direction: column;
 
     gap: 1rem;
-
-    @media(max-width:1000px) {
-        gap: .5rem;
-    }
-
-    @media(max-width:400px) {
-        gap: .25rem;
-    }
 }
 
-.right {
-    flex-grow: 5;
+:deep(.right) {
+    padding: 1rem;
 
-    min-width: 15rem;
-    max-width: 26rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    &>* {
+        flex-grow: 0;
+    }
 
     @media(max-width:400px) {
         min-width: 0;
