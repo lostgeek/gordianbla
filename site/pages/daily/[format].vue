@@ -1,6 +1,6 @@
 <template>
     <Splitter :layout="getLayout">
-        <SplitterPanel>
+        <SplitterPanel :size="75">
             <div class="left" v-if="loaded">
                 <GuessTable :guesses="gordian.guesses.value" />
                 <CardInputField v-if="!gordian.finished.value" :cards="cards" @submit="(card) => gordian.guess(card)" />
@@ -10,7 +10,7 @@
                 <Skeleton width="100%" height="3rem" />
             </div>
         </SplitterPanel>
-        <SplitterPanel class="right" :size="20">
+        <SplitterPanel class="right" :size="25">
             <div v-if="loaded">
                 <Puzzle v-if="cardSvg" :puzzleMode="puzzleMode" :revealLevel="revealLevel" :cardUrl="cardUrl" :cardSvg="cardSvg" />
             </div>
