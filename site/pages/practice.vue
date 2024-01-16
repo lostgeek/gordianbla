@@ -15,11 +15,11 @@
                     <Skeleton width="100%" height="3rem" />
                 </div>
             </SplitterPanel>
-            <SplitterPanel :size="30">
-                <div class="right" v-if="loaded">
+            <SplitterPanel class="right" :size="20">
+                <div v-if="loaded">
                     <Puzzle v-if="cardSvg" :puzzleMode="puzzleMode" :revealLevel="revealLevel" :cardUrl="cardUrl" :cardSvg="cardSvg" />
                 </div>
-                <div class="right" v-else>
+                <div v-else>
                     <Skeleton class="puzzleSkeleton" width="100%" height="auto"/>
                 </div>
             </SplitterPanel>
