@@ -34,6 +34,7 @@ class Generator:
         self.formats = { \
             'standard': \
                 self.packs_in_cycles([ \
+                    'red-sand', \
                     'kitara', \
                     'reign-and-reverie', \
                     'magnum-opus', \

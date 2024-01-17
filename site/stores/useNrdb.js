@@ -9,6 +9,7 @@ export const useNrdb = defineStore("nrdbStore", {
             return {
                 eternal: null,
                 standard: nrdb.packsInCycles([
+                    "red-sand",
                     "kitara",
                     "reign-and-reverie",
                     "magnum-opus",
