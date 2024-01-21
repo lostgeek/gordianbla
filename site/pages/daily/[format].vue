@@ -128,7 +128,7 @@ onMounted(async () => {
         cardSvg.value = await gordian.startDailyPuzzle(cards.value, currentDaily, format.value, history);
 
         // Show rules dialog if user has not played a daily yet
-        if(user.stats.played == 0 && revealLevel.value == 0) {
+        if(!user.playedAnyGame) {
             setTimeout(() => {
                 rulesVisible.value = true;
             }, 1000);
