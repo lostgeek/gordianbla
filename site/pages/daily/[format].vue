@@ -6,16 +6,18 @@
                 <CardInputField v-if="!gordian.finished.value" :cards="cards" @submit="(card) => gordian.guess(card)" />
             </div>
             <div class="left" v-else>
-                <GuessTable :guesses='[{state: "not-guessed" }, { state: "not-guessed" }, { state: "not-guessed" }, { state: "not-guessed" }, { state: "not-guessed" }, { state: "not-guessed" }]' />
+                <GuessTable
+                    :guesses='[{ state: "not-guessed" }, { state: "not-guessed" }, { state: "not-guessed" }, { state: "not-guessed" }, { state: "not-guessed" }, { state: "not-guessed" }]' />
                 <Skeleton width="100%" height="3rem" />
             </div>
         </SplitterPanel>
         <SplitterPanel class="right" :size="25">
             <div v-if="loaded">
-                <Puzzle v-if="cardSvg" :puzzleMode="puzzleMode" :revealLevel="revealLevel" :cardUrl="cardUrl" :cardSvg="cardSvg" />
+                <Puzzle v-if="cardSvg" :puzzleMode="puzzleMode" :revealLevel="revealLevel" :cardUrl="cardUrl"
+                    :cardSvg="cardSvg" />
             </div>
             <div v-else>
-                <Skeleton class="puzzleSkeleton" width="100%" height="auto"/>
+                <Skeleton class="puzzleSkeleton" width="100%" height="auto" />
             </div>
         </SplitterPanel>
     </Splitter>
@@ -25,12 +27,12 @@
 
 <script setup>
 const breakpoints = useBreakpoints({
-  vert: 700,
+    vert: 700,
 })
 
 const layoutBreakpoint = breakpoints.greater('vert');
-const getLayout = computed( () => {
-    if (layoutBreakpoint.value) { 
+const getLayout = computed(() => {
+    if (layoutBreakpoint.value) {
         return 'horizontal';
     } else {
         return 'vertical';
@@ -39,7 +41,7 @@ const getLayout = computed( () => {
 
 const route = useRoute();
 const loaded = useState('siteLoaded', () => false);
-if(!['eternal', 'standard', 'neo', 'startup'].includes(route.params.format)) {
+if (!['eternal', 'standard', 'neo', 'startup'].includes(route.params.format)) {
     navigateTo('/daily/eternal');
 }
 
@@ -71,29 +73,34 @@ watch(gordian.guesses, (newG, oldG) => {
     if (gordian.puzzleAttr.value.dailyNumber) {
         if (format.value == 'eternal') {
             user.dailyHistory[gordian.puzzleAttr.value.dailyNumber] = gordian.guesses.value;
-        } else if(format.value == 'standard') {
+        } else if (format.value == 'standard') {
             user.dailyStandardHistory[gordian.puzzleAttr.value.dailyNumber] = gordian.guesses.value;
-        } else if(format.value == 'neo') {
+        } else if (format.value == 'neo') {
             user.dailyNeoHistory[gordian.puzzleAttr.value.dailyNumber] = gordian.guesses.value;
-        } else if(format.value == 'startup') {
+        } else if (format.value == 'startup') {
             user.dailyStartupHistory[gordian.puzzleAttr.value.dailyNumber] = gordian.guesses.value;
         }
     }
 
     if (gordian.finished.value) {
-        if(oldG.length > 0) { // If this is not the page loading to a finished puzzle
+        if (oldG.length > 0) { // If this is not the page loading to a finished puzzle
             // Analytics
-            useTrackEvent('solve_daily', {props: {format: format.value}});
+            useTrackEvent('solve_daily', { props: { format: format.value } });
 
+            // Show statistics after 2.5s if still on the same page
+            var formatBeforeTimeout = format.value;
             setTimeout(() => {
-                statisticsVisible.value = true;
+                var route = useRoute();
+                if (route.path.startsWith(`/daily/${formatBeforeTimeout}`)) {
+                    statisticsVisible.value = true;
+                }
             }, 2500);
         }
     }
-}, {deep: true});
+}, { deep: true });
 
 const revealLevel = computed(() => {
-    if(gordian.finished.value) {
+    if (gordian.finished.value) {
         return 6;
     } else {
         return gordian.currentGuess.value;
@@ -104,7 +111,7 @@ const cardSvg = ref(null);
 const cardUrl = computed(() => nrdb.imageUrlTemplate.replace('{code}', gordian.puzzleAttr.value.nrdbID));
 
 onMounted(async () => {
-    if(user.importOldStats()) {
+    if (user.importOldStats()) {
         toast.add({
             severity: 'success',
             summary: "Import old stats",
@@ -116,26 +123,26 @@ onMounted(async () => {
         await callOnce(nrdb.fetch);
 
         var history;
-        if(format.value == 'eternal') {
+        if (format.value == 'eternal') {
             history = user.dailyHistory[currentDaily];
-        } else if(format.value == 'standard') {
+        } else if (format.value == 'standard') {
             history = user.dailyStandardHistory[currentDaily];
-        } else if(format.value == 'neo') {
+        } else if (format.value == 'neo') {
             history = user.dailyNeoHistory[currentDaily];
-        } else if(format.value == 'startup') {
+        } else if (format.value == 'startup') {
             history = user.dailyStartupHistory[currentDaily];
         }
         cardSvg.value = await gordian.startDailyPuzzle(cards.value, currentDaily, format.value, history);
 
         // Show rules dialog if user has not played a daily yet
-        if(!user.playedAnyGame) {
+        if (!user.playedAnyGame) {
             setTimeout(() => {
                 rulesVisible.value = true;
             }, 1000);
         }
 
         loaded.value = true;
-    } catch ({name, message}) {
+    } catch ({ name, message }) {
         toast.add({
             severity: 'error',
             summary: name,
