@@ -1,20 +1,35 @@
 <template>
     <Dialog v-model:visible="statisticsVisible" modal header="Statistics" :pt="{
+        root: {
+            style: 'overflow: clip'
+        },
         mask: {
             style: 'backdrop-filter: blur(2px)'
         }
     }" :style="{ width: '30rem' }" :breakpoints="{ '320px': '100%' }">
         <Statistics :format="format" />
+        <Button 
+            v-if="prevFormat"
+            class="p-button prev-button"
+            :label="prevFormat.label"
+            @click="switchFormat(prevFormat)"
+            icon="fa-solid fa-arrow-left" rounded icon-pos="right" />
+        <Button
+            v-if="nextFormat"
+            class="p-button next-button"
+            :label="nextFormat.label"
+            @click="switchFormat(nextFormat)"
+            icon="fa-solid fa-arrow-right" rounded />
         <template #footer>
             <div class="footer">
                 <div class="next">
                     Next puzzle: <span class="time">{{ nextPuzzle }}</span>
                 </div>
                 <div class="buttons" v-if="gordian.solved.value">
-                    <Button icon="fa-solid fa-clipboard" label="Copy result"
-                        @click="copyResult()" />
+                    <Button icon="fa-solid fa-clipboard" label="Copy result" @click="copyResult()" />
                     <div>
-                        <Checkbox v-model="user.exportSettings.discordSpoiler" :binary="true" inputId="discordSpoiler" name="discordSpoiler"/>
+                        <Checkbox v-model="user.exportSettings.discordSpoiler" :binary="true" inputId="discordSpoiler"
+                            name="discordSpoiler" />
                         <label for="discordSpoiler"> Discord spoiler </label>
                     </div>
                 </div>
@@ -38,6 +53,33 @@ const formatLabel = {
     neo: 'Neo (All-NSG)',
     startup: 'Startup',
 };
+
+const currentFormatIndex = Object.keys(formatLabel).findIndex(x => x === props.format);
+const prevFormat = ref(null);
+const nextFormat = ref(null);
+if (currentFormatIndex > 0) {
+    const id = Object.keys(formatLabel)[currentFormatIndex-1];
+    console.log("prev", id);
+    prevFormat.value = {
+        id: id,
+        label: formatLabel[id],
+        to: `/daily/${id}`,
+    };
+}
+if (currentFormatIndex < Object.keys(formatLabel).length-1 ) {
+    const id = Object.keys(formatLabel)[currentFormatIndex+1];
+    console.log("next", id);
+    nextFormat.value = {
+        id: id,
+        label: formatLabel[id],
+        to: `/daily/${id}`,
+    };
+}
+
+async function switchFormat(format) {
+    await navigateTo(format.to);
+    statisticsVisible.value = false;
+}
 
 const nextPuzzle = ref("");
 setInterval(function () {
@@ -132,6 +174,36 @@ function copyResult() {
 </script>
 
 <style lang="scss" scoped>
+.prev-button, .next-button {
+    position: absolute;
+    top:50%;
+    transition: transform .3s ease-in-out;
+}
+.next-button {
+    right: 0;
+    transform: translateX(calc(100% - 2rem));
+
+    & :deep(.p-button-label) {
+        padding-right: 2rem;
+    }
+
+    &:hover {
+    transform: translateX(2rem);
+    }
+}
+
+.prev-button {
+    left: 0;
+    transform: translateX(calc(-100% + 2rem));
+
+    & :deep(.p-button-label) {
+        padding-left: 2rem;
+    }
+
+    &:hover {
+    transform: translateX(-2rem);
+    }
+}
 .footer {
     display: flex;
     justify-content: space-between;
