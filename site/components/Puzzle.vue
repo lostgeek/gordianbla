@@ -107,9 +107,9 @@ const squint = ref(0);
             <img :src="cardUrl" />
         </div>
     </div>
-    <div class="sliderGroup" v-tooltip.left="'Squinting strength'">
-        <i class="icon fa-solid fa-eye" />
-        <Slider v-if="user.squintMode" class="squint" id="squint"
+    <div v-if="user.squintMode" class="sliderGroup" v-tooltip.left="'Squinting strength'">
+        <EyeIcon :squint="squint" />
+        <Slider class="squint" id="squint"
             v-model="squint"
             :min="0" :max="10" :step=".2" />
     </div>
