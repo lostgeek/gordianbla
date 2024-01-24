@@ -32,7 +32,7 @@
         <Listbox v-model="format" :options="formats" optionLabel="name" />
     </div>
     <StatisticsDialog :format="format" :gordian="gordian" />
-    <RulesDialog :cards="nrdb.cards" :imageUrlTemplate="nrdb.imageUrlTemplate" />
+    <RulesDialog />
 </template>
 
 <script setup>

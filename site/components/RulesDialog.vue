@@ -38,9 +38,10 @@
 
 <script setup>
 const rulesVisible = useState('rulesVisible', () => false);
-const props = defineProps(['cards', 'imageUrlTemplate']);
 
 const gordian = useGordian();
+
+const nrdb = useNrdb();
 
 const revealLevel = computed(() => {
     if(gordian.solved.value) {
@@ -51,19 +52,21 @@ const revealLevel = computed(() => {
 });
 
 const cardSvg = ref(null);
-cardSvg.value = await gordian.startSpecificPuzzle(props.cards, 'core', '01043', '00');
 const puzzleMode = computed(() => gordian.puzzleAttr.value.mode);
-const cardUrl = computed(() => props.imageUrlTemplate.replace('{code}', gordian.puzzleAttr.value.nrdbID));
+const cardUrl = computed(() => nrdb.imageUrlTemplate.replace('{code}', gordian.puzzleAttr.value.nrdbID));
 
 const guessCards = ['Creative Commission', 'Conduit', 'Takobi', 'Gordian Blade'];
 
 var animInterval = null;
-onMounted(() => {
+onMounted(async () => {
+    await callOnce(nrdb.fetch);
+    cardSvg.value = await gordian.startSpecificPuzzle(nrdb.cards, 'core', '01043', '00');
+
     setTimeout((event) => {
         if (!animInterval) {
             animInterval = setInterval((event) => {
                 if(revealLevel.value < guessCards.length) {
-                    const card = props.cards.filter((c) => c.stripped_title == guessCards[revealLevel.value])[0];
+                    const card = nrdb.cards.filter((c) => c.stripped_title == guessCards[revealLevel.value])[0];
                     gordian.guess(card);
                 } else {
                     clearTimeout(animInterval);

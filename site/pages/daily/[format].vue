@@ -22,7 +22,7 @@
         </SplitterPanel>
     </Splitter>
     <StatisticsDialog :format="format" :gordian="gordian" />
-    <RulesDialog :cards="nrdb.cards" :imageUrlTemplate="nrdb.imageUrlTemplate" />
+    <RulesDialog />
 </template>
 
 <script setup>
@@ -150,7 +150,6 @@ onMounted(async () => {
         });
     }
 });
-
 </script>
 
 <style lang="scss" scoped>
