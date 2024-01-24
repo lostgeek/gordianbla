@@ -2,6 +2,7 @@ export const useUser = defineStore(
     "userStore",
     () => {
         const lightMode = ref(false);
+        const squintMode = ref(false);
         const newestArticleViewed = ref(0);
         const exportSettings = ref({ discordSpoiler: false });
 
@@ -235,6 +236,7 @@ export const useUser = defineStore(
             dailyNeoHistory,
             dailyStartupHistory,
             lightMode,
+            squintMode,
             importedStats,
             offsetStats,
             newestArticleViewed,

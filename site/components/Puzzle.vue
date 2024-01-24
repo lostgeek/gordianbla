@@ -6,6 +6,8 @@ const props = defineProps(['puzzleMode', 'revealLevel', 'cardUrl', 'cardSvg',]);
 // cardUrl: URL to actual card image
 // cardSvg: SVG of the gordian puzzle
 
+const user = useUser();
+
 const puzzle = ref(null);
 
 const puzzleClasses = ref([]);
@@ -93,15 +95,23 @@ watch(() => props.revealLevel, (newLevel, oldLevel) => {
     updateSvg();
 });
 
+const squint = ref(0);
 </script>
 
 <template>
     <div class="puzzleContainer">
-        <div class="puzzle" :class="puzzleClasses" ref="puzzle">
+        <div class="puzzle" :class="puzzleClasses"
+            :style="`filter: blur(${squint}px)`" ref="puzzle">
         </div>
         <div class="cardImage" :class="cardImageClasses" ref="cardImage">
             <img :src="cardUrl" />
         </div>
+    </div>
+    <div class="sliderGroup" v-tooltip.left="'Squinting strength'">
+        <i class="icon fa-solid fa-eye" />
+        <Slider v-if="user.squintMode" class="squint" id="squint"
+            v-model="squint"
+            :min="0" :max="10" :step=".2" />
     </div>
 </template>
 
@@ -110,6 +120,9 @@ watch(() => props.revealLevel, (newLevel, oldLevel) => {
     width: 100%;
     position: relative; // Needed for cardImage to be positioned absolute
     z-index: 0;
+
+    overflow:clip;
+    border-radius: 4.7% / 3.6%;
 }
 .puzzle {
     width: 100%;
@@ -123,7 +136,6 @@ watch(() => props.revealLevel, (newLevel, oldLevel) => {
     }
 
     & svg {
-        border-radius: 4.7% / 3.6%;
         
         & * {
             transition: visibility 0s, opacity 0.1s linear;
@@ -162,6 +174,21 @@ watch(() => props.revealLevel, (newLevel, oldLevel) => {
 
     &.solved {
         visibility: visible;
+    }
+}
+
+.sliderGroup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+
+    & .icon {
+        font-size: 1.5rem;
+    }
+
+    & .squint {
+        flex-grow: 1;
     }
 }
 </style>

@@ -168,6 +168,8 @@ onMounted(async () => {
     flex-direction: column;
     justify-content: center;
 
+    gap: 1rem;
+
     &>* {
         flex-grow: 0;
     }
