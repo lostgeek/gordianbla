@@ -107,7 +107,8 @@ const squint = ref(0);
             <img :src="cardUrl" />
         </div>
     </div>
-    <div v-if="user.squintMode" class="sliderGroup" v-tooltip.left="'Squinting strength'">
+    <div v-if="user.squintMode" class="sliderGroup" :class="puzzleClasses"
+        v-tooltip.left="'Squinting strength'">
         <EyeIcon :squint="squint" />
         <Slider class="squint" id="squint"
             v-model="squint"
@@ -182,6 +183,10 @@ const squint = ref(0);
     justify-content: center;
     align-items: center;
     gap: 1rem;
+
+    &.solved {
+        visibility: hidden;
+    }
 
     & .icon {
         font-size: 1.5rem;
