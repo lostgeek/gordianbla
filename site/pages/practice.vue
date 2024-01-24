@@ -1,19 +1,19 @@
 <template>
     <div v-if="format">
         <Splitter :layout="getLayout">
-            <SplitterPanel :size="75">
-                <div class="left" v-if="loaded">
+            <SplitterPanel class="left" :size="75">
+                <template v-if="loaded">
                     <GuessTable :guesses="gordian.guesses.value" />
                     <CardInputField v-if="!gordian.finished.value" :cards="filteredCards" @submit="(card) => gordian.guess(card)" />
                     <div class="buttons">
                         <Button icon="fa-solid fa-left-long" class="small" label="Back" @click="format=null"/>
                         <Button v-if="gordian.finished.value" icon="fa-solid fa-arrows-rotate" class="small" label="New Puzzle" @click="newPuzzle()"/>
                     </div>
-                </div>
-                <div class="left" v-else>
+                </template>
+                <template v-else>
                     <GuessTable :guesses='[{state: "not-guessed" }, { state: "not-guessed" }, { state: "not-guessed" }, { state: "not-guessed" }, { state: "not-guessed" }, { state: "not-guessed" }]' />
                     <Skeleton width="100%" height="3rem" />
-                </div>
+                </template>
             </SplitterPanel>
             <SplitterPanel class="right" :size="25">
                 <div v-if="loaded">

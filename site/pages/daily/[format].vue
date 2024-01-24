@@ -1,24 +1,24 @@
 <template>
     <Splitter :layout="getLayout">
-        <SplitterPanel :size="75">
-            <div class="left" v-if="loaded">
+        <SplitterPanel class="left" :size="75">
+            <template v-if="loaded">
                 <GuessTable :guesses="gordian.guesses.value" />
                 <CardInputField v-if="!gordian.finished.value" :cards="cards" @submit="(card) => gordian.guess(card)" />
-            </div>
-            <div class="left" v-else>
+            </template>
+            <template v-else>
                 <GuessTable
                     :guesses='[{ state: "not-guessed" }, { state: "not-guessed" }, { state: "not-guessed" }, { state: "not-guessed" }, { state: "not-guessed" }, { state: "not-guessed" }]' />
                 <Skeleton width="100%" height="3rem" />
-            </div>
+            </template>
         </SplitterPanel>
         <SplitterPanel class="right" :size="25">
-            <div v-if="loaded">
+            <template v-if="loaded">
                 <Puzzle v-if="cardSvg" :puzzleMode="puzzleMode" :revealLevel="revealLevel" :cardUrl="cardUrl"
-                    :cardSvg="cardSvg" />
-            </div>
-            <div v-else>
+                    :cardSvg="cardSvg" :style="{filter: `blur(${squint}px)`}" />
+            </template>
+            <template v-else>
                 <Skeleton class="puzzleSkeleton" width="100%" height="auto" />
-            </div>
+            </template>
         </SplitterPanel>
     </Splitter>
     <StatisticsDialog :format="format" :gordian="gordian" />
