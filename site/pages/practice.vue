@@ -16,12 +16,12 @@
                 </template>
             </SplitterPanel>
             <SplitterPanel class="right" :size="25">
-                <div v-if="loaded">
+                <template v-if="loaded">
                     <Puzzle v-if="cardSvg" :puzzleMode="puzzleMode" :revealLevel="revealLevel" :cardUrl="cardUrl" :cardSvg="cardSvg" />
-                </div>
-                <div v-else>
+                </template>
+                <template v-else>
                     <Skeleton class="puzzleSkeleton" width="100%" height="auto"/>
-                </div>
+                </template>
             </SplitterPanel>
         </Splitter>
     </div>
