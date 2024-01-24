@@ -30,7 +30,6 @@ const { data: newestArticle } = await useAsyncData('newestArticle', () => queryC
     { transform: (articles) => articles[0] }); // findOne does not work for some reason
 
 const unreadArticles = computed(() => {
-    console.log("newest:", newestArticle.value);
     if(newestArticle.value && newestArticle.value.id > user.newestArticleViewed) {
         return {severity: 'primary', value: "New update!"};
     }
