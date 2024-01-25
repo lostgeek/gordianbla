@@ -244,21 +244,21 @@ export function useGordian() {
 
         /* Cost */
         var targetCostType = ""; // 'cost', 'advancement_cost' or null
-        if (correctCard.value.cost) {
+        if (correctCard.value.cost !== undefined) {
             targetCostType = "cost";
-        } else if (correctCard.value.advancement_cost) {
+        } else if (correctCard.value.advancement_cost !== undefined) {
             targetCostType = "advancement_cost";
         } else {
-            targetCostType = null; // Should not exist
+            targetCostType = null; // Identities
         }
 
         var guessedCostType = ""; // 'cost', 'advancement_cost' or null
-        if (card.cost) {
+        if (card.cost !== undefined) {
             guessedCostType = "cost";
-        } else if (card.advancement_cost) {
+        } else if (card.advancement_cost !== undefined) {
             guessedCostType = "advancement_cost";
         } else {
-            guessedCostType = null; // Should not exist
+            guessedCostType = null; // Identities
         }
 
         newGuess.checks.cost =
