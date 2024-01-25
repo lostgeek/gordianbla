@@ -59,7 +59,7 @@ const guessCards = ['Creative Commission', 'Conduit', 'Takobi', 'Gordian Blade']
 
 var animInterval = null;
 onMounted(async () => {
-    await callOnce(nrdb.fetch);
+    await nrdb.fetch();
     cardSvg.value = await gordian.startSpecificPuzzle(nrdb.cards, 'core', '01043', '00');
 
     setTimeout((event) => {

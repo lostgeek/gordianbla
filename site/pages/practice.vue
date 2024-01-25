@@ -82,7 +82,7 @@ const cardUrl = computed(() => nrdb.imageUrlTemplate.replace('{code}', gordian.p
 
 onMounted(async () => {
     try {
-        await callOnce(nrdb.fetch);
+        await nrdb.fetch();
     } catch ({name, message}) {
         toast.add({
             severity: 'error',

@@ -120,7 +120,7 @@ onMounted(async () => {
     }
 
     try {
-        await callOnce(nrdb.fetch);
+        await nrdb.fetch();
 
         var history;
         if (format.value == 'eternal') {
