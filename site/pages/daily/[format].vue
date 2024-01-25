@@ -137,7 +137,9 @@ onMounted(async () => {
         // Show rules dialog if user has not played a daily yet
         if (!user.playedAnyGame) {
             setTimeout(() => {
-                rulesVisible.value = true;
+                if (!user.playedAnyGame) {
+                    rulesVisible.value = true;
+                }
             }, 1000);
         }
 
