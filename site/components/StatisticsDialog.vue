@@ -59,7 +59,6 @@ const prevFormat = ref(null);
 const nextFormat = ref(null);
 if (currentFormatIndex > 0) {
     const id = Object.keys(formatLabel)[currentFormatIndex-1];
-    console.log("prev", id);
     prevFormat.value = {
         id: id,
         label: formatLabel[id],
@@ -68,7 +67,6 @@ if (currentFormatIndex > 0) {
 }
 if (currentFormatIndex < Object.keys(formatLabel).length-1 ) {
     const id = Object.keys(formatLabel)[currentFormatIndex+1];
-    console.log("next", id);
     nextFormat.value = {
         id: id,
         label: formatLabel[id],
