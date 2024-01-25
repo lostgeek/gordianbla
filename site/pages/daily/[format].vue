@@ -14,7 +14,7 @@
         <SplitterPanel class="right" :size="25">
             <template v-if="loaded">
                 <Puzzle v-if="cardSvg" :puzzleMode="puzzleMode" :revealLevel="revealLevel" :cardUrl="cardUrl"
-                    :cardSvg="cardSvg" :style="{filter: `blur(${squint}px)`}" />
+                    :cardSvg="cardSvg" />
             </template>
             <template v-else>
                 <Skeleton class="puzzleSkeleton" width="100%" height="auto" />
