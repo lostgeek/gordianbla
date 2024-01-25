@@ -252,6 +252,28 @@ export const useUser = defineStore(
             });
         }
 
+        function syncUserData(data, overwrite=false) {
+            accountInfo.value = {
+                _id: data._id,
+                secret: data.secret,
+            };
+            if (overwrite) {
+                dailyHistory.value = data.dailyHistory;
+                importedStats.value = data.importedStats;
+                offsetStats.value = data.offsetStats;
+                dailyStandardHistory.value = data.dailyStandardHistory;
+                dailyNeoHistory.value = data.dailyNeoHistory;
+                dailyStartupHistory.value = data.dailyStartupHistory;
+            } else {
+                dailyHistory.value = {...dailyHistory.value, ...data.dailyHistory};
+                importedStats.value = {...importedStats.value, ...data.importedStats};
+                offsetStats.value = {...offsetStats.value, ...data.offsetStats};
+                dailyStandardHistory.value = {...dailyStandardHistory.value, ...data.dailyStandardHistory};
+                dailyNeoHistory.value = {...dailyNeoHistory.value, ...data.dailyNeoHistory};
+                dailyStartupHistory.value = {...dailyStartupHistory.value, ...data.dailyStartupHistory};
+            }
+        }
+
         async function fetchUser(overwrite=false) {
             if (!accountInfo.value) {
                 return;
@@ -259,30 +281,38 @@ export const useUser = defineStore(
 
             var userId = accountInfo.value._id;
 
-            await $fetch(`/api/users/${userId}`, {
+            const data = await $fetch(`/api/users/${userId}`, {
                 method: 'GET',
                 headers: {
                     Authorization: accountInfo.value.secret,
                 }
-            }).then((res) => {
-                if (overwrite) {
-                    dailyHistory.value = res.dailyHistory;
-                    importedStats.value = res.importedStats;
-                    offsetStats.value = res.offsetStats;
-                    dailyStandardHistory.value = res.dailyStandardHistory;
-                    dailyNeoHistory.value = res.dailyNeoHistory;
-                    dailyStartupHistory.value = res.dailyStartupHistory;
-                } else {
-                    dailyHistory.value = {...dailyHistory.value, ...res.dailyHistory};
-                    importedStats.value = {...importedStats.value, ...res.importedStats};
-                    offsetStats.value = {...offsetStats.value, ...res.offsetStats};
-                    dailyStandardHistory.value = {...dailyStandardHistory.value, ...res.dailyStandardHistory};
-                    dailyNeoHistory.value = {...dailyNeoHistory.value, ...res.dailyNeoHistory};
-                    dailyStartupHistory.value = {...dailyStartupHistory.value, ...res.dailyStartupHistory};
+            });
+
+            syncUserData(data, overwrite);
+        }
+
+        async function createInvite() {
+            if (!accountInfo.value) {
+                return;
+            }
+
+            var userId = accountInfo.value._id;
+
+            return await $fetch(`/api/users/${userId}/invites`, {
+                method: 'POST',
+                headers: {
+                    Authorization: accountInfo.value.secret,
                 }
             });
         }
 
+        async function fetchUserFromInvite(link) {
+            const user = await $fetch(`/api/invites/${link}/users`, {
+                method: 'GET',
+            });
+
+            syncUserData(user, true);
+        }
 
         return {
             // state
@@ -307,6 +337,8 @@ export const useUser = defineStore(
             importOldStats,
             createUser,
             fetchUser,
+            createInvite,
+            fetchUserFromInvite,
         };
     },
     { persist: { storage: localStorage } }

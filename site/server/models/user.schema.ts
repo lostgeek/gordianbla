@@ -1,29 +1,48 @@
-import { defineMongooseModel } from '#nuxt/mongoose'
-import { Schema } from 'mongoose';
+import { Schema, Types, model } from "mongoose";
 
-export const UserSchema = defineMongooseModel({
-  name: 'User',
-  schema: {
-    secret: {
-      type: Schema.Types.String,
+interface IInvite {
+    link: string,
+    expiration?: Date,
+}
+
+export const InviteSchema = new Schema<IInvite>(
+    {
+        link: {
+            type: String,
+            required: true,
+            index: true,
+            unique: true,
+        },
+        expiration: Date,
     },
-    dailyHistory: {
-      type: Schema.Types.Map,
+    { timestamps: true }
+);
+
+export const Invite = model("Invite", InviteSchema);
+
+interface IUser {
+    secret: String,
+    inviteLinks: Types.DocumentArray<IInvite>,
+    dailyHistory: Schema.Types.Map,
+    importedStats: Schema.Types.Map,
+    offsetStats: Schema.Types.Map,
+    dailyStandardHistory: Schema.Types.Map,
+    dailyNeoHistory: Schema.Types.Map,
+    dailyStartupHistory: Schema.Types.Map,
+}
+
+export const UserSchema = new Schema<IUser>(
+    {
+        secret: String,
+        inviteLinks: [InviteSchema],
+        dailyHistory: Map,
+        importedStats: Map,
+        offsetStats: Map,
+        dailyStandardHistory: Map,
+        dailyNeoHistory: Map,
+        dailyStartupHistory: Map,
     },
-    importedStats: {
-      type: Schema.Types.Map,
-    },
-    offsetStats: {
-      type: Schema.Types.Map,
-    },
-    dailyStandardHistory: {
-      type: Schema.Types.Map,
-    },
-    dailyNeoHistory: {
-      type: Schema.Types.Map,
-    },
-    dailyStartupHistory: {
-      type: Schema.Types.Map,
-    },
-  },
-})
+    { timestamps: true }
+);
+
+export const User = model("User", UserSchema);

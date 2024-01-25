@@ -12,6 +12,7 @@
         <Panel header="Account synchronisation" toggleable :collapsed="false">
             <template v-if="user.accountInfo">
                 <Button label="Get account info" @click="userAction('fetchUser')"></Button>
+                <Button label="Connect other device" @click="userAction('createInvite')"></Button>
             </template>
             <template v-else>
                 <p>
