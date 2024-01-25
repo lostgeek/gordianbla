@@ -15,7 +15,8 @@
     "@pinia/nuxt": "^0.5.1",
     "@vueuse/core": "^10.7.2",
     "@vueuse/nuxt": "^10.7.2",
-    "nuxt": "^3.9.0",
+    "mongoose": "^8.1.0",
+    "nuxt": "^3.8.2",
     "nuxt-primevue": "^0.2.2",
     "sass": "^1.69.5",
     "vue": "^3.3.13",
@@ -28,6 +29,7 @@
     "@nuxtjs/plausible": "^0.2.4",
     "feed": "^4.2.2",
     "fuse.js": "^7.0.0",
+    "nuxt-mongoose": "^1.0.4",
     "pinia": "^2.1.7",
     "primevue": "^3.45.0"
   }

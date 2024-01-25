@@ -9,6 +9,18 @@
             <InputSwitch id="squintMode" v-model="user.squintMode" />
             <label for="squintMode">Squinting mode<div class="explanation">Adds slider beneath card to blur the card</div></label>
         </div>
+        <Panel header="Account synchronisation" toggleable :collapsed="false">
+            <template v-if="user.accountInfo">
+                <Button label="Get account info" @click="userAction('fetchUser')"></Button>
+            </template>
+            <template v-else>
+                <p>
+                    By default, gordianbla.de saves your account data only locally in your browser.
+                    You can create an account to synchronise your history across multiple devices and gain access to the leaderboards.
+                </p>
+                <Button label="Create account" @click="userAction('createUser')"></Button>
+            </template>
+        </Panel>
         <Panel class="statistics" header="Edit Eternal statistics" toggleable :collapsed="true"
             :pt="{
                 content: {
@@ -50,6 +62,19 @@ watch(() => user.lightMode, (newV, oldV) =>{
 
 const reducedMotion = computed(() => (window.matchMedia(`(prefers-reduced-motion: reduce)`) === true ||
     window.matchMedia(`(prefers-reduced-motion: reduce)`).matches === true));
+
+async function userAction(action) {
+    try {
+        const res = await user[action]();
+        console.log(action, res, user);
+    } catch (e) {
+        toast.add({
+            severity: 'error',
+            summary: "User account",
+            detail: e,
+        });
+    }
+}
 </script>
 
 <style lang="scss" scoped>

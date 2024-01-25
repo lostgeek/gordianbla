@@ -10,6 +10,7 @@ export default defineNuxtConfig({
     "@nuxt/content",
     "@nuxtjs/plausible",
     '@vueuse/nuxt',
+    'nuxt-mongoose',
   ],
   primevue: {
     options: {
@@ -74,5 +75,5 @@ export default defineNuxtConfig({
   pages: true,
   plausible: {
     apiHost: "https://gordianbla.de",
-  }
+  },
 });

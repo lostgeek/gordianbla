@@ -229,6 +229,61 @@ export const useUser = defineStore(
             );
         });
 
+        // Server export
+        const accountInfo = ref(null);
+        async function createUser() {
+            await $fetch('/api/users', {
+                method: 'POST',
+                body: {
+                    dailyHistory: dailyHistory.value,
+                    importedStats: importedStats.value,
+                    offsetStats: offsetStats.value,
+                    dailyStandardHistory: dailyStandardHistory.value,
+                    dailyNeoHistory: dailyNeoHistory.value,
+                    dailyStartupHistory: dailyStartupHistory.value,
+                }
+            }).catch((e) => {
+                throw e;
+            }).then((res) => {
+                accountInfo.value = {
+                    _id: res._id,
+                    secret: res.secret,
+                };
+            });
+        }
+
+        async function fetchUser(overwrite=false) {
+            if (!accountInfo.value) {
+                return;
+            }
+
+            var userId = accountInfo.value._id;
+
+            await $fetch(`/api/users/${userId}`, {
+                method: 'GET',
+                headers: {
+                    Authorization: accountInfo.value.secret,
+                }
+            }).then((res) => {
+                if (overwrite) {
+                    dailyHistory.value = res.dailyHistory;
+                    importedStats.value = res.importedStats;
+                    offsetStats.value = res.offsetStats;
+                    dailyStandardHistory.value = res.dailyStandardHistory;
+                    dailyNeoHistory.value = res.dailyNeoHistory;
+                    dailyStartupHistory.value = res.dailyStartupHistory;
+                } else {
+                    dailyHistory.value = {...dailyHistory.value, ...res.dailyHistory};
+                    importedStats.value = {...importedStats.value, ...res.importedStats};
+                    offsetStats.value = {...offsetStats.value, ...res.offsetStats};
+                    dailyStandardHistory.value = {...dailyStandardHistory.value, ...res.dailyStandardHistory};
+                    dailyNeoHistory.value = {...dailyNeoHistory.value, ...res.dailyNeoHistory};
+                    dailyStartupHistory.value = {...dailyStartupHistory.value, ...res.dailyStartupHistory};
+                }
+            });
+        }
+
+
         return {
             // state
             dailyHistory,
@@ -241,6 +296,7 @@ export const useUser = defineStore(
             offsetStats,
             newestArticleViewed,
             exportSettings,
+            accountInfo,
             // getters
             stats,
             standardStats,
@@ -249,6 +305,8 @@ export const useUser = defineStore(
             playedAnyGame,
             // actions
             importOldStats,
+            createUser,
+            fetchUser,
         };
     },
     { persist: { storage: localStorage } }
