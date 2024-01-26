@@ -12,12 +12,12 @@ export default defineEventHandler(async (event) => {
             return {message: 'Unauthorized'};
         }
 
-        // 30 min default expiration time
+        // 3 min default expiration time
         var expiration = new Date();
-        expiration.setTime(expiration.getTime() + 30*60*1000);
+        expiration.setTime(expiration.getTime() + 3*60*1000);
 
         const invite = new Invite({
-            link: crypto.randomBytes(16).toString('hex'),
+            link: crypto.randomBytes(4).toString('hex'),
             expiration: expiration,
         });
         user.inviteLinks.push(invite);

@@ -298,12 +298,14 @@ export const useUser = defineStore(
 
             var userId = accountInfo.value._id;
 
-            return await $fetch(`/api/users/${userId}/invites`, {
+            const invite = await $fetch(`/api/users/${userId}/invites`, {
                 method: 'POST',
                 headers: {
                     Authorization: accountInfo.value.secret,
-                }
+                },
             });
+            invite.expiration = new Date(invite.expiration);
+            return invite;
         }
 
         async function fetchUserFromInvite(link) {

@@ -10,16 +10,20 @@
             <label for="squintMode">Squinting mode<div class="explanation">Adds slider beneath card to blur the card</div></label>
         </div>
         <Panel header="Account synchronisation" toggleable :collapsed="false">
-            <template v-if="user.accountInfo">
-                <Button label="Get account info" @click="userAction('fetchUser')"></Button>
-                <Button label="Connect other device" @click="userAction('createInvite')"></Button>
-            </template>
-            <template v-else>
+            <template v-if="!user.accountInfo">
                 <p>
                     By default, gordianbla.de saves your account data only locally in your browser.
-                    You can create an account to synchronise your history across multiple devices and gain access to the leaderboards.
+                    You can create an account to synchronise your history across multiple devices and gain access to the leaderboards (WIP).
                 </p>
-                <Button label="Create account" @click="userAction('createUser')"></Button>
+                <Button label="Create account" icon="fa-solid fa-user-plus" @click="createUser"></Button>
+            </template>
+            <template v-else>
+                <Button v-if="!invite" label="Connect other device" icon="fa-solid fa-link" @click="createInvite"></Button>
+                <div v-else class="qrcode">
+                    <img :src="qrcode" alt="QR Code to link mobile device" />
+                    <div class="inviteLink"><a @click="copyInviteLinkToClipboard">Invite Link</a> (click to copy)</div>
+                    <div v-if="expiration" class="expiration">Expires in {{expiration}}.</div>
+                </div>
             </template>
         </Panel>
         <Panel class="statistics" header="Edit Eternal statistics" toggleable :collapsed="true"
@@ -36,6 +40,8 @@
 </template>
 
 <script setup>
+import { useQRCode } from '@vueuse/integrations/useQRCode'
+
 const user = useUser();
 const toast = useToast();
 
@@ -64,18 +70,102 @@ watch(() => user.lightMode, (newV, oldV) =>{
 const reducedMotion = computed(() => (window.matchMedia(`(prefers-reduced-motion: reduce)`) === true ||
     window.matchMedia(`(prefers-reduced-motion: reduce)`).matches === true));
 
-async function userAction(action) {
-    try {
-        const res = await user[action]();
-        console.log(action, res, user);
-    } catch (e) {
+async function createUser() {
+    if (user.accountInfo) {
         toast.add({
             severity: 'error',
-            summary: "User account",
-            detail: e,
+            summary: "Account creation",
+            detail: "An account already exists.",
+        });
+        return;
+    }
+    try {
+        await user.createUser();
+    } catch (e) {
+        console.log("createUser:", e);
+        toast.add({
+            severity: 'error',
+            summary: "Account creation",
+            detail: "Could not create account. Please try again later.",
         });
     }
 }
+
+const invite = ref(null);
+var host;
+if (process.server) {
+    host = nuxtApp.ssrContext.event.node.req.headers.origin;
+} else {
+    host = window.location.origin;
+}
+const inviteLink = computed(() => (invite.value) ? `${origin}/settings/link-device/${invite.value.link}` : null);
+const qrcode = useQRCode(inviteLink);
+const expiration = ref(null)
+
+async function createInvite() {
+    if (!user.accountInfo) {
+        toast.add({
+            severity: 'error',
+            summary: "Invite creation",
+            detail: "No account found",
+        });
+        return;
+    }
+    try {
+        invite.value = await user.createInvite();
+    } catch (e) {
+        console.log("createUser:", e);
+        toast.add({
+            severity: 'error',
+            summary: "Invite creation",
+            detail: "Could not create invite. Please try again later.",
+        });
+    }
+    
+    function generateExpirationString () {
+        if(invite.value) {
+            const diff = invite.value.expiration - new Date();
+
+            if (diff < 0) {
+                // invite expired
+                invite.value = null;
+                clearInterval(inviteInt);
+            }
+
+            var out = [];
+            const minutes = Math.floor(diff / 1000 / 60);
+            const seconds = Math.floor(diff / 1000 % 60);
+
+            if (minutes > 0) {
+                out.push(`${minutes} min`);
+            }
+            if (seconds > 0) {
+                out.push(`${seconds} sec`);
+            }
+
+            expiration.value = out.join(' ');
+        }
+    }
+    const inviteInt = setInterval(generateExpirationString, 1000);
+    generateExpirationString();
+}
+
+function copyInviteLinkToClipboard() {
+    if(!inviteLink.value) {
+        return;
+    }
+    navigator.clipboard.writeText(inviteLink.value); 
+    toast.add({
+        severity: 'success',
+        summary: "Invite Link",
+        detail: "Copied to clipboard",
+        life: 3000,
+    });
+}
+
+onMounted( () => {
+});
+
 </script>
 
 <style lang="scss" scoped>
@@ -104,6 +194,21 @@ async function userAction(action) {
         .explanation {
             font-size: 0.9rem;
         }
+    }
+}
+
+.qrcode {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 20rem;
+
+    & img {
+        margin-bottom: .5rem;
+    }
+
+    & .expiration {
+        font-size:0.8rem;
     }
 }
 </style>

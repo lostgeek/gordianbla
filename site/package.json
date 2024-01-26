@@ -27,10 +27,12 @@
     "@fontsource/patua-one": "^5.0.18",
     "@nuxt/content": "^2.10.0",
     "@nuxtjs/plausible": "^0.2.4",
+    "@vueuse/integrations": "^10.7.2",
     "feed": "^4.2.2",
     "fuse.js": "^7.0.0",
     "nuxt-mongoose": "^1.0.4",
     "pinia": "^2.1.7",
-    "primevue": "^3.45.0"
+    "primevue": "^3.45.0",
+    "qrcode": "^1.5.3"
   }
 }
