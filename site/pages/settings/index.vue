@@ -13,7 +13,7 @@
             <template v-if="!user.accountInfo">
                 <p>
                     By default, gordianbla.de saves your account data only locally in your browser.
-                    You can create an account to synchronise your history across multiple devices and gain access to the leaderboards (WIP).
+                    You can create an account on the server to synchronise your history across multiple devices and gain access to the leaderboards (coming soon).
                 </p>
                 <Button label="Create account" icon="fa-solid fa-user-plus" @click="createUser"></Button>
             </template>
