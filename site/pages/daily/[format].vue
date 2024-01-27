@@ -66,19 +66,24 @@ const cards = computed(() => {
 });
 
 const user = useUser();
+await user.fetchUser();
 
 const gordian = useGordian();
 
-watch(gordian.guesses, (newG, oldG) => {
+watch(gordian.guesses, async (newG, oldG) => {
     if (gordian.puzzleAttr.value.dailyNumber) {
         if (format.value == 'eternal') {
             user.dailyHistory[gordian.puzzleAttr.value.dailyNumber] = gordian.guesses.value;
+            await user.updateUser(['dailyHistory']);
         } else if (format.value == 'standard') {
             user.dailyStandardHistory[gordian.puzzleAttr.value.dailyNumber] = gordian.guesses.value;
+            await user.updateUser(['dailyStandardHistory']);
         } else if (format.value == 'neo') {
             user.dailyNeoHistory[gordian.puzzleAttr.value.dailyNumber] = gordian.guesses.value;
+            await user.updateUser(['dailyNeoHistory']);
         } else if (format.value == 'startup') {
             user.dailyStartupHistory[gordian.puzzleAttr.value.dailyNumber] = gordian.guesses.value;
+            await user.updateUser(['dailyStartupHistory']);
         }
     }
 

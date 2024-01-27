@@ -252,7 +252,7 @@ export const useUser = defineStore(
             });
         }
 
-        function syncUserData(data, overwrite=false) {
+        function mergeUserData(data, overwrite=false) {
             accountInfo.value = {
                 _id: data._id,
                 secret: data.secret,
@@ -288,7 +288,41 @@ export const useUser = defineStore(
                 }
             });
 
-            syncUserData(data, overwrite);
+            mergeUserData(data, overwrite);
+        }
+
+        async function updateUser(fields) {
+            if (!accountInfo.value) {
+                return;
+            }
+
+            var update = {};
+            if (fields.includes('dailyHistory')) {
+                update.dailyHistory = dailyHistory.value;
+            }
+            if (fields.includes('importedStats')) {
+                update.importedStats = importedStats.value;
+            }
+            if (fields.includes('offsetStats')) {
+                update.offsetStats = offsetStats.value;
+            }
+            if (fields.includes('dailyStandardHistory')) {
+                update.dailyStandardHistory = dailyStandardHistory.value;
+            }
+            if (fields.includes('dailyNeoHistory')) {
+                update.dailyNeoHistory = dailyNeoHistory.value;
+            }
+            if (fields.includes('dailyStartupHistory')) {
+                update.dailyStartupHistory = dailyStartupHistory.value;
+            }
+
+            await $fetch(`/api/users/${accountInfo.value._id}`, {
+                method: 'PATCH',
+                headers: {
+                    Authorization: accountInfo.value.secret,
+                },
+                body: update,
+            });
         }
 
         async function createInvite() {
@@ -313,7 +347,7 @@ export const useUser = defineStore(
                 method: 'GET',
             });
 
-            syncUserData(user, true);
+            mergeUserData(user, true);
         }
 
         return {
@@ -339,6 +373,7 @@ export const useUser = defineStore(
             importOldStats,
             createUser,
             fetchUser,
+            updateUser,
             createInvite,
             fetchUserFromInvite,
         };

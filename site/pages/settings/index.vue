@@ -34,7 +34,12 @@
             }">
             <div v-if="user.importedStats.played == 0"><Button icon="fa-solid fa-download" label="Import old stats" @click="importOldStats()" /></div>
             <div v-if="!oathSworn"><p>I declare on my honour that I will never use my powers for cheating.</p><Button icon="fa-solid fa-scroll" label="Swear oath" @click="oathSworn=true"/></div>
-            <div><Statistics :editable="oathSworn" format="eternal" /></div>
+            <div>
+                <Statistics :editable="oathSworn" format="eternal" />
+                <Button style="margin-top: 1rem" v-if="oathSworn" label="Save changes"
+                    @click="saveChanges(['offsetStats'])"
+                    icon="fa-solid fa-save" />
+            </div>
         </Panel>
     </div>
 </template>
@@ -43,6 +48,8 @@
 import { useQRCode } from '@vueuse/integrations/useQRCode'
 
 const user = useUser();
+await user.fetchUser();
+
 const toast = useToast();
 
 const oathSworn = ref(false);
@@ -70,6 +77,16 @@ watch(() => user.lightMode, (newV, oldV) =>{
 const reducedMotion = computed(() => (window.matchMedia(`(prefers-reduced-motion: reduce)`) === true ||
     window.matchMedia(`(prefers-reduced-motion: reduce)`).matches === true));
 
+async function saveChanges(fields) {
+    await user.updateUser(fields);
+    toast.add({
+        severity: 'success',
+        summary: "Account",
+        detail: "Changes saved.",
+        life: 3000,
+    });
+}
+
 async function createUser() {
     if (user.accountInfo) {
         toast.add({
@@ -81,6 +98,7 @@ async function createUser() {
     }
     try {
         await user.createUser();
+        useTrackEvent('create_account');
     } catch (e) {
         console.log("createUser:", e);
         toast.add({
@@ -113,6 +131,7 @@ async function createInvite() {
     }
     try {
         invite.value = await user.createInvite();
+        useTrackEvent('create_invite');
     } catch (e) {
         console.log("createUser:", e);
         toast.add({
@@ -162,10 +181,6 @@ function copyInviteLinkToClipboard() {
         life: 3000,
     });
 }
-
-onMounted( () => {
-});
-
 </script>
 
 <style lang="scss" scoped>
