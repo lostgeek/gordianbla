@@ -121,7 +121,7 @@ function showRules() {
 .headerLink {
     color: var(--text-color);
     text-decoration: none;
-    font-family: 'Patua One', cursive;
+    font-family: 'Patua One', system-ui, sans-serif;
     font-size: 2rem;
 }
 .p-menubar {

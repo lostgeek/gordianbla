@@ -127,7 +127,7 @@ function titleClass(guess) {
     }
 
     & .guessHeader {
-        font-family: 'Patua One', cursive;
+        font-family: 'Patua One', system-ui, sans-serif;
         text-align: center;
         white-space: nowrap;
 
@@ -187,7 +187,7 @@ function titleClass(guess) {
         width: 100%;
         height: 100%;
 
-        font-family: 'Medula One', sans-serif;
+        font-family: 'Medula One', system-ui, sans-serif;
         font-size: 2rem;
         @media(max-width:768px) {
             font-size: 1.5rem;
