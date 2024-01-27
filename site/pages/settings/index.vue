@@ -9,7 +9,7 @@
             <InputSwitch id="squintMode" v-model="user.squintMode" />
             <label for="squintMode">Squinting mode<div class="explanation">Adds slider beneath card to blur the card</div></label>
         </div>
-        <Panel header="Account synchronisation" toggleable :collapsed="false">
+        <Panel class="account" header="Account synchronisation" toggleable :collapsed="false">
             <template v-if="!user.accountInfo">
                 <p>
                     By default, gordianbla.de saves your account data only locally in your browser.
@@ -18,11 +18,21 @@
                 <Button label="Create account" icon="fa-solid fa-user-plus" @click="createUser"></Button>
             </template>
             <template v-else>
-                <Button v-if="!invite" label="Connect other device" icon="fa-solid fa-link" @click="createInvite"></Button>
-                <div v-else class="qrcode">
-                    <img :src="qrcode" alt="QR Code to link mobile device" />
-                    <div class="inviteLink"><a @click="copyInviteLinkToClipboard">Invite Link</a> (click to copy)</div>
-                    <div v-if="expiration" class="expiration">Expires in {{expiration}}.</div>
+                <div>
+                    <Button v-if="!invite" label="Connect other device" icon="fa-solid fa-link" @click="createInvite"></Button>
+                    <div v-else class="qrcode">
+                        <img :src="qrcode" alt="QR Code to link mobile device" />
+                        <div class="inviteLink"><a @click="copyInviteLinkToClipboard">Invite Link</a> (click to copy)</div>
+                        <div v-if="expiration" class="expiration">Expires in {{expiration}}.</div>
+                    </div>
+                </div>
+                <div v-if="!areYouSure">
+                    <Button label="Unlink device from account" severity="danger" icon="fa-solid fa-user-slash" @click="areYouSure = true" />
+                </div>
+                <div v-else>
+                Are you sure?<br />
+                    <Button label="Yes, unlink device" severity="danger" icon="fa-solid fa-user-slash" @click="unlinkUser" />
+                    <Button label="No" @click="areYouSure = false" />
                 </div>
             </template>
         </Panel>
@@ -107,6 +117,16 @@ async function createUser() {
             detail: "Could not create account. Please try again later.",
         });
     }
+}
+
+const areYouSure = ref(false);
+function unlinkUser() {
+    if (!user.accountInfo) {
+        return;
+    }
+    user.accountInfo = null;
+    console.log(user);
+    useTrackEvent('unlink_device');
 }
 
 const invite = ref(null);
@@ -224,6 +244,12 @@ function copyInviteLinkToClipboard() {
 
     & .expiration {
         font-size:0.8rem;
+    }
+}
+
+:deep(.account) {
+    .p-panel-content>div:not(:first-child) {
+        margin-top: 1rem;
     }
 }
 </style>
