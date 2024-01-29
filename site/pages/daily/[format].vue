@@ -66,24 +66,58 @@ const cards = computed(() => {
 });
 
 const user = useUser();
-await user.fetchUser();
+try {
+    await user.fetchUser();
+} catch (e) {
+    if(e.status == 401) {
+        console.log("401 error");
+        toast.add({
+            severity: 'error',
+            summary: "Account Synchronisation",
+            detail: "Authorisation failed: Server did not accept secret."
+        });
+    } else {
+        toast.add({
+            severity: 'error',
+            summary: "Account Synchronisation",
+            detail: e.message
+        });
+    }
+}
 
 const gordian = useGordian();
 
 watch(gordian.guesses, async (newG, oldG) => {
-    if (gordian.puzzleAttr.value.dailyNumber) {
-        if (format.value == 'eternal') {
-            user.dailyHistory[gordian.puzzleAttr.value.dailyNumber] = gordian.guesses.value;
-            await user.updateUser(['dailyHistory']);
-        } else if (format.value == 'standard') {
-            user.dailyStandardHistory[gordian.puzzleAttr.value.dailyNumber] = gordian.guesses.value;
-            await user.updateUser(['dailyStandardHistory']);
-        } else if (format.value == 'neo') {
-            user.dailyNeoHistory[gordian.puzzleAttr.value.dailyNumber] = gordian.guesses.value;
-            await user.updateUser(['dailyNeoHistory']);
-        } else if (format.value == 'startup') {
-            user.dailyStartupHistory[gordian.puzzleAttr.value.dailyNumber] = gordian.guesses.value;
-            await user.updateUser(['dailyStartupHistory']);
+    try {
+        if (gordian.puzzleAttr.value.dailyNumber) {
+            if (format.value == 'eternal') {
+                user.dailyHistory[gordian.puzzleAttr.value.dailyNumber] = gordian.guesses.value;
+                await user.updateUser(['dailyHistory']);
+            } else if (format.value == 'standard') {
+                user.dailyStandardHistory[gordian.puzzleAttr.value.dailyNumber] = gordian.guesses.value;
+                await user.updateUser(['dailyStandardHistory']);
+            } else if (format.value == 'neo') {
+                user.dailyNeoHistory[gordian.puzzleAttr.value.dailyNumber] = gordian.guesses.value;
+                await user.updateUser(['dailyNeoHistory']);
+            } else if (format.value == 'startup') {
+                user.dailyStartupHistory[gordian.puzzleAttr.value.dailyNumber] = gordian.guesses.value;
+                await user.updateUser(['dailyStartupHistory']);
+            }
+        }
+    } catch (e) {
+        if(e.status == 401) {
+            console.log("401 error");
+            toast.add({
+                severity: 'error',
+                summary: "Account Synchronisation",
+                detail: "Authorisation failed: Server did not accept secret."
+            });
+        } else {
+            toast.add({
+                severity: 'error',
+                summary: "Account Synchronisation",
+                detail: e.message
+            });
         }
     }
 

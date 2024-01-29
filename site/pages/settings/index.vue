@@ -57,10 +57,26 @@
 <script setup>
 import { useQRCode } from '@vueuse/integrations/useQRCode'
 
-const user = useUser();
-await user.fetchUser();
-
 const toast = useToast();
+
+const user = useUser();
+try {
+    await user.fetchUser();
+} catch (e) {
+    if(e.status == 401) {
+        toast.add({
+            severity: 'error',
+            summary: "Account Synchronisation",
+            detail: "Authorisation failed: Server did not accept secret."
+        });
+    } else {
+        toast.add({
+            severity: 'error',
+            summary: "Account Synchronisation",
+            detail: e.message
+        });
+    }
+}
 
 const oathSworn = ref(false);
 

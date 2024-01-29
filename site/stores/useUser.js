@@ -279,7 +279,7 @@ export const useUser = defineStore(
                 return;
             }
 
-            var userId = accountInfo.value._id;
+            const userId = accountInfo.value._id;
 
             const data = await $fetch(`/api/users/${userId}`, {
                 method: 'GET',
