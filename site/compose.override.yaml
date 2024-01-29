@@ -1,0 +1,27 @@
+services:
+  node:
+    build:
+      args:
+        - MONGODB_URI=mongodb://mongo:27017/gordianbla
+      target: dev
+    volumes:
+      - ./assets:/srv/assets
+      - ./components:/srv/components
+      - ./content:/srv/content
+      - ./layouts:/srv/layouts
+      - ./pages:/srv/pages
+      - ./plugins:/srv/plugins
+      - ./public:/srv/public
+      - ./server:/srv/server
+      - ./stores:/srv/stores
+    environment:
+      NODE_ENV: development
+    ports:
+      - 3000:3000
+      - 24678:24678
+  
+  mongo:
+    volumes:
+      - .docker/db:/data/db
+    ports:
+      - 27017:27017
