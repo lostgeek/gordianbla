@@ -1,5 +1,5 @@
 services:
-  node:
+  gordianbla:
     build:
       context: .
       args:
@@ -13,3 +13,5 @@ services:
 
   mongo:
     image: mongo
+    volumes:
+      - gordianbla_db:/data/db

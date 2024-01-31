@@ -1,5 +1,5 @@
 services:
-  node:
+  gordianbla:
     build:
       args:
         - MONGODB_URI=mongodb://mongo:27017/gordianbla
@@ -21,7 +21,5 @@ services:
       - 24678:24678
   
   mongo:
-    volumes:
-      - .docker/db:/data/db
     ports:
       - 27017:27017
