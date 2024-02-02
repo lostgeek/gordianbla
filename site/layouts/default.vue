@@ -1,7 +1,7 @@
 <template>
+    <Toast />
     <Header />
     <slot />
-    <Toast />
 </template>
 
 <script setup>
