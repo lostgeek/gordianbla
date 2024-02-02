@@ -11,7 +11,6 @@ export const InviteSchema = new Schema<IInvite>(
             type: String,
             required: true,
             index: true,
-            unique: true,
         },
         expiration: Date,
     },

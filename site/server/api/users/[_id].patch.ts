@@ -13,6 +13,7 @@ export default defineEventHandler(async (event) => {
 
         return user;
     } catch (error) {
+        console.log("Error in /api/users/[_id].patch.ts:", error);
         return error;
     }
 });

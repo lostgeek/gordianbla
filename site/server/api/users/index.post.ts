@@ -8,6 +8,7 @@ export default defineEventHandler(async (event) => {
     try {
         return await new User(body).save();
     } catch (error) {
+        console.log("Error in /api/users/index.post.ts:", error);
         return error;
     }
 });

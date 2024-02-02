@@ -30,6 +30,7 @@ export default defineEventHandler(async (event) => {
 
         return user;
     } catch (error) {
+        console.log("Error in /api/invites/[_link]/users/index.get.ts:", error);
         return error;
     }
 });

@@ -25,6 +25,7 @@ export default defineEventHandler(async (event) => {
 
         return invite;
     } catch (error) {
+        console.log("Error in /api/users/[_id]/invites/index.post.ts:", error);
         return error;
     }
 });
