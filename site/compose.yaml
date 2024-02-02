@@ -6,8 +6,6 @@ services:
         - MONGODB_URI=mongodb://mongo:27017/gordianbla
     environment:
       NODE_ENV: production
-    ports:
-      - 3000:3000
     depends_on:
       - mongo
 
