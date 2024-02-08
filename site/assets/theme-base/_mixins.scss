@@ -1,3 +1,5 @@
+$inputFocusOutlineOffset: 0 !default;
+
 @mixin icon-override($icon) {
 	&:before {
 		content: $icon;
@@ -12,12 +14,14 @@
 
 @mixin focused-inset() {
 	outline: $focusOutline;
-    outline-offset: $focusOutlineOffset;
+    outline-offset: -1 * $focusOutlineOffset;
     box-shadow: inset $focusShadow;
 }
 
 @mixin focused-input() {
-	@include focused();
+	outline: $focusOutline;
+    outline-offset: $inputFocusOutlineOffset;
+    box-shadow: $focusShadow;
 	border-color: $inputFocusBorderColor;
 }
 
@@ -32,6 +36,16 @@
 }
 
 @mixin menuitem {
+    margin: $inputListItemMargin;
+
+    &:first-child {
+        margin-top: 0;
+    }
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+    
     > .p-menuitem-content {
         color: $menuitemTextColor;
         transition: $listItemTransition;
@@ -210,6 +224,7 @@
     background: $actionIconBg;
     border-radius: $actionIconBorderRadius;
     transition: $actionIconTransition;
+    outline-color: transparent;
 
     @if $enabled {
         &:enabled:hover {

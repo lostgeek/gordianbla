@@ -20,7 +20,7 @@ $emphasis-lower:rgba(0,0,0,.12) !default;
 $overlayColor:#000000 !default;
 
 //global
-$fontFamily:Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif !default;
+$fontFamily:Roboto,"Helvetica Neue Light","Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif !default;
 $fontSize:1rem !default;
 $fontWeight:normal !default;
 $textColor:$emphasis-high !default;
@@ -51,6 +51,7 @@ $scaleLG:1.25 !default;
 $focusOutlineColor:transparent !default;
 $focusOutline:0 none !default;
 $focusOutlineOffset:0 !default;
+$inputFocusOutlineOffset:$focusOutlineOffset !default;
 $focusShadow:none !default;
 
 //action icons
@@ -206,6 +207,17 @@ $dangerButtonActiveBg:rgba(#D32F2F, .68) !default;
 $dangerButtonTextActiveColor:#ffffff !default;
 $dangerButtonActiveBorderColor:transparent !default;
 $dangerButtonFocusShadow:none !default;
+
+$contrastButtonBg:#212121 !default;
+$contrastButtonTextColor:#ffffff !default;
+$contrastButtonBorder:1px solid #212121 !default;
+$contrastButtonHoverBg:#424242 !default;
+$contrastButtonTextHoverColor:$contrastButtonTextColor !default;
+$contrastButtonHoverBorderColor:#424242 !default;
+$contrastButtonActiveBg:#616161 !default;
+$contrastButtonTextActiveColor:$contrastButtonTextColor !default;
+$contrastButtonActiveBorderColor:#616161 !default;
+$contrastButtonFocusShadow:none !default;
 
 $linkButtonColor:$primaryColor !default;
 $linkButtonHoverColor:$primaryColor !default;
@@ -588,6 +600,14 @@ $errorMessageBg:#FFCDD2 !default;
 $errorMessageBorder:solid transparent !default;
 $errorMessageTextColor:#B71C1C !default;
 $errorMessageIconColor:#B71C1C !default;
+$secondaryMessageBg: $secondaryButtonBg !default;
+$secondaryMessageBorder: solid transparent !default;
+$secondaryMessageTextColor: $secondaryButtonTextColor !default;
+$secondaryMessageIconColor: $secondaryButtonTextColor !default;
+$contrastMessageBg: $contrastButtonBg !default;
+$contrastMessageBorder: solid transparent !default;
+$contrastMessageTextColor: $contrastButtonTextColor !default;
+$contrastMessageIconColor: $contrastButtonTextColor !default;
 
 //overlays
 $overlayContentBorder:0 none !default;
@@ -833,8 +853,8 @@ $imagePreviewActionIconFontSize:1.5rem !default;
 $imagePreviewActionIconBorderRadius:50% !default;
 
 :root {
-    font-family:Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif;
-    --font-family:Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif; 
+    font-family:Roboto,"Helvetica Neue Light","Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
+    --font-family:Roboto,"Helvetica Neue Light","Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
     --surface-a:#ffffff;
     --surface-b:#fafafa;
     --surface-c:rgba(0,0,0,.04);

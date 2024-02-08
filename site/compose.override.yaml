@@ -14,10 +14,12 @@ services:
       - ./public:/srv/public
       - ./server:/srv/server
       - ./stores:/srv/stores
+      - ./nuxt.config.ts:/srv/nuxt.config.ts
     environment:
       NODE_ENV: development
     ports:
       - 3000:3000
+      - 4000:4000
       - 24678:24678
   
   mongo:
