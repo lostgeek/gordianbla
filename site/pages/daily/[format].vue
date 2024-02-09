@@ -3,7 +3,7 @@
         <SplitterPanel class="left" :size="75">
             <template v-if="loaded">
                 <GuessTable :guesses="gordian.guesses.value" />
-                <CardInputField v-if="!gordian.finished.value" :cards="cards" @submit="(card) => gordian.guess(card)" />
+                <CardInputField :class="(gordian.finished.value)?'hidden':none" :cards="cards" @submit="(card) => gordian.guess(card)" />
             </template>
             <template v-else>
                 <GuessTable
@@ -256,5 +256,9 @@ onMounted(async () => {
     width: 100%;
     border-radius: 4.7% / 3.6%;
     aspect-ratio: 63.5/88;
+}
+
+.hidden {
+    visibility: hidden;
 }
 </style>

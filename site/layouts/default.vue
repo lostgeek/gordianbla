@@ -13,6 +13,3 @@ if(user.lightMode) {
     import('~/assets/themes/material/material-dark/compact/gordian/theme.scss');
 }
 </script>
-
-<style>
-</style>

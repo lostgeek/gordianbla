@@ -99,9 +99,9 @@ const squint = ref(0);
 </script>
 
 <template>
-    <div class="puzzleContainer">
+    <div class="puzzleContainer" :class="puzzleClasses" :style="`filter: blur(${squint}px)`" >
         <div class="puzzle" :class="puzzleClasses"
-            :style="`filter: blur(${squint}px)`" ref="puzzle">
+            ref="puzzle">
         </div>
         <div class="cardImage" :class="cardImageClasses" ref="cardImage">
             <img :src="cardUrl" />
@@ -124,20 +124,33 @@ const squint = ref(0);
 
     overflow:clip;
     border-radius: 4.7% / 3.6%;
+
+    &.solved {
+        transition: filter .5s linear;
+        filter: blur(0px)!important;
+    }
 }
 .puzzle {
     width: 100%;
     visibility: visible;
     opacity: 1;
     transition: visibility 0s 2s, opacity 1s 1s linear;
+    height: 100%;
 
     &.solved {
         visibility: hidden;
+        transition: visibility 0s 2s, opacity 1s 1s linear;
         opacity: 0;
     }
 
     & svg {
-        
+        max-width: 100%;
+        height: auto;
+        vertical-align: middle;
+        font-style: italic;
+        background-repeat: no-repeat;
+        background-size: cover;
+        shape-margin: 1rem;
         & * {
             transition: visibility 0s, opacity 0.1s linear;
         }

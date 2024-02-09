@@ -17,7 +17,7 @@ export default defineNuxtConfig({
       ripple: true
     },
   },
-  css: ["@fontsource/patua-one", "@fontsource/medula-one"],
+  css: ["@fontsource/patua-one", "@fontsource/medula-one", "~/assets/reset.css"],
   app: {
     head: {
       link: [
