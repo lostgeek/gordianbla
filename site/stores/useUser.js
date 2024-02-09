@@ -241,7 +241,8 @@ export const useUser = defineStore(
                     dailyStandardHistory: dailyStandardHistory.value,
                     dailyNeoHistory: dailyNeoHistory.value,
                     dailyStartupHistory: dailyStartupHistory.value,
-                }
+                },
+                timeout: 3000,
             }).catch((e) => {
                 throw e;
             }).then((res) => {
@@ -285,7 +286,8 @@ export const useUser = defineStore(
                 method: 'GET',
                 headers: {
                     Authorization: accountInfo.value.secret,
-                }
+                },
+                timeout: 3000,
             });
 
             mergeUserData(data, overwrite);
@@ -322,6 +324,7 @@ export const useUser = defineStore(
                     Authorization: accountInfo.value.secret,
                 },
                 body: update,
+                timeout: 3000,
             });
         }
 
@@ -337,6 +340,7 @@ export const useUser = defineStore(
                 headers: {
                     Authorization: accountInfo.value.secret,
                 },
+                timeout: 3000,
             });
             invite.expiration = new Date(invite.expiration);
             return invite;
@@ -345,6 +349,7 @@ export const useUser = defineStore(
         async function fetchUserFromInvite(link) {
             const user = await $fetch(`/api/invites/${link}/users`, {
                 method: 'GET',
+                timeout: 3000,
             });
 
             mergeUserData(user, true);

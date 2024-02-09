@@ -66,30 +66,14 @@ const cards = computed(() => {
 });
 
 const user = useUser();
-try {
-    await user.fetchUser();
-} catch (e) {
-    if(e.status == 401) {
-        console.log("401 error");
-        toast.add({
-            severity: 'error',
-            summary: "Account Synchronisation",
-            detail: "Authorisation failed: Server did not accept secret."
-        });
-    } else {
-        toast.add({
-            severity: 'error',
-            summary: "Account Synchronisation",
-            detail: e.message
-        });
-    }
-}
+const unsavedChanges = ref(false);
 
 const gordian = useGordian();
 
 watch(gordian.guesses, async (newG, oldG) => {
     try {
         if (gordian.puzzleAttr.value.dailyNumber) {
+            unsavedChanges.value = true;
             if (format.value == 'eternal') {
                 user.dailyHistory[gordian.puzzleAttr.value.dailyNumber] = gordian.guesses.value;
                 await user.updateUser(['dailyHistory']);
@@ -103,6 +87,7 @@ watch(gordian.guesses, async (newG, oldG) => {
                 user.dailyStartupHistory[gordian.puzzleAttr.value.dailyNumber] = gordian.guesses.value;
                 await user.updateUser(['dailyStartupHistory']);
             }
+            unsavedChanges.value = false;
         }
     } catch (e) {
         if(e.status == 401) {
@@ -150,6 +135,13 @@ const cardSvg = ref(null);
 const cardUrl = computed(() => nrdb.imageUrlTemplate.replace('{code}', gordian.puzzleAttr.value.nrdbID));
 
 onMounted(async () => {
+    window.onbeforeunload = confirmExit;
+    function confirmExit() {
+        if (unsavedChanges.value) {
+            return "You have unsaved changes. Do you really want to exit?";
+        }
+    }
+
     if (user.importOldStats()) {
         toast.add({
             severity: 'success',
@@ -157,6 +149,8 @@ onMounted(async () => {
             detail: "Old stats found and imported. Welcome to the new Gordian Blade!"
         });
     }
+
+    var errorsOccurred = false;
 
     try {
         await nrdb.fetch();
@@ -181,14 +175,37 @@ onMounted(async () => {
                 }
             }, 1000);
         }
-
-        loaded.value = true;
     } catch ({ name, message }) {
+        errorsOccurred = true;
         toast.add({
             severity: 'error',
             summary: name,
             detail: message
         });
+    }
+
+    try {
+        await user.fetchUser();
+    } catch (e) {
+        if(e.status == 401) {
+            console.log("401 error");
+            toast.add({
+                severity: 'error',
+                summary: "Account Synchronisation",
+                detail: "Authorisation failed: Server did not accept secret."
+            });
+        } else {
+            errorsOccurred = true;
+            toast.add({
+                severity: 'error',
+                summary: "Account Synchronisation",
+                detail: e.message
+            });
+        }
+    }
+
+    if(!errorsOccurred) {
+        loaded.value = true;
     }
 });
 </script>
