@@ -12,6 +12,11 @@
             </template>
         </SplitterPanel>
         <SplitterPanel class="right" :size="25">
+            <Tag icon="fa-solid fa-calendar">
+                <template #default>
+                    <span>Format: {{formatLabel[format]}}</span>
+                </template>
+            </Tag>
             <template v-if="loaded">
                 <Puzzle v-if="cardSvg" :puzzleMode="puzzleMode" :revealLevel="revealLevel" :cardUrl="cardUrl"
                     :cardSvg="cardSvg" />
@@ -46,15 +51,15 @@ if (!['eternal', 'standard', 'neo', 'startup'].includes(route.params.format)) {
 }
 
 const format = computed(() => route.params.format);
-const formatLabel = {
+const formatLabel = ref({
     eternal: 'Eternal',
     standard: 'Standard',
     neo: 'Neo (All-NSG)',
     startup: 'Startup',
-};
+});
 useSeoMeta({
-  title: `Gordian Blade - ${formatLabel[format.value]}`,
-  ogTitle: `Gordian Blade - ${formatLabel[format.value]}`,
+  title: `Gordian Blade - ${formatLabel.value[format.value]}`,
+  ogTitle: `Gordian Blade - ${formatLabel.value[format.value]}`,
   description: 'The daily Netrunner puzzle!',
   ogDescription: 'The daily Netrunner puzzle!',
   ogImage: 'https://gordianbla.de/android-chrome-192x192.png',
@@ -234,16 +239,27 @@ onMounted(async () => {
 }
 
 :deep(.right) {
-    padding: 1rem;
-
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    align-items: center;
 
+    padding: 1rem;
     gap: 1rem;
+    @media(max-width:1000px) {
+        padding: .5rem;
+        gap: .5rem;
+    }
+    @media(max-width:400px) {
+        padding: .25rem;
+        gap: .25rem;
+    }
 
     &>* {
         flex-grow: 0;
+    }
+
+    & .sliderGroup {
+        align-self: stretch;
     }
 
     @media(max-width:400px) {

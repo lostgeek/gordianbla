@@ -4,7 +4,7 @@
             <SplitterPanel class="left" :size="75">
                 <template v-if="loaded">
                     <GuessTable :guesses="gordian.guesses.value" />
-                    <CardInputField v-if="!gordian.finished.value" :cards="filteredCards" @submit="(card) => gordian.guess(card)" />
+                    <CardInputField :class="(gordian.finished.value)?'hidden':none" :cards="filteredCards" @submit="(card) => gordian.guess(card)" />
                     <div class="buttons">
                         <Button icon="fa-solid fa-left-long" class="small" label="Back" @click="format=null"/>
                         <Button v-if="gordian.finished.value" icon="fa-solid fa-arrows-rotate" class="small" label="New Puzzle" @click="newPuzzle()"/>
@@ -16,6 +16,11 @@
                 </template>
             </SplitterPanel>
             <SplitterPanel class="right" :size="25">
+                <Tag icon="fa-solid fa-gamepad" severity="warning">
+                    <template #default>
+                        <span>Practice: {{format.name}}</span>
+                    </template>
+                </Tag>
                 <template v-if="loaded">
                     <Puzzle v-if="cardSvg" :puzzleMode="puzzleMode" :revealLevel="revealLevel" :cardUrl="cardUrl" :cardSvg="cardSvg" />
                 </template>
@@ -160,24 +165,30 @@ watch(format, async () => {
     flex-direction: column;
 
     gap: 1rem;
-    
-    & .buttons {
-        display:flex;
-        gap: 1rem;
-    } 
 }
 
 :deep(.right) {
-    padding: 1rem;
-
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    align-items: center;
 
+    padding: 1rem;
     gap: 1rem;
+    @media(max-width:1000px) {
+        padding: .5rem;
+        gap: .5rem;
+    }
+    @media(max-width:400px) {
+        padding: .25rem;
+        gap: .25rem;
+    }
 
     &>* {
         flex-grow: 0;
+    }
+
+    & .sliderGroup {
+        align-self: stretch;
     }
 
     @media(max-width:400px) {
@@ -190,5 +201,9 @@ watch(format, async () => {
     width: 100%;
     border-radius: 4.7% / 3.6%;
     aspect-ratio: 63.5/88;
+}
+
+.hidden {
+    visibility: hidden;
 }
 </style>
