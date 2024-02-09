@@ -34,6 +34,7 @@ const { data: articles } = await useAsyncData('newsArticles', () => queryContent
 // Update user to note the newest article viewed
 const user = useUser();
 const { data: newestArticle, error } = await useAsyncData('newestArticle', () => queryContent('news')
+    .sort({ publishedAt: -1 })
     .find(),
     { transform: (articles) => articles[0] }); // findOne does not work for some reason
 if(!error.value) {
