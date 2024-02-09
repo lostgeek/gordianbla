@@ -36,6 +36,15 @@
 </template>
 
 <script setup>
+useSeoMeta({
+  title: "Gordian Blade - Practice",
+  ogTitle: "Gordian Blade - Practice",
+  description: 'The daily Netrunner puzzle!',
+  ogDescription: 'The daily Netrunner puzzle!',
+  ogImage: 'https://gordianbla.de/android-chrome-192x192.png',
+  twitterCard: 'summary_large_image',
+})
+
 const loaded = useState('siteLoaded', () => false);
 
 const breakpoints = useBreakpoints({

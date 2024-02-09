@@ -46,6 +46,20 @@ if (!['eternal', 'standard', 'neo', 'startup'].includes(route.params.format)) {
 }
 
 const format = computed(() => route.params.format);
+const formatLabel = {
+    eternal: 'Eternal',
+    standard: 'Standard',
+    neo: 'Neo (All-NSG)',
+    startup: 'Startup',
+};
+useSeoMeta({
+  title: `Gordian Blade - ${formatLabel[format.value]}`,
+  ogTitle: `Gordian Blade - ${formatLabel[format.value]}`,
+  description: 'The daily Netrunner puzzle!',
+  ogDescription: 'The daily Netrunner puzzle!',
+  ogImage: 'https://gordianbla.de/android-chrome-192x192.png',
+  twitterCard: 'summary_large_image',
+})
 
 const data = await $fetch(`/api/current_daily_puzzle?format=${format.value}`);
 const currentDaily = data.daily;

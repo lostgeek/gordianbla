@@ -13,6 +13,14 @@
 </template>
 
 <script setup>
+useSeoMeta({
+  title: "Gordian Blade - News",
+  ogTitle: "Gordian Blade - News",
+  description: 'The daily Netrunner puzzle!',
+  ogDescription: 'The daily Netrunner puzzle!',
+  ogImage: 'https://gordianbla.de/android-chrome-192x192.png',
+  twitterCard: 'summary_large_image',
+})
 const { data:totalArticles } = await useAsyncData('newsCount', () => queryContent('news').count());
 const first = ref(0);
 const rows = ref(5);

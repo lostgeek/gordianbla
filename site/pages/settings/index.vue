@@ -57,6 +57,15 @@
 <script setup>
 import { useQRCode } from '@vueuse/integrations/useQRCode'
 
+useSeoMeta({
+  title: "Gordian Blade - Settings",
+  ogTitle: "Gordian Blade - Settings",
+  description: 'The daily Netrunner puzzle!',
+  ogDescription: 'The daily Netrunner puzzle!',
+  ogImage: 'https://gordianbla.de/android-chrome-192x192.png',
+  twitterCard: 'summary_large_image',
+})
+
 const toast = useToast();
 
 const user = useUser();
