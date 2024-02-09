@@ -157,6 +157,11 @@ onMounted(async () => {
     window.onbeforeunload = confirmExit;
     function confirmExit() {
         if (unsavedChanges.value) {
+            toast.add({
+                severity: 'warn',
+                summary: "Unsaved changes",
+                detail: "You have unsaved changes. Do you really want to exit?"
+            });
             return "You have unsaved changes. Do you really want to exit?";
         }
     }
