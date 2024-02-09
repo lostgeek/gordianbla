@@ -101,7 +101,7 @@ function copyResult() {
     text += `Guesses: ${props.gordian.currentGuess.value}/6\n`;
 
     for (const g of props.gordian.guesses.value) {
-        if (g.state != 'not-guessed') {
+        if (g.state !== 'not-guessed') {
             if (g.checks.faction) {
                 text += "🟩";
             } else {
@@ -120,7 +120,7 @@ function copyResult() {
             }
 
             if (g.checks.subtype.total == 0) {
-                if (g.state == 'correct') {
+                if (g.checks.subtype.class === 'correct') {
                     text += "🟩";
                 } else {
                     if (user.lightMode)
