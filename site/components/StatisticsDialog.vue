@@ -1,12 +1,12 @@
 <template>
     <Dialog v-model:visible="statisticsVisible" modal header="Statistics" :pt="{
         root: {
-            style: 'overflow: clip'
+            style: 'overflow: clip; width: 30rem;'
         },
         mask: {
             style: 'backdrop-filter: blur(2px)'
         }
-    }" :style="{ width: '30rem' }" :breakpoints="{ '320px': '100%' }">
+    }" :breakpoints="{ '320px': '100%' }">
         <Statistics :format="format" />
         <Button 
             v-if="prevFormat"
@@ -205,13 +205,12 @@ function copyResult() {
 .footer {
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
+    align-items: last baseline;
     width: 100%;
 
     & .next {
         font-family: 'Patua One';
         font-size: 1.2rem;
-        height: 100%;
 
         & .time {
             font-size: 1.4rem;
