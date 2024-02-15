@@ -12,11 +12,26 @@
             </template>
         </SplitterPanel>
         <SplitterPanel class="right" :size="25">
-            <Tag icon="fa-solid fa-calendar">
+            <Tag class="clickable" icon="fa-solid fa-calendar" @click="toggleFormatMenu">
                 <template #default>
                     <span>Format: {{formatLabel[format]}}</span>
                 </template>
             </Tag>
+            <Menu ref="formatMenu" id="format_overlay" :model="formatMenuItems" :popup="true"
+                :pt="{
+                    root: {
+                        style: 'min-width: 5rem;'
+                    },
+                    menu: {
+                        style: 'font-size: .75rem;'
+                    },
+                }">
+                <template #item="{ item }">
+                    <NuxtLink v-ripple class="p-ripple p-menuitem-link" v-if="item.route" :to="item.route">
+                        <span class="p-menuitem-text">{{ item.label }}</span>
+                    </NuxtLink>
+                </template>
+            </Menu>
             <template v-if="loaded">
                 <Puzzle v-if="cardSvg" :puzzleMode="puzzleMode" :revealLevel="revealLevel" :cardUrl="cardUrl"
                     :cardSvg="cardSvg" />
@@ -57,6 +72,28 @@ const formatLabel = ref({
     neo: 'Neo (All-NSG)',
     startup: 'Startup',
 });
+const formatMenu = ref();
+function toggleFormatMenu(event) {
+    formatMenu.value.toggle(event);
+}
+const formatMenuItems = ref([
+    {
+        label: 'Eternal',
+        route: '/daily/eternal',
+    },
+    {
+        label: 'Standard',
+        route: '/daily/standard',
+    },
+    {
+        label: 'Neo (All-NSG)',
+        route: '/daily/neo',
+    },
+    {
+        label: 'Startup',
+        route: '/daily/startup',
+    },
+]);
 useSeoMeta({
   title: `Gordian Blade - ${formatLabel.value[format.value]}`,
   ogTitle: `Gordian Blade - ${formatLabel.value[format.value]}`,
@@ -281,5 +318,9 @@ onMounted(async () => {
 
 .hidden {
     visibility: hidden;
+}
+
+.clickable {
+    cursor: pointer;
 }
 </style>
