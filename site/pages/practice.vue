@@ -4,7 +4,7 @@
             <SplitterPanel class="left" :size="75">
                 <template v-if="loaded">
                     <GuessTable :guesses="gordian.guesses.value" />
-                    <CardInputField :class="(gordian.finished.value)?'hidden':none" :cards="filteredCards" @submit="(card) => gordian.guess(card)" />
+                    <CardInputField :class="(gordian.finished.value)?'hidden':null" :cards="filteredCards" @submit="(card) => gordian.guess(card)" />
                     <div class="buttons">
                         <Button icon="fa-solid fa-left-long" class="small" label="Back" @click="format=null"/>
                         <Button v-if="gordian.finished.value" icon="fa-solid fa-arrows-rotate" class="small" label="New Puzzle" @click="newPuzzle()"/>
