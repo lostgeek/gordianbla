@@ -1,3 +1,8 @@
+const nrdbBaseUrl =
+    process.env.NODE_ENV === "production"
+        ? "https://netrunnerdb.com/api/2.0/public"
+        : "/dev_nrdb_api";
+
 export const useNrdb = defineStore("nrdbStore", {
     state: () => ({
         cards: [],
@@ -43,7 +48,7 @@ export const useNrdb = defineStore("nrdbStore", {
         async fetch(reload = false) {
             if (this.cards.length == 0 || reload) {
                 const data = await $fetch(
-                    "https://netrunnerdb.com/api/2.0/public/cards"
+                    `${nrdbBaseUrl}/cards`
                 );
 
                 this.cards = data.data;
@@ -51,7 +56,7 @@ export const useNrdb = defineStore("nrdbStore", {
             }
             if (this.packs.length == 0 || reload) {
                 const data = await $fetch(
-                    "https://netrunnerdb.com/api/2.0/public/packs"
+                    `${nrdbBaseUrl}/packs`
                 );
 
                 this.packs = data.data;
