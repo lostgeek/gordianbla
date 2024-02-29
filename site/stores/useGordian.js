@@ -61,10 +61,8 @@ export function useGordian() {
             puzzleAttr.value.dailyNumber = -1;
         }
 
-        // ToDo: Add handling for TD cards
-        const correctTitle = puzzleAttr.value.title;
         correctCard.value = cards.filter(function (c) {
-            return c.title == correctTitle;
+            return c.code == puzzleAttr.value.nrdbID;
         })[0];
 
         return cardSvg;
