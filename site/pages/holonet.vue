@@ -1,3 +1,3 @@
 <template>
-  THE HOLONET
+  <HoloNetPuzzle />
 </template>
