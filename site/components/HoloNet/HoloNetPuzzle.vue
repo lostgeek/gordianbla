@@ -1,10 +1,4 @@
 <script setup>
-import { ref, watch } from 'vue'
-import Image from './Image.vue'
-import Form from './Form.vue'
-import History from './History.vue'
-import Toast from './Toast.vue'
-
 const imageWord = ref("");
 const historyHits = ref([]);
 
@@ -24,22 +18,20 @@ function reveal(status) {
 
 const toastMessage = ref({});
 function showToast(message) {
-   toastMessage.value = message;
 }
-    
+
 </script>
 
 <template>
     <div class="puzzle">
         <div class="left">
-            <Image :word="imageWord" @hits="(w,h,p) => addHistory(w,h,p)" :revealed="revealed"></Image>
-            <Form @entered-word="(w) => checkWord(w)" v-show="!revealed"></Form>
+            <HoloNetImage :word="imageWord" @hits="(w,h,p) => addHistory(w,h,p)" :revealed="revealed"></HoloNetImage>
+            <HoloNetForm @entered-word="(w) => checkWord(w)" v-show="!revealed"></HoloNetForm>
         </div>
         <div class="right">
-            <History :hits="historyHits" @reveal="(status) => reveal(status)" @toast="(message) => showToast(message)"></History>
+            <HoloNetHistory :hits="historyHits" @reveal="(status) => reveal(status)" @toast="(message) => showToast(message)"></HoloNetHistory>
         </div>
     </div>
-    <Toast :message="toastMessage"></Toast>
 </template>
 
 <style lang="scss" scoped>
