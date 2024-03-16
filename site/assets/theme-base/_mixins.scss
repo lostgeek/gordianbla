@@ -1,5 +1,3 @@
-$inputFocusOutlineOffset: 0 !default;
-
 @mixin icon-override($icon) {
 	&:before {
 		content: $icon;
@@ -97,16 +95,31 @@ $inputFocusOutlineOffset: 0 !default;
     &:not(.p-highlight):not(.p-disabled) {
         &.p-focus {
             > .p-menuitem-content {
-                color: $menuitemTextFocusColor;
-                background: $menuitemFocusBg;
+                color: $menuitemTextHoverColor;
+                background: $menuitemHoverBg;
     
                 .p-menuitem-link {
                     .p-menuitem-text {
-                        color: $menuitemTextFocusColor;
+                        color: $menuitemTextHoverColor;
                     }
                 
                     .p-menuitem-icon, .p-submenu-icon {
-                        color: $menuitemIconFocusColor;
+                        color: $menuitemTextHoverColor;
+                    }
+                }
+
+                &:hover {
+                    color: $menuitemTextHoverColor;
+                    background: $menuitemHoverBg;
+        
+                    .p-menuitem-link {
+                        .p-menuitem-text {
+                            color: $menuitemTextHoverColor;
+                        }
+        
+                        .p-menuitem-icon, .p-submenu-icon {
+                            color: $menuitemIconHoverColor;
+                        }
                     }
                 }
             }
