@@ -1,4 +1,13 @@
 <template>
+  <Dialog v-model:visible="dialogVisible" modal header="Simulation complete" :style="{ width: '25rem' }">
+    <span class="p-text-secondary dialogText">
+      Initiative now 99.7% certain to pass senate. Full report available.
+    </span>
+    <template #footer>
+      <Button type="button" label="Cancel" severity="secondary" @click="dialogVisible = false" />
+      <Button type="button" severity="success" label="Show results" @click="holoNet.fullReveal.value = true;dialogVisible = false" />
+    </template>
+  </Dialog>
   <Panel header="Simulation history">
     <div class="scroll">
       <ul>
@@ -17,14 +26,11 @@
           </span>
           <div v-if="item.type == 'reveal'" class="reveal">
             <span class="reveal success">
-            {{ item.message }}
+              {{ item.message }}
             </span>
-            <Button
-              severity="success"
-              v-if="item.type == 'reveal'"
+            <Button type="button" severity="success" v-if="item.type == 'reveal'"
               :label="(holoNet.fullReveal.value) ? 'Hide full results' : 'Reveal full results'"
-              @click="holoNet.fullReveal.value = !holoNet.fullReveal.value"
-              />
+              @click="holoNet.fullReveal.value = !holoNet.fullReveal.value" />
           </div>
         </li>
       </ul>
@@ -40,6 +46,8 @@ Array.prototype.sample = function () {
 }
 
 const history = ref([]);
+
+const dialogVisible = ref(false);
 
 function generateMessage(hits) {
   if (hits == 0) {
@@ -66,7 +74,7 @@ function generateMessage(hits) {
   } else {
     return [
       "Prediction: Public opinion decisively swayed in our favour.",
-      "Evaluation: Overwhelming support for the initiative in the parliament.",
+      "Evaluation: Overwhelming shift in support for the initiative in the senate.",
       "Assessment: Transition to stage 3 possible two months ahead of schedule.",
     ].sample();
   }
@@ -106,8 +114,10 @@ watch(() => holoNet.percentageRules.value, (percentageRules) => {
     history.value.push({ 'type': 'message', 'level': "PROGRESS", 'message': "Agreement across political parties likely. Success probability: 73.8%" });
     level++;
   }
-  if (level == 3 && percentageRules > .85) {
-    history.value.push({ 'type': 'reveal', 'level': "SUCCESS", 'message': "Initiative now 99.7% certain to pass parliament. Full report available." });
+  if (level == 3 && percentageRules > .80) {
+    history.value.push({ 'type': 'reveal', 'level': "SUCCESS", 'message': "Initiative now 99.7% certain to pass senate. Full report available." });
+    dialogVisible.value = true;
+    level++;
   }
 })
 </script>
@@ -195,6 +205,7 @@ div.reveal {
   align-items: center;
   gap: .5rem;
   color: rgb(var(--highlight-color-numbers));
+
   & span {
     font-size: 120%;
   }
