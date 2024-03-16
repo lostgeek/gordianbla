@@ -104,6 +104,7 @@ function updateShapes() {
 <style lang="scss">
 #svgImage,
 #spoilerImage {
+  object-fit: contain;
   max-width: 30rem;
   max-height: 80vh;
   width: 40vw;
