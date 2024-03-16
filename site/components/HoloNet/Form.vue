@@ -1,42 +1,28 @@
 <script setup>
-import { ref } from 'vue'
-
-const emit = defineEmits(['enteredWord']);
+const { holoNet } = defineProps(['holoNet']);
 
 const word = ref("");
 
 function submit(e) {
-    e.preventDefault();
-    var sanitised = word.value;
-    word.value = "";
+  e.preventDefault();
+  var sanitised = word.value;
+  word.value = "";
 
-    sanitised = sanitised.replace(/\s/g,'');
-    if(sanitised != "")
-        emit('enteredWord', sanitised);
+  sanitised = sanitised.replace(/\s/g, '');
+  if (sanitised != "")
+    holoNet.guess(sanitised);
 }
 </script>
 
 <template>
-    <form v-on:submit="submit">
-        <input autofocus v-model="word" placeholder="intercept datastream" pattern="[^\s]+" title="Only single words" />
-        <button type="submit">decypher</button>
-    </form>
+  <InputGroup class="group">
+    <InputText v-model="word" placeholder="Enter possible speech continuation" pattern="[^\s]+" title="Only single words" @keyup.enter="submit" />
+    <Button label="Run simulation" severity="warning" @click="submit" />
+  </InputGroup>
 </template>
 
 <style lang="scss" scoped>
-form {
-    margin-top:1rem;
-    display:flex;
-    justify-content: center;
-    gap:.5rem;
-    height: 2rem;
-}
-
-input,button {
-    box-shadow: 0 0 10px rgba(var(--highlight-color-numbers), .3), 0 0 10px rgba(var(--highlight-color-numbers), .8);
-    border:1px black solid;
-    border-radius:.25rem;
-    padding:.25rem;
-    background: var(--background-color);
+.group {
+  padding: 1rem;
 }
 </style>

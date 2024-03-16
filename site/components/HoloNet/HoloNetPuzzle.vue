@@ -1,74 +1,73 @@
-<script setup>
-const imageWord = ref("");
-const historyHits = ref([]);
-
-function checkWord(word) {
-    imageWord.value = word;
-}
-
-function addHistory(word, hits, percentage) {
-    historyHits.value = [word, hits, percentage];
-}
-
-const revealed = ref(false);
-
-function reveal(status) {
-    revealed.value = status;
-}
-
-const toastMessage = ref({});
-function showToast(message) {
-}
-
-</script>
-
 <template>
-    <div class="puzzle">
-        <div class="left">
-            <HoloNetImage :word="imageWord" @hits="(w,h,p) => addHistory(w,h,p)" :revealed="revealed"></HoloNetImage>
-            <HoloNetForm @entered-word="(w) => checkWord(w)" v-show="!revealed"></HoloNetForm>
-        </div>
-        <div class="right">
-            <HoloNetHistory :hits="historyHits" @reveal="(status) => reveal(status)" @toast="(message) => showToast(message)"></HoloNetHistory>
-        </div>
+  <h2>
+    <svg :style="{ fill: '#ffde00', height: '32px', 'margin-right': '.5rem' }"
+      viewBox="0 0 1 1">
+      <use xlink:href="/icons.svg#faction-nbn"></use>
+    </svg>
+    Epiphany Political Suite &ndash; Speech Writer
+  </h2>
+
+  <div class="puzzle">
+    <div class="left">
+      <HoloNetImage :holo-net="holoNet" :revealed="holoNet.fullReveal.value" />
+      <HoloNetForm :holo-net="holoNet" v-show="!holoNet.fullReveal.value" />
     </div>
+    <div class="right">
+      <HoloNetHistory :holo-net="holoNet" />
+    </div>
+  </div>
 </template>
+
+<script setup>
+const holoNet = await useHoloNet();
+</script>
 
 <style lang="scss" scoped>
 .puzzle {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    flex-wrap: wrap;
-    align-content: flex-start;
-    max-width: 70rem;
-    width:80vw;
-    @media (max-width: 70rem) {
-        gap: 1rem;
-    }
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  max-width: 70rem;
+  width: 80vw;
+
+  @media (max-width: 70rem) {
+    gap: 1rem;
+  }
 }
 
-.left,.right {
-    max-height: 80vh;
-    display: flex;
-    height:fit-content;
+h2 {
+  display: flex;
+  align-items: center;
+  margin-left: 4rem;
+}
+
+.left,
+.right {
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
 }
 
 .left {
-    flex-direction: column;
-    align-items: center;
-    flex-grow: 3;
+  flex-direction: column;
+  align-items: center;
+  flex-grow: 3;
 }
+
 .right {
-    flex-direction: row;
-    justify-content: center;
+  flex-direction: column;
+  justify-content: center;
 
-    min-width:20rem;
-    max-width:30rem;
-    width:30vw;
-    @media (max-width: 70rem) {
-        width:100%;
-    }
+  min-width: 20rem;
+  max-width: 30rem;
+  width: 90vw;
+
+  @media (max-width: 70rem) {
+    width: 100%;
+  }
 }
-
 </style>

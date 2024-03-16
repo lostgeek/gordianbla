@@ -1,46 +1,84 @@
+<template>
+  <div id="svgImage" ref="svgImage" v-show="!revealed"></div>
+  <div id="spoilerImage" v-show="revealed"><img src="~/assets/LIB_RWR_48.png" /></div>
+</template>
+
 <script setup>
-import { ref, watch } from 'vue'
-import svgUrl from '~/assets/LIB_RWR_48.svg'
+const { holoNet, revealed } = defineProps(['holoNet', 'revealed']);
 
-const props = defineProps(['word', 'revealed']);
-const emit = defineEmits(['hits']);
+const svgImage = ref();
+const gordian = ref([]);
+const words = ref([]);
 
-const svgImage = ref(null);
+onMounted(() => {
+  let svgDOM = holoNet.svgDOM.value;
+  let gordian_tmp = svgDOM.children[0];
+  let words_tmp = Array.from(svgDOM.children).slice(1);
+  Array.from(words_tmp).forEach(el => {
+    el.classList.add("hidden");
+  });
 
-var words = ref(null);
-var gordian = ref(null);
-var subs = ref(null);
+  Array.from(gordian_tmp.children).forEach(el => {
+    el.classList.add("hidden");
+  });
 
-watch(() => props.word, async (word, oldWord) => {
-  var hits = 0;
+  words_tmp[0].classList.replace("hidden", "shown")
+
+  gordian_tmp.children[0].classList.replace("hidden", "shown");
+
+  svgImage.value.innerHTML = svgDOM.outerHTML;
+
+  gordian.value = svgImage.value.children[0].children[0];
+  words.value = Array.from(svgImage.value.children[0].children).slice(1).reverse();
+  setTimeout(updateShapes, 500);
+  setTimeout(revealInterpunction, 2000);
+})
+
+function revealInterpunction() {
+  let count = 0;
+  words.value.forEach(el => {
+    var w_id = el.getAttribute('id');
+    if (el.getAttribute('serif:id') != null) {
+      w_id = el.getAttribute('serif:id');
+    }
+
+    if ([".", ",", "-", ":", "\"", "Kingmaking"].includes(w_id)) {
+      el.classList.replace("hidden", "shown-anim-"+Math.floor(count/15*10));
+      count++;
+    }
+  });
+}
+
+watch(() => holoNet.guesses.value.length, () => {
+  let word = holoNet.guesses.value[holoNet.guesses.value.length - 1].word;
+
+  let localHits = 0;
   Array.from(words.value).forEach(w => {
     var w_id = w.getAttribute('id');
     if (w.getAttribute('serif:id') != null) {
       w_id = w.getAttribute('serif:id');
     }
 
+    if (!w_id) {
+      return;
+    }
+
     if (word.toLowerCase() == w_id.toLowerCase()) {
       if (!w.classList.contains("shown")) {
         w.classList.replace("hidden", "shown");
-        w.classList.add("shown-anim-" + hits);
-        hits++;
+        w.classList.add("shown-anim-" + localHits);
+        localHits++;
       }
     }
   });
 
-
-  const indices = [0, 2, 3, 5, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 41, 42, 43, 44, 45, 47, 48, 49, 51, 52, 53, 54, 55, 56, 57, 58, 60, 61, 62, 63, 64, 65, 66, 67, 68, 78, 79];
-  var all = indices.map(idx => words.value[idx]);
-  var shown = all.filter(el => el.classList.contains("shown"));
-
-  emit('hits', word, hits, shown.length / all.length);
   updateShapes();
-});
+})
 
 function updateShapes() {
-  var n = 8;
+  var n = 6;
 
-  n += Array.from(words.value).filter(el => { return el.classList.contains("shown"); }).length * 2;
+  n += holoNet.realHits.value * 2;
 
   var prevLimit = -1;
   for (var i = 0; i <= n; i++) {
@@ -61,44 +99,7 @@ function updateShapes() {
   }
 }
 
-onMounted(() => {
-  fetch(svgUrl)
-    .then((response) => response.text())
-    .then((text) => {
-      var parser = new DOMParser();
-      var svg = parser.parseFromString(text, "text/xml");
-
-      var svgDOM = svg.children[0];
-
-      gordian = ref(svgDOM.children[0]);
-      words = ref(Array.from(svgDOM.children).slice(1));
-      Array.from(words.value).forEach(el => {
-        el.classList.add("hidden");
-      });
-
-      Array.from(gordian.value.children).forEach(el => {
-        el.classList.add("hidden");
-      });
-
-      words.value[0].classList.replace("hidden", "shown")
-      console.log(words.value)
-
-      gordian.value.children[0].classList.replace("hidden", "shown");
-
-      svgImage.value.innerHTML = svgDOM.outerHTML;
-
-      gordian.value = svgImage.value.children[0].children[0];
-      words.value = Array.from(svgImage.value.children[0].children).slice(1);
-
-      setTimeout(() => { updateShapes() }, 500);
-    });
-})
 </script>
-
-<template>
-  <div id="svgImage" ref="svgImage" v-show="!props.revealed"></div>
-  <div id="spoilerImage" v-show="props.revealed"><img src="~/assets/LIB_RWR_48.png" /></div>
-</template>
 
 <style lang="scss">
 #svgImage,

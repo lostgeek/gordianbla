@@ -26,7 +26,7 @@
           <svg :style="{fill: '#ffde00', height: '48px'}" viewBox="0 0 1 1">
             <use xlink:href="/icons.svg#faction-nbn"></use>
           </svg>
-          <span>NBN HoloNet Login</span>
+          <span>Epiphany Staff Login</span>
         </div>
       </template>
       <div class="logingrid">
@@ -36,7 +36,7 @@
           <Password :feedback="false" id="password" autocomplete="off" v-model="password" />
       </div>
       <template #footer>
-          <Button type="button" ref="loginButton" label="Login" severity="warning" @click="() => {loginVisible = false; navigateTo('/holonet')}" :disabled="!finished"></Button>
+          <Button type="button" ref="loginButton" label="Login" severity="warning" @click="() => {loginVisible = false; navigateTo('/epiphany')}" :disabled="!finished"></Button>
       </template>
   </Dialog>
 </template>
@@ -150,10 +150,10 @@ const items = ref([
         route: '/settings',
     },
     {
-        label: 'NBN HoloNet Login',
+        label: 'Epiphany Staff Login',
         icon: 'nbn',
         command: () => {
-          if(!route.path.startsWith('/holonet')) {
+          if(!route.path.startsWith('/epiphany')) {
             startLogin()
           }
         }
