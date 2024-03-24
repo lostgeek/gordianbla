@@ -1,120 +1,127 @@
+<template>
+  <div class="puzzleContainer" :class="puzzleClasses" :style="`filter: blur(${squint}px)`">
+    <div
+      ref="puzzle" class="puzzle"
+      :class="puzzleClasses"
+    />
+    <div class="cardImage" :class="cardImageClasses">
+      <img :src="cardUrl">
+    </div>
+  </div>
+  <div
+    v-if="user.squintMode" v-tooltip.left="'Squinting strength'" class="sliderGroup"
+    :class="puzzleClasses"
+  >
+    <EyeIcon :squint="squint" />
+    <Slider
+      id="squint" v-model="squint"
+      class="squint"
+      :min="0" :max="10" :step=".2"
+    />
+  </div>
+</template>
+
 <script setup>
-const props = defineProps(['puzzleMode', 'revealLevel', 'cardUrl', 'cardSvg',]);
-// puzzleMode: one of these: [combo, triangle, rect, rectangle, 
+const props = defineProps(['puzzleMode', 'revealLevel', 'cardUrl', 'cardSvg'])
+// puzzleMode: one of these: [combo, triangle, rect, rectangle,
 //             ellipse, circle, rotatedrect, beziers, rotatedellipse, polygon]
 // revealLevel: Level (n=0-5) to be revealed after n guesses. n=6 stands for full solution
 // cardUrl: URL to actual card image
 // cardSvg: SVG of the gordian puzzle
 
-const user = useUser();
+const user = useUser()
 
-const puzzle = ref(null);
+const puzzle = ref(null)
 
-const puzzleClasses = ref([]);
-const cardImageClasses = ref([]);
+const puzzleClasses = ref([])
+const cardImageClasses = ref([])
 
 onMounted(() => {
-    puzzle.value.innerHTML = props.cardSvg;
+  puzzle.value.innerHTML = props.cardSvg
 
-    const svgDom = puzzle.value.children[0];
+  const svgDom = puzzle.value.children[0]
 
-    var width = svgDom.getAttribute('width');
-    var height = svgDom.getAttribute('height');
-    if(height) {
-        svgDom.removeAttribute('width');
-        svgDom.removeAttribute('height');
-        // svgDom.setAttribute('width', '100%');
-        svgDom.setAttribute('viewBox', '0 0 '+width+' '+height);
-    }
+  const width = svgDom.getAttribute('width')
+  const height = svgDom.getAttribute('height')
+  if (height) {
+    svgDom.removeAttribute('width')
+    svgDom.removeAttribute('height')
+    // svgDom.setAttribute('width', '100%');
+    svgDom.setAttribute('viewBox', `0 0 ${width} ${height}`)
+  }
 
-    // Set all elements to hidden at first
-    var elements = svgDom.children[1].children;
-    for (var i = 0; i < elements.length; i++) {
-        elements[i].className.baseVal = "hidden";
-    }
+  // Set all elements to hidden at first
+  const elements = svgDom.children[1].children
+  for (let i = 0; i < elements.length; i++)
+    elements[i].className.baseVal = 'hidden'
 
-    setTimeout(() => {updateSvg()}, 500);
+  setTimeout(() => {
+    updateSvg()
+  }, 500)
 })
 
 const numOfElements = {
-    'combo':            [10, 20, 40, 80, 160, 320, 320],
-    'triangle':         [10, 20, 40, 80, 160, 320, 320],
-    'rect':             [10, 20, 40, 80, 160, 320, 320],
-    'rectangle':        [10, 20, 40, 80, 160, 320, 320],
-    'ellipse':          [10, 20, 40, 80, 160, 320, 320],
-    'circle':           [20, 40, 80, 160, 320, 640, 640],
-    'rotatedrect':      [10, 20, 40, 80, 160, 320, 320],
-    'beziers':          [100, 200, 400, 800, 1600, 3200, 3200], // slight lie... there only are 1500
-    'rotatedellipse':   [10, 20, 40, 80, 160, 320, 320],
-    'polygon':          [10, 20, 40, 80, 160, 320, 320],
-};
-const MAX_ANIMS = 99;
+  combo: [10, 20, 40, 80, 160, 320, 320],
+  triangle: [10, 20, 40, 80, 160, 320, 320],
+  rect: [10, 20, 40, 80, 160, 320, 320],
+  rectangle: [10, 20, 40, 80, 160, 320, 320],
+  ellipse: [10, 20, 40, 80, 160, 320, 320],
+  circle: [20, 40, 80, 160, 320, 640, 640],
+  rotatedrect: [10, 20, 40, 80, 160, 320, 320],
+  beziers: [100, 200, 400, 800, 1600, 3200, 3200], // slight lie... there only are 1500
+  rotatedellipse: [10, 20, 40, 80, 160, 320, 320],
+  polygon: [10, 20, 40, 80, 160, 320, 320],
+}
+const MAX_ANIMS = 99
 
 function updateSvg() {
-    const svgDom = puzzle.value.children[0];
+  const svgDom = puzzle.value.children[0]
 
-    var elements = svgDom.children[1].children;
+  const elements = svgDom.children[1].children
 
-    var targetElements;
-    if (props.revealLevel == 6) {
-        targetElements = elements.length;
-        if(!puzzleClasses.value.includes('solved')) {
-            puzzleClasses.value.push('solved');
-        }
-        if(!cardImageClasses.value.includes('solved')) {
-            cardImageClasses.value.push('solved');
-        }
+  let targetElements
+  if (props.revealLevel === 6) {
+    targetElements = elements.length
+    if (!puzzleClasses.value.includes('solved'))
+      puzzleClasses.value.push('solved')
+
+    if (!cardImageClasses.value.includes('solved'))
+      cardImageClasses.value.push('solved')
+  } else {
+    if (puzzleClasses.value.includes('solved'))
+      puzzleClasses.value = puzzleClasses.value.filter(x => (x !== 'solved'))
+
+    if (cardImageClasses.value.includes('solved'))
+      cardImageClasses.value = cardImageClasses.value.filter(x => (x !== 'solved'))
+
+    targetElements = numOfElements[props.puzzleMode][props.revealLevel]
+  }
+
+  const firstHidden = Array.from(elements).findIndex((e) => {
+    return e.className.baseVal === 'hidden'
+  })
+  const newElements = Math.min(targetElements, elements.length) - firstHidden
+
+  for (let i = 0; i < elements.length; i++) {
+    if (i <= targetElements) {
+      if (i < firstHidden) {
+        elements[i].className.baseVal = 'shown'
+      } else {
+        const partial_anim = Math.min(Math.floor((i - firstHidden) / newElements * (MAX_ANIMS + 1)), MAX_ANIMS)
+        elements[i].className.baseVal = `shown shown-anim-${partial_anim}`
+      }
     } else {
-        if(puzzleClasses.value.includes('solved')) {
-            puzzleClasses.value = puzzleClasses.value.filter((x) => (x !== 'solved'));
-        }
-        if(cardImageClasses.value.includes('solved')) {
-            cardImageClasses.value = cardImageClasses.value.filter((x) => (x !== 'solved'));
-        }
-        targetElements = numOfElements[props.puzzleMode][props.revealLevel];
+      elements[i].className.baseVal = 'hidden'
     }
-
-    var firstHidden = Array.from(elements).findIndex(function (e) { return e.className.baseVal == "hidden"; });
-    var newElements = Math.min(targetElements, elements.length) - firstHidden;
-
-    for (var i = 0; i < elements.length; i++) {
-        if (i <= targetElements) {
-            if (i < firstHidden) {
-                elements[i].className.baseVal = "shown";
-            } else {
-                const partial_anim = Math.min(Math.floor((i - firstHidden) / newElements * (MAX_ANIMS + 1)), MAX_ANIMS);
-                elements[i].className.baseVal = "shown shown-anim-" + partial_anim;
-            }
-        } else {
-            elements[i].className.baseVal = "hidden";
-        }
-    }
+  }
 }
 
-watch(() => props.revealLevel, (newLevel, oldLevel) => {
-    updateSvg();
-});
+watch(() => props.revealLevel, () => {
+  updateSvg()
+})
 
-const squint = ref(0);
+const squint = ref(0)
 </script>
-
-<template>
-    <div class="puzzleContainer" :class="puzzleClasses" :style="`filter: blur(${squint}px)`" >
-        <div class="puzzle" :class="puzzleClasses"
-            ref="puzzle">
-        </div>
-        <div class="cardImage" :class="cardImageClasses" ref="cardImage">
-            <img :src="cardUrl" />
-        </div>
-    </div>
-    <div v-if="user.squintMode" class="sliderGroup" :class="puzzleClasses"
-        v-tooltip.left="'Squinting strength'">
-        <EyeIcon :squint="squint" />
-        <Slider class="squint" id="squint"
-            v-model="squint"
-            :min="0" :max="10" :step=".2" />
-    </div>
-</template>
 
 <style lang="scss">
 .puzzleContainer {

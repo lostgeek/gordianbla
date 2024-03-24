@@ -1,96 +1,93 @@
+<template>
+  <div class="guessesDisplay">
+    <div class="guessColumn faction">
+      <div class="guessHeader">
+        Faction
+      </div>
+      <div v-for="(guess, index) in guesses" :key="index" class="guess" :class="factionClass(guess)">
+        <div class="face front" />
+        <div class="face back" />
+      </div>
+    </div>
+    <div class="guessColumn type">
+      <div class="guessHeader">
+        Type
+      </div>
+      <div v-for="(guess, index) in guesses" :key="index" class="guess" :class="typeClass(guess)">
+        <div class="face front" />
+        <div class="face back" />
+      </div>
+    </div>
+    <div class="guessColumn subtype">
+      <div class="guessHeader">
+        Subtype
+      </div>
+      <div v-for="(guess, index) in guesses" :key="index" class="guess" :class="subtypeClass(guess)">
+        <div class="face front" />
+        <div class="face back" />
+      </div>
+    </div>
+    <div class="guessColumn cost">
+      <div class="guessHeader">
+        (Adv.) Cost
+      </div>
+      <div v-for="(guess, index) in guesses" :key="index" class="guess" :class="costClass(guess)">
+        <div class="face front" />
+        <div class="face back" />
+      </div>
+    </div>
+    <div class="guessColumn title">
+      <div class="guessHeader">
+        Card Title
+      </div>
+      <div v-for="(guess, index) in guesses" :key="index" class="guess title" :class="titleClass(guess)">
+        <div class="face front" />
+        <div class="face back">
+          {{ guess.guessedTitle }}
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
 <script setup>
-const props = defineProps(['guesses']);
+defineProps(['guesses'])
 
 function factionClass(guess) {
-    if (guess.state == 'not-guessed') {
-        return 'not-guessed';
-    } else {
-        return (guess.checks.faction) ? 'correct' : 'incorrect';
-    }
+  if (guess.state === 'not-guessed')
+    return 'not-guessed'
+  else
+    return (guess.checks.faction) ? 'correct' : 'incorrect'
 }
 
 function typeClass(guess) {
-    if (guess.state == 'not-guessed') {
-        return 'not-guessed';
-    } else {
-        return (guess.checks.type) ? 'correct' : 'incorrect';
-    }
+  if (guess.state === 'not-guessed')
+    return 'not-guessed'
+  else
+    return (guess.checks.type) ? 'correct' : 'incorrect'
 }
 
 function subtypeClass(guess) {
-    if (guess.state == 'not-guessed') {
-        return 'not-guessed';
-    } else {
-        return guess.checks.subtype.class;
-    }
+  if (guess.state === 'not-guessed')
+    return 'not-guessed'
+  else
+    return guess.checks.subtype.class
 }
 
 function costClass(guess) {
-    if (guess.state == 'not-guessed') {
-        return 'not-guessed';
-    } else {
-        return (guess.checks.cost) ? 'correct' : 'incorrect';
-    }
+  if (guess.state === 'not-guessed')
+    return 'not-guessed'
+  else
+    return (guess.checks.cost) ? 'correct' : 'incorrect'
 }
 
 function titleClass(guess) {
-    if (guess.state == 'not-guessed') {
-        return 'not-guessed';
-    } else {
-        return (guess.checks.title) ? 'correct' : 'incorrect';
-    }
+  if (guess.state === 'not-guessed')
+    return 'not-guessed'
+  else
+    return (guess.checks.title) ? 'correct' : 'incorrect'
 }
 </script>
-
-<template>
-    <div class="guessesDisplay">
-        <div class="guessColumn faction">
-            <div class="guessHeader">
-                Faction
-            </div>
-            <div class="guess" v-for="guess in guesses" :class="factionClass(guess)">
-                <div class="face front"></div>
-                <div class="face back"></div>
-            </div>
-        </div>
-        <div class="guessColumn type">
-            <div class="guessHeader">
-                Type
-            </div>
-            <div class="guess" v-for="guess in guesses" :class="typeClass(guess)">
-                <div class="face front"></div>
-                <div class="face back"></div>
-            </div>
-        </div>
-        <div class="guessColumn subtype">
-            <div class="guessHeader">
-                Subtype
-            </div>
-            <div class="guess" v-for="guess in guesses" :class="subtypeClass(guess)">
-                <div class="face front"></div>
-                <div class="face back"></div>
-            </div>
-        </div>
-        <div class="guessColumn cost">
-            <div class="guessHeader">
-                (Adv.) Cost
-            </div>
-            <div class="guess" v-for="guess in guesses" :class="costClass(guess)">
-                <div class="face front"></div>
-                <div class="face back"></div>
-            </div>
-        </div>
-        <div class="guessColumn title">
-            <div class="guessHeader">
-                Card Title
-            </div>
-            <div class="guess title" v-for="guess in guesses" :class="titleClass(guess)">
-                <div class="face front"></div>
-                <div class="face back">{{ guess.guessedTitle }}</div>
-            </div>
-        </div>
-    </div>
-</template>
 
 <style lang="scss" scoped>
 .guessesDisplay {
@@ -142,7 +139,6 @@ function titleClass(guess) {
     }
 
 }
-
 
 .guess {
     width: 4rem;

@@ -1,14 +1,14 @@
-import crypto from "node:crypto";
-import { User } from "~~/server/models/user.schema";
+import crypto from 'node:crypto'
+import { User } from '~~/server/models/user.schema'
 
 export default defineEventHandler(async (event) => {
-    const body = await readBody(event);
-    body.secret = crypto.randomBytes(48).toString('base64');
+  const body = await readBody(event)
+  body.secret = crypto.randomBytes(48).toString('base64')
 
-    try {
-        return await new User(body).save();
-    } catch (error) {
-        console.log("Error in /api/users/index.post.ts:", error);
-        return error;
-    }
-});
+  try {
+    return await new User(body).save()
+  } catch (error) {
+    console.error('Error in /api/users/index.post.ts:', error)
+    return error
+  }
+})

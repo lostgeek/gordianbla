@@ -1,47 +1,48 @@
-import { Schema, Types, model } from "mongoose";
+import type { Types } from 'mongoose'
+import { Schema, model } from 'mongoose'
 
 interface IInvite {
-    link: string,
-    expiration?: Date,
+  link: string
+  expiration?: Date
 }
 
 export const InviteSchema = new Schema<IInvite>(
-    {
-        link: {
-            type: String,
-            required: true,
-            index: true,
-        },
-        expiration: Date,
+  {
+    link: {
+      type: String,
+      required: true,
+      index: true,
     },
-    { timestamps: true }
-);
+    expiration: Date,
+  },
+  { timestamps: true },
+)
 
-export const Invite = model("Invite", InviteSchema);
+export const Invite = model('Invite', InviteSchema)
 
 interface IUser {
-    secret: String,
-    inviteLinks: Types.DocumentArray<IInvite>,
-    dailyHistory: Schema.Types.Map,
-    importedStats: Schema.Types.Map,
-    offsetStats: Schema.Types.Map,
-    dailyStandardHistory: Schema.Types.Map,
-    dailyNeoHistory: Schema.Types.Map,
-    dailyStartupHistory: Schema.Types.Map,
+  secret: string
+  inviteLinks: Types.DocumentArray<IInvite>
+  dailyHistory: Schema.Types.Map
+  importedStats: Schema.Types.Map
+  offsetStats: Schema.Types.Map
+  dailyStandardHistory: Schema.Types.Map
+  dailyNeoHistory: Schema.Types.Map
+  dailyStartupHistory: Schema.Types.Map
 }
 
 export const UserSchema = new Schema<IUser>(
-    {
-        secret: String,
-        inviteLinks: [InviteSchema],
-        dailyHistory: Map,
-        importedStats: Map,
-        offsetStats: Map,
-        dailyStandardHistory: Map,
-        dailyNeoHistory: Map,
-        dailyStartupHistory: Map,
-    },
-    { timestamps: true }
-);
+  {
+    secret: String,
+    inviteLinks: [InviteSchema],
+    dailyHistory: Map,
+    importedStats: Map,
+    offsetStats: Map,
+    dailyStandardHistory: Map,
+    dailyNeoHistory: Map,
+    dailyStartupHistory: Map,
+  },
+  { timestamps: true },
+)
 
-export const User = model("User", UserSchema);
+export const User = model('User', UserSchema)

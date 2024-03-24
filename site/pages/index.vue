@@ -1,3 +1,3 @@
 <script setup>
-navigateTo('/daily/eternal');
+navigateTo('/daily/eternal')
 </script>

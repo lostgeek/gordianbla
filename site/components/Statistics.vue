@@ -1,83 +1,107 @@
 <template>
-    <div class="outer">
-        <div class="statistics">
-            <div class="stat">
-                <div class="number">{{ stats.played }}</div>
-                <div v-if="editable" class="buttons">
-                    <Button class="minus" icon="fa-solid fa-fw fa-minus" @click="user.offsetStats.played--" />
-                    <Button class="plus" icon="fa-solid fa-fw fa-plus" @click="user.offsetStats.played++" />
-                    <Button class="reset" size="small" icon="fa-solid fa-fw fa-rotate-left" label="Reset"
-                        @click="user.offsetStats.played = 0" 
-                        :disabled="user.offsetStats.played == 0" />
-                </div>
-                <div class="label">Played</div>
-            </div>
-            <div class="stat">
-                <div class="number">{{ (stats.wins / stats.played * 100).toFixed(0) }}</div>
-                <div v-if="editable" class="buttons"></div>
-                <div class="label">Win %</div>
-            </div>
-            <div class="stat">
-                <div class="number">{{ stats.streak }}</div>
-                <div v-if="editable" class="buttons"></div>
-                <div class="label">Current streak</div>
-            </div>
-            <div class="stat">
-                <div class="number">{{ stats.maxStreak }}</div>
-                <div v-if="editable" class="buttons">
-                    <Button class="minus" icon="fa-solid fa-fw fa-minus" @click="user.offsetStats.maxStreak--" />
-                    <Button class="plus" icon="fa-solid fa-fw fa-plus" @click="user.offsetStats.maxStreak++" />
-                    <Button class="reset" size="small" icon="fa-solid fa-fw fa-rotate-left" label="Reset"
-                        @click="user.offsetStats.maxStreak = 0" 
-                        :disabled="user.offsetStats.maxStreak == 0" />
-                </div>
-                <div class="label">Max streak</div>
-            </div>
+  <div class="outer">
+    <div class="statistics">
+      <div class="stat">
+        <div class="number">
+          {{ stats.played }}
         </div>
-        <div class="distribution" :class="(editable) ? 'editable' : null">
-            <template v-for="(occurance, index) in stats.distribution">
-                <div class="index">
-                    {{ index + 1 }}
-                </div>
-                <div class="bar" :style="barStyle(occurance)"
-                    :class="(occurance == 0) ? 'empty' : null">
-                    <span class="occurance">
-                        {{ occurance }}
-                    </span>
-                </div>
-                <div v-if="editable" class="buttons">
-                    <Button class="minus" icon="fa-solid fa-fw fa-minus" @click="user.offsetStats.distribution[index]--" />
-                    <Button class="plus" icon="fa-solid fa-fw fa-plus" @click="user.offsetStats.distribution[index]++" />
-                    <Button class="reset" icon="fa-solid fa-fw fa-rotate-left"
-                    @click="user.offsetStats.distribution[index] = 0"
-                    :disabled="user.offsetStats.distribution[index] == 0"
-                    />
-                </div>
-            </template>
+        <div v-if="editable" class="buttons">
+          <Button class="minus" icon="fa-solid fa-fw fa-minus" @click="user.offsetStats.played--" />
+          <Button class="plus" icon="fa-solid fa-fw fa-plus" @click="user.offsetStats.played++" />
+          <Button
+            class="reset" size="small" icon="fa-solid fa-fw fa-rotate-left" label="Reset"
+            :disabled="user.offsetStats.played === 0"
+            @click="user.offsetStats.played = 0"
+          />
         </div>
+        <div class="label">
+          Played
+        </div>
+      </div>
+      <div class="stat">
+        <div class="number">
+          {{ (stats.wins / stats.played * 100).toFixed(0) }}
+        </div>
+        <div v-if="editable" class="buttons" />
+        <div class="label">
+          Win %
+        </div>
+      </div>
+      <div class="stat">
+        <div class="number">
+          {{ stats.streak }}
+        </div>
+        <div v-if="editable" class="buttons" />
+        <div class="label">
+          Current streak
+        </div>
+      </div>
+      <div class="stat">
+        <div class="number">
+          {{ stats.maxStreak }}
+        </div>
+        <div v-if="editable" class="buttons">
+          <Button class="minus" icon="fa-solid fa-fw fa-minus" @click="user.offsetStats.maxStreak--" />
+          <Button class="plus" icon="fa-solid fa-fw fa-plus" @click="user.offsetStats.maxStreak++" />
+          <Button
+            class="reset" size="small" icon="fa-solid fa-fw fa-rotate-left" label="Reset"
+            :disabled="user.offsetStats.maxStreak === 0"
+            @click="user.offsetStats.maxStreak = 0"
+          />
+        </div>
+        <div class="label">
+          Max streak
+        </div>
+      </div>
     </div>
+    <div class="distribution" :class="(editable) ? 'editable' : null">
+      <template v-for="(occurance, index) in stats.distribution" :key="index">
+        <div class="index">
+          {{ index + 1 }}
+        </div>
+        <div
+          class="bar" :style="barStyle(occurance)"
+          :class="(occurance === 0) ? 'empty' : null"
+        >
+          <span class="occurance">
+            {{ occurance }}
+          </span>
+        </div>
+        <div v-if="editable" class="buttons">
+          <Button class="minus" icon="fa-solid fa-fw fa-minus" @click="user.offsetStats.distribution[index]--" />
+          <Button class="plus" icon="fa-solid fa-fw fa-plus" @click="user.offsetStats.distribution[index]++" />
+          <Button
+            class="reset" icon="fa-solid fa-fw fa-rotate-left"
+            :disabled="user.offsetStats.distribution[index] === 0"
+            @click="user.offsetStats.distribution[index] = 0"
+          />
+        </div>
+      </template>
+    </div>
+  </div>
 </template>
 
 <script setup>
 const props = defineProps({
-    format: { default: 'eternal' },
-    editable: { default: false },
-});
-const user = useUser();
+  format: { default: 'eternal' },
+  editable: { default: false },
+})
+const user = useUser()
 const stats = computed(() => {
-    if(props.format === 'eternal') {
-        return user.stats;
-    } else if(props.format === 'standard') {
-        return user.standardStats;
-    } else if(props.format === 'neo') {
-        return user.neoStats;
-    } else if(props.format === 'startup') {
-        return user.startupStats;
-    }
-});
+  if (props.format === 'eternal')
+    return user.stats
+  else if (props.format === 'standard')
+    return user.standardStats
+  else if (props.format === 'neo')
+    return user.neoStats
+  else if (props.format === 'startup')
+    return user.startupStats
+  else
+    return null
+})
 
 function barStyle(occurance) {
-    return { width: `${occurance / Math.max.apply(null, stats.value.distribution) * 100}%` };
+  return { width: `${occurance / Math.max.apply(null, stats.value.distribution) * 100}%` }
 }
 </script>
 
@@ -132,7 +156,7 @@ function barStyle(occurance) {
         & .label {
             text-align: center;
             font-size: 1rem;
-            
+
             @media(max-height:600px) {
                 font-size: .9rem;
             }
