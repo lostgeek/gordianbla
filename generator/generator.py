@@ -30,7 +30,7 @@ class Generator:
 
         response = requests.get('https://netrunnerdb.com/api/2.0/public/packs');
         self.packs = response.json()['data']
-        
+
         self.formats = { \
             'standard': \
                 self.packs_in_cycles([ \
@@ -57,14 +57,13 @@ class Generator:
                 self.packs_in_cycles([ \
                     'system-gateway', \
                     'system-update-2021', \
-                    'borealis', \
                     'liberation', \
                 ]),
             }
-    
+
     def packs_in_cycles(self, cycle_codes):
         return [p['code'] for p in self.packs if p['cycle_code'] in cycle_codes]
-    
+
     def get_random_card(self, format='eternal'):
         return random.choice(self.cards.filter(lambda c: (c['pack_code'] in self.formats[format])))
 
@@ -78,7 +77,7 @@ class Generator:
             urllib.request.urlretrieve(url, target_filepath)
         except:
             raise Exception(f"Fetching image for {card['title']} failed.")
-    
+
     def generate_puzzle(self, card, puzzle_filepath, thumbnail_filepath=None, mode=None):
         if not mode:
             mode = random.choice(list(self.available_parameters.keys()))
@@ -87,7 +86,7 @@ class Generator:
 
         _, temp_input_filepath = tempfile.mkstemp(suffix=".jpg")
         _, temp_puzzle_filepath = tempfile.mkstemp(suffix=".svg")
-        
+
         self.fetch_card_image(card, temp_input_filepath)
 
         process = subprocess.Popen(f'go run ./lib/primitive/main.go -i {temp_input_filepath} -o {temp_puzzle_filepath} -m {mode_nr} -n {n} -v', \
@@ -120,7 +119,7 @@ class Generator:
             # Every other child node is empty because of linebreaks in the svg
             for n in range(len(svgElements.childNodes)-1, level1elements*2+1, -1):
                 svgElements.removeChild(svgElements.childNodes[n])
-            
+
             with open(temp_thumb_svg_filepath, 'w') as outfile:
                 dom.writexml(outfile)
         cairosvg.svg2png(url=temp_thumb_svg_filepath, write_to=thumbnail_filepath)

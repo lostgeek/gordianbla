@@ -35,7 +35,6 @@ export const useNrdb = defineStore('nrdbStore', {
         startup: nrdb.packsInCycles([
           'system-gateway',
           'system-update-2021',
-          'borealis',
           'liberation',
         ]),
       }
