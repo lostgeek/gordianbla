@@ -21,6 +21,7 @@ if __name__ == "__main__":
     parser.add_argument('-n', type=int, default=1, help="Number of puzzles to generate")
     parser.add_argument('-title', help="Specific puzzle name")
     parser.add_argument('-format', choices=['eternal', 'standard', 'neo', 'startup'], default='eternal', help="Choose format for puzzle generation")
+    parser.add_argument('-set', help="Choose sets for puzzle generation in practice mode")
 
     args = parser.parse_args()
 
@@ -66,7 +67,10 @@ if __name__ == "__main__":
         for n in range(args.n):
             started = datetime.now()
 
-            card = random.choice(g.cards)
+            if not args.set:
+                card = random.choice(g.cards)
+            else:
+                card = random.choice(list(filter(lambda c: c['pack_code'] == args.set, g.cards)))
 
             # Create necessary directories
             thumb_folder = os.path.join(puzzle_prefix, card['pack_code'], 'thumb')
