@@ -70,8 +70,20 @@ const nrdb = useNrdb()
 
 const gordian = useGordian()
 
+const query = useRoute().query
+
 const format = ref(null)
 const formats = ref(null)
+
+if (query.pack && query.code && query.id) {
+  format.value = {
+    name: 'Eternal',
+    packs: nrdb.packsInFormat.eternal,
+  }
+  nextTick(async () => {
+    await newPuzzle()
+  })
+}
 
 const filteredCards = computed(() => {
   if (format.value.packs && format.value.packs.length > 0) {
@@ -128,8 +140,6 @@ onMounted(async () => {
   }, { deep: true })
 })
 
-const query = useQuery()
-
 async function newPuzzle() {
   let packs = null
   if (format.value.packs && format.value.packs.length > 0)
@@ -137,6 +147,7 @@ async function newPuzzle() {
 
   loaded.value = false
   if (query.pack && query.code && query.id) {
+    console.log('hello')
     cardSvg.value = await gordian.startSpecificPuzzle(nrdb.cards, query.pack, query.code, query.id)
   } else {
     cardSvg.value = await gordian.startPracticePuzzle(nrdb.cards, packs)
