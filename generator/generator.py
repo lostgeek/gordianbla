@@ -108,6 +108,8 @@ class Generator:
     def generate_thumbnail(self, gz_filepath, mode, thumbnail_filepath):
         if (mode == 'circles'):
             level1elements = 20
+        elif (mode == 'beziers'):
+            level1elements = 15
         else:
             level1elements = 10
 
