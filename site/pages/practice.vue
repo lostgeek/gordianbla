@@ -147,7 +147,6 @@ async function newPuzzle() {
 
   loaded.value = false
   if (query.pack && query.code && query.id) {
-    console.log('hello')
     cardSvg.value = await gordian.startSpecificPuzzle(nrdb.cards, query.pack, query.code, query.id)
   } else {
     cardSvg.value = await gordian.startPracticePuzzle(nrdb.cards, packs)
