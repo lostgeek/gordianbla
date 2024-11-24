@@ -128,13 +128,19 @@ onMounted(async () => {
   }, { deep: true })
 })
 
+const query = useQuery()
+
 async function newPuzzle() {
   let packs = null
   if (format.value.packs && format.value.packs.length > 0)
     packs = format.value.packs.map(p => p.code).join(',')
 
   loaded.value = false
-  cardSvg.value = await gordian.startPracticePuzzle(nrdb.cards, packs)
+  if (query.pack && query.code && query.id) {
+    cardSvg.value = await gordian.startSpecificPuzzle(nrdb.cards, query.pack, query.code, query.id)
+  } else {
+    cardSvg.value = await gordian.startPracticePuzzle(nrdb.cards, packs)
+  }
   loaded.value = true
 }
 
