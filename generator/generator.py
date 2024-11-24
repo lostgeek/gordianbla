@@ -109,7 +109,7 @@ class Generator:
         if (mode == 'circles'):
             level1elements = 20
         elif (mode == 'beziers'):
-            level1elements = 100
+            level1elements = 20
         else:
             level1elements = 10
 

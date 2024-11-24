@@ -68,7 +68,7 @@ const numOfElements = {
   ellipse: [10, 20, 40, 80, 160, 320, 320],
   circle: [20, 40, 80, 160, 320, 640, 640],
   rotatedrect: [10, 20, 40, 80, 160, 320, 320],
-  beziers: [100, 200, 400, 800, 1600, 3200, 3200], // slight lie... there only are 1500
+  beziers: [20, 40, 80, 160, 320, 640, 640],
   rotatedellipse: [10, 20, 40, 80, 160, 320, 320],
   polygon: [10, 20, 40, 80, 160, 320, 320],
 }
