@@ -19,7 +19,7 @@ class Generator:
         'ellipse': [3, 600],
         'circle': [4, 1200],
         'rotatedrect': [5, 600],
-        'beziers': [6, 1500],
+        'beziers': [6, 400],
         'rotatedellipse': [7, 600],
         'polygon': [8, 600],}
 
@@ -107,8 +107,6 @@ class Generator:
 
     def generate_thumbnail(self, gz_filepath, mode, thumbnail_filepath):
         if (mode == 'circles'):
-            level1elements = 20
-        elif (mode == 'beziers'):
             level1elements = 20
         else:
             level1elements = 10
