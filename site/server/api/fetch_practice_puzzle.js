@@ -15,6 +15,8 @@ export default defineEventHandler((event) => {
 
   let puzzles = []
   packFolders.forEach((f) => {
+    if (f === '.DS_Store')
+      return
     puzzles = puzzles.concat(
       fs
         .readdirSync(`./assets/practice_puzzles/${f}`)

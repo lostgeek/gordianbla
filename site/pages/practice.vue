@@ -75,16 +75,6 @@ const query = useRoute().query
 const format = ref(null)
 const formats = ref(null)
 
-if (query.pack && query.code && query.id) {
-  format.value = {
-    name: 'Eternal',
-    packs: nrdb.packsInFormat.eternal,
-  }
-  nextTick(async () => {
-    await newPuzzle()
-  })
-}
-
 const filteredCards = computed(() => {
   if (format.value.packs && format.value.packs.length > 0) {
     return nrdb.cards.filter((c) => {
@@ -132,6 +122,13 @@ onMounted(async () => {
       packs: nrdb.packsInFormat.startup,
     },
   ]
+
+  if (query.pack && query.code && query.id) {
+    format.value = {
+      name: 'Eternal',
+      packs: nrdb.packsInFormat.eternal,
+    }
+  }
 
   // Analytics
   watch(gordian.guesses, () => {
