@@ -1,5 +1,5 @@
 <template>
-  <div class="guessesDisplay">
+  <div class="guessesDisplay" :style="spoiler && guessNumber === -1 ? { '--correct-color': 'var(--spoiler-color)' } : {}">
     <div class="guessColumn faction">
       <div class="guessHeader">
         Faction
@@ -42,7 +42,7 @@
       </div>
       <div v-for="(guess, index) in guesses" :key="index" class="guess title" :class="titleClass(guess)">
         <div class="face front" />
-        <div class="face back">
+        <div class="face back" :style="spoiler && index === 4 ? { background: 'var(--spoiler-color)!important' } : {}">
           {{ guess.guessedTitle }}
         </div>
       </div>
@@ -51,7 +51,11 @@
 </template>
 
 <script setup>
-defineProps(['guesses'])
+const props = defineProps(['guesses', 'spoiler'])
+
+const guessNumber = computed(() =>
+  props.guesses.findIndex(g => g.state !== 'guessed'),
+)
 
 function factionClass(guess) {
   if (guess.state === 'not-guessed')
@@ -212,6 +216,7 @@ function titleClass(guess) {
         -moz-transform: rotateX(180deg);
         -ms-transform: rotateX(180deg);
         z-index: 1;
+        transition: background .5s linear, background-image .5s linear;
     }
 
     &.not-guessed .back {

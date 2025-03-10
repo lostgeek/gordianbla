@@ -52,11 +52,15 @@ const suggestions = ref([])
 const selectedCard = ref('')
 function autocomplete(event) {
   // include matches in card data
-  suggestions.value = fuse.search(event.query).map((el) => {
-    const card = el.item
-    card.matches = el.matches
+  const tmp = fuse.search(event.query)
+  const res = tmp.map((el) => {
+    const card = {
+      ...el.item,
+      matches: el.matches,
+    }
     return card
   })
+  suggestions.value = res
 }
 
 function guess() {

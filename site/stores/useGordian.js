@@ -171,6 +171,81 @@ export function useGordian() {
     return solved.value || currentGuess.value === 6
   })
 
+  function fakeGuess(card, target) {
+    const newGuess = {
+      state: 'guessed',
+      guessedTitle: currentGuess.value === 5 ? 'Byte!' : currentGuess.value === 4 ? 'You thought you were safe?' : card.title,
+      checks: {},
+    }
+
+    /* Title */
+    newGuess.checks.title
+            = card.stripped_title === target.stripped_title || currentGuess.value === 5
+
+    /* Faction */
+    newGuess.checks.faction
+            = card.faction_code === target.faction_code || currentGuess.value === 5
+
+    /* Type */
+    newGuess.checks.type = card.type_code === target.type_code || currentGuess.value === 5
+
+    /* Subtypes */
+    let correctTypes = []
+    if (target.keywords)
+      correctTypes = target.keywords.split(' - ')
+
+    let cardTypes = []
+    if (card.keywords)
+      cardTypes = card.keywords.split(' - ')
+
+    // How many of the correct types are present on the guessed card?
+    const hits = correctTypes.filter(value => cardTypes.includes(value))
+
+    let subtypesClass = ''
+    if (correctTypes.length === 0) {
+      if (cardTypes.length === 0)
+        subtypesClass = 'correct'
+      else
+        subtypesClass = 'incorrect'
+    } else {
+      subtypesClass = `partial-${hits.length}-${correctTypes.length}`
+    }
+
+    newGuess.checks.subtype = currentGuess.value === 5
+      ? {
+          hits: 1,
+          total: 1,
+          class: 'correct',
+        }
+      : {
+          hits: hits.length,
+          total: correctTypes.length,
+          class: subtypesClass,
+        }
+
+    /* Cost */
+    let targetCostType = '' // 'cost', 'advancement_cost' or null
+    if (target.cost !== undefined)
+      targetCostType = 'cost'
+    else if (target.advancement_cost !== undefined)
+      targetCostType = 'advancement_cost'
+    else
+      targetCostType = null // Identities
+
+    let guessedCostType = '' // 'cost', 'advancement_cost' or null
+    if (card.cost !== undefined)
+      guessedCostType = 'cost'
+    else if (card.advancement_cost !== undefined)
+      guessedCostType = 'advancement_cost'
+    else
+      guessedCostType = null // Identities
+
+    newGuess.checks.cost
+            = target[targetCostType] === card[guessedCostType] || currentGuess.value === 5
+
+    guesses.value[currentGuess.value] = newGuess
+  }
+
   function guess(card) {
     if (currentGuess.value === -1 || solved.value || !correctCard.value)
       return
@@ -268,5 +343,6 @@ export function useGordian() {
     startPracticePuzzle,
     startSpecificPuzzle,
     guess,
+    fakeGuess,
   }
 }

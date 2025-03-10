@@ -6,6 +6,7 @@ $accentColor:#f4dcee !default;
 $accentTextColor:#1d1c22 !default;
 
 :root {
+    --spoiler-color: var(--red-600);
     --correct-color: var(--green-600);
     --incorrect-color: var(--surface-200);
     --not-guessed-color: var(--surface-50);
