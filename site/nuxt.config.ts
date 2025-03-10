@@ -4,76 +4,79 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr: false,
   modules: [
-    "nuxt-primevue",
-    "@pinia/nuxt",
-    "@pinia-plugin-persistedstate/nuxt",
-    "@nuxt/content",
-    "@nuxtjs/plausible",
+    'nuxt-primevue',
+    '@pinia/nuxt',
+    '@pinia-plugin-persistedstate/nuxt',
+    '@nuxt/content',
+    '@nuxtjs/plausible',
     '@vueuse/nuxt',
     'nuxt-mongoose',
   ],
   primevue: {
     options: {
-      ripple: true
+      ripple: true,
     },
   },
-  css: ["@fontsource/patua-one", "@fontsource/medula-one", "~/assets/reset.css"],
+  css: ['@fontsource/patua-one', '@fontsource/medula-one', '~/assets/reset.css'],
   app: {
     head: {
       link: [
         {
-          rel: "stylesheet",
-          href: "/fontawesome/css/fontawesome.css",
+          rel: 'stylesheet',
+          href: '/fontawesome/css/fontawesome.css',
         },
         {
-          rel: "stylesheet",
-          href: "/fontawesome/css/solid.css",
+          rel: 'stylesheet',
+          href: '/fontawesome/css/solid.css',
         },
         {
-          rel: "stylesheet",
-          href: "/fontawesome/css/brands.css",
+          rel: 'stylesheet',
+          href: '/fontawesome/css/brands.css',
         },
         {
-          rel: "apple-touch-icon",
-          sizes: "180x180",
-          href: "/apple-touch-icon.png",
+          rel: 'apple-touch-icon',
+          sizes: '180x180',
+          href: '/apple-touch-icon.png',
         },
         {
-          rel: "icon",
-          type: "image/png",
-          sizes: "32x32",
-          href: "/favicon-32x32.png",
+          rel: 'icon',
+          type: 'image/png',
+          sizes: '32x32',
+          href: '/favicon-32x32.png',
         },
         {
-          rel: "icon",
-          type: "image/png",
-          sizes: "16x16",
-          href: "/favicon-16x16.png",
+          rel: 'icon',
+          type: 'image/png',
+          sizes: '16x16',
+          href: '/favicon-16x16.png',
         },
         {
-          rel: "manifest",
-          href: "/site.webmanifest",
+          rel: 'manifest',
+          href: '/site.webmanifest',
         },
         {
-          rel: "mask-icon",
-          href: "/safari-pinned-tab.svg",
-          color: "#5bbad5",
+          rel: 'mask-icon',
+          href: '/safari-pinned-tab.svg',
+          color: '#5bbad5',
         },
       ],
       meta: [
         {
-          name: "msapplication-TileColor",
-          content: "#da532c",
+          name: 'msapplication-TileColor',
+          content: '#da532c',
         },
         {
-          name: "theme-color",
-          content: "#ffffff",
+          name: 'theme-color',
+          content: '#ffffff',
         },
       ],
     },
   },
   pages: true,
   plausible: {
-    apiHost: "https://gordianbla.de",
+    apiHost: 'https://gordianbla.de',
   },
-});
+  content: {
+    watch: false,
+  },
+})

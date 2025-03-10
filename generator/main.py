@@ -119,5 +119,5 @@ if __name__ == "__main__":
         g.generate_puzzle(card, new_puzzle_path, thumb_path, mode)
 
         print("Finished in " + str(datetime.now()-started) + "\n")
-    else: 
+    else:
         print(g.formats)
