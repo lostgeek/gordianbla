@@ -39,25 +39,32 @@ const cardImageClasses = ref([])
 onMounted(() => {
   puzzle.value.innerHTML = props.cardSvg
 
-  const svgDom = puzzle.value.children[0]
+  nextTick(() => {
+    const svgDom = puzzle.value?.children[0]
 
-  const width = svgDom.getAttribute('width')
-  const height = svgDom.getAttribute('height')
-  if (height) {
-    svgDom.removeAttribute('width')
-    svgDom.removeAttribute('height')
-    // svgDom.setAttribute('width', '100%');
-    svgDom.setAttribute('viewBox', `0 0 ${width} ${height}`)
-  }
+    if (!svgDom) {
+      console.error('No SVG found in puzzle. props:', props)
+      return
+    }
 
-  // Set all elements to hidden at first
-  const elements = svgDom.children[1].children
-  for (let i = 0; i < elements.length; i++)
-    elements[i].className.baseVal = 'hidden'
+    const width = svgDom.getAttribute('width')
+    const height = svgDom.getAttribute('height')
+    if (height) {
+      svgDom.removeAttribute('width')
+      svgDom.removeAttribute('height')
+      // svgDom.setAttribute('width', '100%');
+      svgDom.setAttribute('viewBox', `0 0 ${width} ${height}`)
+    }
 
-  setTimeout(() => {
-    updateSvg()
-  }, 500)
+    // Set all elements to hidden at first
+    const elements = svgDom.children[1].children
+    for (let i = 0; i < elements.length; i++)
+      elements[i].className.baseVal = 'hidden'
+
+    setTimeout(() => {
+      updateSvg()
+    }, 500)
+  })
 })
 
 const numOfElements = {
@@ -75,7 +82,9 @@ const numOfElements = {
 const MAX_ANIMS = 99
 
 function updateSvg() {
-  const svgDom = puzzle.value.children[0]
+  const svgDom = puzzle.value?.children[0]
+  if (!svgDom)
+    return
 
   const elements = svgDom.children[1].children
 

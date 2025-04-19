@@ -65,6 +65,7 @@ const getLayout = computed(() => {
 
 const route = useRoute()
 const loaded = useState('siteLoaded', () => false)
+loaded.value = false
 if (!['eternal', 'standard', 'neo', 'startup'].includes(route.params.format))
   navigateTo('/daily/eternal')
 

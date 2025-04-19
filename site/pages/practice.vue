@@ -51,6 +51,7 @@ useSeoMeta({
 })
 
 const loaded = useState('siteLoaded', () => false)
+loaded.value = false
 
 const breakpoints = useBreakpoints({
   vert: 700,
