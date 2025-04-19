@@ -5,6 +5,9 @@ export const useUser = defineStore(
     const squintMode = ref(false)
     const newestArticleViewed = ref(0)
     const exportSettings = ref({ discordSpoiler: false })
+    const spoilerData = ref({
+      years: [],
+    })
 
     // Eternal daily
     const dailyHistory = ref({})
@@ -56,10 +59,11 @@ export const useUser = defineStore(
           && dailyHistory.value[i].findIndex(
             x => x.checks && x.checks.title,
           ) >= 0
-        )
+        ) {
           streak++
-        else
+        } else {
           break
+        }
       }
       res.streak = streak
 
@@ -110,8 +114,9 @@ export const useUser = defineStore(
           && localStorage.getItem('maxStreak')
           && localStorage.getItem('distribution')
         )
-      )
+      ) {
         return false
+      }
 
       // No games played in imported stats
       if (Number.parseInt(localStorage.getItem('played')) === 0)
@@ -170,10 +175,11 @@ export const useUser = defineStore(
         if (
           i in history
           && history[i].findIndex(x => x.checks && x.checks.title) >= 0
-        )
+        ) {
           streak++
-        else
+        } else {
           break
+        }
       }
       res.streak = streak
 
@@ -356,6 +362,7 @@ export const useUser = defineStore(
       newestArticleViewed,
       exportSettings,
       accountInfo,
+      spoilerData,
       // getters
       stats,
       standardStats,

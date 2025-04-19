@@ -3,6 +3,15 @@
     <SplitterPanel class="left" :size="75">
       <GuessTable :guesses="gordian.guesses.value" :spoiler="true" />
       <CardInputField :class="(gordian.finished.value) ? 'hidden' : null" :cards="cards" @submit="(card) => gordian.fakeGuess(card, target)" />
+      <Transition name="fade">
+        <NuxtLink v-if="revealLevel === 6" to="/" style="text-decoration: none; margin: 0 auto;">
+          <Button
+            label="Back to main page"
+            icon="fa-solid fa-arrow-left"
+            class="p-button-outlined"
+          />
+        </NuxtLink>
+      </Transition>
     </SplitterPanel>
     <SplitterPanel class="right" :size="25">
       <Tag class="clickable" icon="fa-solid fa-calendar" @click="toggleFormatMenu">
@@ -67,6 +76,7 @@ const getLayout = computed(() => {
 })
 
 const loaded = useState('siteLoaded', () => false)
+loaded.value = false
 
 const format = ref('eternal')
 const formatLabel = ref({
@@ -138,12 +148,19 @@ const puzzleMode = computed(() => gordian.puzzleAttr.value.mode)
 const cardSvg = ref(null)
 const cardUrl = computed(() => nrdb.imageUrlTemplate.replace('{code}', gordian.puzzleAttr.value.nrdbID))
 const spoilerUrl = ref('/SPOILER.png')
-const spoilerSvg = ref('/SPOILER.svg.gz')
+const spoilerSvg = ref()
 
 onMounted(async () => {
   cardSvg.value = await gordian.startSpecificPuzzle(nrdb.cards, 'sg', '30070', '00')
   spoilerSvg.value = await gordian.startSpecificPuzzle(nrdb.cards, 'daw', '40000', '00')
   loaded.value = true
+})
+
+const user = useUser()
+watch(gordian.finished, (newValue) => {
+  if (!newValue)
+    return
+  user.spoilerData.years.push(2025)
 })
 </script>
 
@@ -198,5 +215,23 @@ onMounted(async () => {
 
 .clickable {
     cursor: pointer;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.5s ease;
+  transition-delay: 2s;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+.fade-enter-to,
+.fade-leave-from {
+  opacity: 1;
+  transform: translateX(0);
 }
 </style>
