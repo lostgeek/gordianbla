@@ -181,6 +181,9 @@ export function useGordian() {
     /* Title */
     newGuess.checks.title
             = card.stripped_title === target.stripped_title || currentGuess.value === 5
+    if (card.stripped_title === 'Snare!') {
+      newGuess.guessedTitle = 'Snare?'
+    }
 
     /* Faction */
     newGuess.checks.faction

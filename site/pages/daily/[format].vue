@@ -268,7 +268,9 @@ onMounted(async () => {
   if (!errorsOccurred)
     loaded.value = true
 
-  if (format.value === 'eternal' && currentDaily === 1144 && !user.spoilerData.years.includes(2025)) {
+  if (
+    ((format.value === 'eternal' && currentDaily === 1144) || (['standard', 'neo', 'startup'].includes(format.value) && currentDaily === 465))
+    && !user.spoilerData.years.includes(2025)) {
     navigateTo('/daily/etemal')
   }
 })
