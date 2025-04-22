@@ -44,7 +44,7 @@
             :card-svg="cardSvg"
           />
           <div
-            style="position: absolute!important;inset: 0;z-index: 60;"
+            style="position: absolute!important;inset: 0;z-index: 60;pointer-events: none;"
           >
             <SpoilerPuzzle
               puzzle-mode="spoiler" :reveal-level="revealLevel" :card-url="spoilerUrl"
