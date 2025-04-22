@@ -37,7 +37,7 @@
         </template>
       </Menu>
       <template v-if="loaded">
-        <div style="position: relative; width:100%; height:100%;">
+        <div style="position: relative; width:100%; height:100%; aspect-ratio:63/88;">
           <Puzzle
             v-if="revealLevel < 6"
             :puzzle-mode="puzzleMode" :reveal-level="revealLevel" :card-url="cardUrl"
