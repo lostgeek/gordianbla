@@ -3,6 +3,7 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr: false,
+
   modules: [
     'nuxt-primevue',
     '@pinia/nuxt',
@@ -12,12 +13,15 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     'nuxt-mongoose',
   ],
+
   primevue: {
     options: {
       ripple: true,
     },
   },
+
   css: ['@fontsource/patua-one', '@fontsource/medula-one', '~/assets/reset.css'],
+
   app: {
     head: {
       link: [
@@ -72,11 +76,16 @@ export default defineNuxtConfig({
       ],
     },
   },
+
   pages: true,
+
   plausible: {
     apiHost: 'https://gordianbla.de',
   },
+
   content: {
     watch: false,
   },
+
+  compatibilityDate: '2025-04-24',
 })

@@ -34,29 +34,24 @@ class Generator:
         self.formats = { \
             'standard': \
                 self.packs_in_cycles([ \
-                    'red-sand', \
-                    'kitara', \
-                    'reign-and-reverie', \
-                    'magnum-opus', \
-                    'ashes', \
-                    'magnum-opus-reprint', \
                     'system-gateway', \
-                    'system-update-2021', \
+                    'elevation', \
+                    'ashes', \
                     'borealis', \
                     'liberation', \
                 ]), \
             'neo': \
                 self.packs_in_cycles([ \
-                    'ashes', \
                     'system-gateway', \
-                    'system-update-2021', \
+                    'elevation', \
+                    'ashes', \
                     'borealis', \
                     'liberation', \
                 ]), \
             'startup': \
                 self.packs_in_cycles([ \
                     'system-gateway', \
-                    'system-update-2021', \
+                    'elevation', \
                     'liberation', \
                 ]),
             }

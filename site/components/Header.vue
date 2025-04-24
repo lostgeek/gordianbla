@@ -101,6 +101,11 @@ const items = ref([
         route: '/rss',
       },
       {
+        label: 'Elevation Spoiler',
+        icon: 'fa-solid fa-fw fa-question',
+        route: '/daily/etemal',
+      },
+      {
         label: 'About',
         icon: 'fa-solid fa-fw fa-circle-info',
         route: '/about',
