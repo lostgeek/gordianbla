@@ -31,6 +31,7 @@ class Generator:
         response = requests.get('https://netrunnerdb.com/api/2.0/public/packs');
         self.packs = response.json()['data']
 
+        # Note: Also update useNrdb.ts on frontend!!
         self.formats = { \
             'standard': \
                 self.packs_in_cycles([ \

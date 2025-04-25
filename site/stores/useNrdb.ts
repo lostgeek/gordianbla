@@ -46,27 +46,22 @@ export const useNrdb = defineStore('nrdbStore', {
       return {
         eternal: null,
         standard: nrdb.packsInCycles([
-          'red-sand',
-          'kitara',
-          'reign-and-reverie',
-          'magnum-opus',
-          'ashes',
-          'magnum-opus-reprint',
           'system-gateway',
-          'system-update-2021',
+          'elevation',
+          'ashes',
           'borealis',
           'liberation',
         ]),
         neo: nrdb.packsInCycles([
-          'ashes',
           'system-gateway',
-          'system-update-2021',
+          'elevation',
+          'ashes',
           'borealis',
           'liberation',
         ]),
         startup: nrdb.packsInCycles([
           'system-gateway',
-          'system-update-2021',
+          'elevation',
           'liberation',
         ]),
       }
