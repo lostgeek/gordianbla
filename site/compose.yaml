@@ -8,11 +8,24 @@ services:
       NODE_ENV: production
     depends_on:
       - mongo
+    volumes:
+      - gordianbla_assets:/srv/assets
 
   mongo:
     image: mongo
     volumes:
       - gordianbla_db:/data/db
 
+  generator:
+    build:
+      context: ..
+      dockerfile: generator/Dockerfile
+    environment:
+      - TZ=UTC
+    volumes:
+      - gordianbla_assets:/app/site/assets
+    restart: unless-stopped
+
 volumes:
   gordianbla_db:
+  gordianbla_assets:

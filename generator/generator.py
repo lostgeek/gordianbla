@@ -10,6 +10,7 @@ import os
 import gzip
 from xml.dom import minidom
 import cairosvg
+from datetime import date
 
 class Generator:
     available_parameters = {
@@ -57,8 +58,28 @@ class Generator:
                 ]),
             }
 
+        # Daily puzzle start dates must mirror site/server/api/current_daily_puzzle.js
+        # eternal: 2022-03-05, standard/neo/startup: 2024-01-13
+        self.daily_start_dates = {
+            'eternal': date(2022, 3, 5),
+            'standard': date(2024, 1, 13),
+            'neo': date(2024, 1, 13),
+            'startup': date(2024, 1, 13),
+        }
+
     def packs_in_cycles(self, cycle_codes):
         return [p['code'] for p in self.packs if p['cycle_code'] in cycle_codes]
+
+    def get_daily_index(self, format='eternal', on_date=None):
+        """Return the daily index (days since start) for the given format.
+        Mirrors logic in site/server/api/current_daily_puzzle.js.
+        """
+        if on_date is None:
+            on_date = date.today()
+        start = self.daily_start_dates.get(format)
+        if start is None:
+            raise ValueError('Format not found.')
+        return (on_date - start).days
 
     def get_random_card(self, format='eternal'):
         return random.choice(self.cards.filter(lambda c: (c['pack_code'] in self.formats[format])))

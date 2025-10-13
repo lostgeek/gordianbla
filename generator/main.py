@@ -6,7 +6,7 @@ from generator import Generator
 import random
 import glob
 import os
-from datetime import datetime
+from datetime import datetime, timedelta, date
 
 import argparse
 
@@ -22,6 +22,7 @@ if __name__ == "__main__":
     parser.add_argument('-title', help="Specific puzzle name")
     parser.add_argument('-format', choices=['eternal', 'standard', 'neo', 'startup'], default='eternal', help="Choose format for puzzle generation")
     parser.add_argument('-set', help="Choose sets for puzzle generation in practice mode")
+    parser.add_argument('-cron', type=int, default=None, help="Generate daily puzzles for the next N days from today (inclusive of missing days). Works with -type daily and -format.")
 
     args = parser.parse_args()
 
@@ -43,22 +44,33 @@ if __name__ == "__main__":
             os.makedirs(puzzle_prefix, exist_ok=True)
             os.makedirs(os.path.join(puzzle_prefix, "thumb"), exist_ok=True)
 
-        for new_id in range(latest_puzzle_id+1, latest_puzzle_id+1 + args.n):
-            started = datetime.now()
+        # Determine how many puzzles to generate: --cron overrides -n
+        if args.cron is not None:
+            today_index = g.get_daily_index(args.format, on_date=date.today())
+            target_last = today_index + args.cron
+            generate_count = max(0, target_last - latest_puzzle_id)
+        else:
+            generate_count = args.n
 
-            if args.format == 'eternal':
-                card = random.choice(g.cards)
-            else:
-                card = random.choice(list(filter(lambda c: c['pack_code'] in g.formats[args.format], g.cards)))
+        if generate_count <= 0:
+            print("Nothing to do. Up to date.")
+        else:
+            for new_id in range(latest_puzzle_id+1, latest_puzzle_id+1 + generate_count):
+                started = datetime.now()
 
-            new_puzzle_path = os.path.join(puzzle_prefix, f"{new_id:05}.svg.gz")
-            thumb_path = os.path.join(puzzle_prefix, "thumb", f"{new_id:05}.png")
-            mode = random.choice(list(g.available_parameters.keys()))
+                if args.format == 'eternal':
+                    card = random.choice(g.cards)
+                else:
+                    card = random.choice(list(filter(lambda c: c['pack_code'] in g.formats[args.format], g.cards)))
 
-            print(f"Creating {new_puzzle_path} in {mode}...")
-            g.generate_puzzle(card, new_puzzle_path, thumb_path, mode)
+                new_puzzle_path = os.path.join(puzzle_prefix, f"{new_id:05}.svg.gz")
+                thumb_path = os.path.join(puzzle_prefix, "thumb", f"{new_id:05}.png")
+                mode = random.choice(list(g.available_parameters.keys()))
 
-            print("Finished in " + str(datetime.now()-started) + "\n")
+                print(f"Creating {new_puzzle_path} in {mode}...")
+                g.generate_puzzle(card, new_puzzle_path, thumb_path, mode)
+
+                print("Finished in " + str(datetime.now()-started) + "\n")
 
     elif args.type == 'practice':
         puzzle_prefix = PRACTICE_PUZZLE_PREFIX
