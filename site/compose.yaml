@@ -9,7 +9,8 @@ services:
     depends_on:
       - mongo
     volumes:
-      - gordianbla_assets:/srv/assets
+      - ./assets:/srv/assets
+      - ./public:/srv/public
 
   mongo:
     image: mongo
