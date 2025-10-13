@@ -87,5 +87,13 @@ export default defineNuxtConfig({
     watch: false,
   },
 
+  mongoose: {
+    uri: process.env.MONGODB_URI,
+    options: {},
+    modelsDir: 'server/models',
+    // Skip connection during build time
+    connectOnInit: !process.env.NUXT_BUILD,
+  },
+
   compatibilityDate: '2025-04-24',
 })
