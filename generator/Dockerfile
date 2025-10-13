@@ -45,7 +45,7 @@ RUN chmod +x /app/generator/run-generation.sh
 
 # Create log file and cron job that runs at 3 AM UTC daily
 RUN touch /var/log/cron.log \
-    && echo "* * * * * /app/generator/run-generation.sh >> /var/log/cron.log 2>&1" > /etc/cron.d/generator-cron \
+    && echo "0 3 * * * /app/generator/run-generation.sh >> /var/log/cron.log 2>&1" > /etc/cron.d/generator-cron \
     && chmod 0644 /etc/cron.d/generator-cron \
     && crontab /etc/cron.d/generator-cron
 
