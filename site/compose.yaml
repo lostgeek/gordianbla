@@ -24,7 +24,7 @@ services:
     environment:
       - TZ=UTC
     volumes:
-      - gordianbla_assets:/app/site/assets
+      - ./assets:/app/site/assets
     restart: unless-stopped
 
 volumes:
