@@ -13,6 +13,12 @@ useSeoMeta({
   ogImage: 'https://gordianbla.de/android-chrome-192x192.png',
   twitterCard: 'summary_large_image',
 })
+
+useHead({
+  meta: [
+    { name: 'darkreader-lock' },
+  ],
+})
 </script>
 
 <style lang="scss">
