@@ -41,6 +41,7 @@ class Generator:
                     'ashes', \
                     'borealis', \
                     'liberation', \
+                    'vantage-point', \
                 ]), \
             'neo': \
                 self.packs_in_cycles([ \
@@ -49,12 +50,13 @@ class Generator:
                     'ashes', \
                     'borealis', \
                     'liberation', \
+                    'vantage-point', \
                 ]), \
             'startup': \
                 self.packs_in_cycles([ \
                     'system-gateway', \
                     'elevation', \
-                    'liberation', \
+                    'vantage-point', \
                 ]),
             }
 
