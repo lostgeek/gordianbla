@@ -51,6 +51,7 @@ export const useNrdb = defineStore('nrdbStore', {
           'ashes',
           'borealis',
           'liberation',
+          'vantage-point',
         ]),
         neo: nrdb.packsInCycles([
           'system-gateway',
@@ -58,11 +59,13 @@ export const useNrdb = defineStore('nrdbStore', {
           'ashes',
           'borealis',
           'liberation',
+          'vantage-point',
         ]),
         startup: nrdb.packsInCycles([
           'system-gateway',
           'elevation',
           'liberation',
+          'vantage-point',
         ]),
       }
     },
