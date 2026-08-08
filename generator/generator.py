@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import requests
-import urllib
 import random
 import tempfile
 import subprocess
@@ -93,8 +92,11 @@ class Generator:
             url = self.image_url_template.format(card['code'])
 
         try:
-            urllib.request.urlretrieve(url, target_filepath)
-        except:
+            response = requests.get(url, headers={'User-Agent': 'gordianbla-generator/1.0'}, timeout=30)
+            response.raise_for_status()
+            with open(target_filepath, 'wb') as f:
+                f.write(response.content)
+        except Exception:
             raise Exception(f"Fetching image for {card['title']} failed.")
 
     def generate_puzzle(self, card, puzzle_filepath, thumbnail_filepath=None, mode=None):
