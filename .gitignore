@@ -27,6 +27,8 @@ logs
 
 # From primitive library
 go.*
+!/generator/primitive/go.mod
+!/generator/primitive/go.sum
 puzzles
 
 # Python files

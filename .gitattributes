@@ -1,0 +1,2 @@
+# Patch context preserves upstream whitespace, including space-prefixed tabs.
+generator/primitive/*.patch -whitespace

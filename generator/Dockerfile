@@ -1,10 +1,18 @@
 # syntax=docker/dockerfile:1
 
+FROM golang:1.26-bookworm AS primitive-build
+
+WORKDIR /build
+COPY generator/primitive/ ./
+RUN --mount=type=cache,target=/go/pkg/mod \
+    --mount=type=cache,target=/root/.cache/go-build \
+    sh ./build.sh /out
+
 FROM python:3.11-slim
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-# Install system deps: cron, git, curl, ca-certificates, build-essential, golang, cairo
+# Install system deps for scheduling and thumbnail generation.
 RUN apt-get update --fix-missing \
     && apt-get install -y --no-install-recommends \
        cron \
@@ -12,7 +20,6 @@ RUN apt-get update --fix-missing \
        curl \
        git \
        build-essential \
-       golang-go \
        libcairo2-dev \
        libpango1.0-dev \
        libgdk-pixbuf-xlib-2.0-dev \
@@ -27,18 +34,14 @@ ENV TZ=UTC
 WORKDIR /app
 
 # Copy project files needed for generation
-COPY lib /app/lib
 COPY generator /app/generator
-COPY go.mod /app/go.mod
-COPY go.sum /app/go.sum
+COPY --from=primitive-build /out/primitive /usr/local/bin/primitive
+COPY --from=primitive-build /out/primitive-LICENSE.md /usr/local/share/licenses/primitive/LICENSE.md
 # Create site directory structure but don't copy assets (they'll come from volume)
 RUN mkdir -p /app/site/assets
 
 # Python deps
 RUN pip install --no-cache-dir -r /app/generator/requirements.txt
-
-# Initialize Go module and download dependencies
-RUN cd /app && go mod download
 
 # Ensure run script is executable
 RUN chmod +x /app/generator/run-generation.sh

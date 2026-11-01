@@ -17,9 +17,10 @@ def main():
     _, temp_output_fp = tempfile.mkstemp(suffix=".svg")
     output_fp = './generator/SPOILER.svg.gz'
 
-    process = subprocess.Popen(f'go run ./lib/primitive/main.go -i ./generator/SPOILER.png -o {temp_output_fp} -m {mode_nr} -n {n} -v', \
-        stdout=subprocess.PIPE, shell=True)
-    process.communicate()
+    subprocess.run([
+        'primitive', '-i', './generator/SPOILER.png', '-o', temp_output_fp,
+        '-m', str(mode_nr), '-n', str(n), '-v',
+    ], check=True)
 
     with open(temp_output_fp, 'r+') as infile:
         lines = infile.readlines()

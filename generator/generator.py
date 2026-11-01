@@ -110,9 +110,10 @@ class Generator:
 
         self.fetch_card_image(card, temp_input_filepath)
 
-        process = subprocess.Popen(f'go run ./lib/primitive/main.go -i {temp_input_filepath} -o {temp_puzzle_filepath} -m {mode_nr} -n {n} -v', \
-            stdout=subprocess.PIPE, shell=True)
-        process.communicate()
+        subprocess.run([
+            'primitive', '-i', temp_input_filepath, '-o', temp_puzzle_filepath,
+            '-m', str(mode_nr), '-n', str(n), '-v',
+        ], check=True)
 
         with open(temp_puzzle_filepath, 'r+') as infile:
             lines = infile.readlines()

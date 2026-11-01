@@ -1,0 +1,22 @@
+diff --git a/primitive/quadratic.go b/primitive/quadratic.go
+index 740d44a..c6bd3c1 100644
+--- a/primitive/quadratic.go
++++ b/primitive/quadratic.go
+@@ -41,7 +41,7 @@ func (q *Quadratic) SVG(attrs string) string {
+ 	// TODO: this is a little silly
+ 	attrs = strings.Replace(attrs, "fill", "stroke", -1)
+ 	return fmt.Sprintf(
+-		"<path %s fill=\"none\" d=\"M %f %f Q %f %f, %f %f\" stroke-width=\"%f\" />",
++		"<path %s fill=\"none\" d=\"M %f %f Q %f %f, %f %f\" stroke-width=\"%f\" stroke-linecap=\"round\" />",
+ 		attrs, q.X1, q.Y1, q.X2, q.Y2, q.X3, q.Y3, q.Width)
+ }
+ 
+@@ -56,7 +56,7 @@ func (q *Quadratic) Mutate() {
+ 	h := q.Worker.H
+ 	rnd := q.Worker.Rnd
+ 	for {
+-		switch rnd.Intn(3) {
++		switch rnd.Intn(4) {
+ 		case 0:
+ 			q.X1 = clamp(q.X1+rnd.NormFloat64()*16, -m, float64(w-1+m))
+ 			q.Y1 = clamp(q.Y1+rnd.NormFloat64()*16, -m, float64(h-1+m))
