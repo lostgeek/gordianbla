@@ -64,7 +64,6 @@ export const useNrdb = defineStore('nrdbStore', {
         startup: nrdb.packsInCycles([
           'system-gateway',
           'elevation',
-          'liberation',
           'vantage-point',
         ]),
       }
@@ -77,7 +76,7 @@ export const useNrdb = defineStore('nrdbStore', {
     async fetch(reload = false) {
       if (this.cards.length === 0 || reload) {
         const data = await $fetch(
-                    `${nrdbBaseUrl}/cards`,
+          `${nrdbBaseUrl}/cards`,
         ) as any
 
         this.cards = (data?.data ?? [])
@@ -85,7 +84,7 @@ export const useNrdb = defineStore('nrdbStore', {
       }
       if (this.packs.length === 0 || reload) {
         const data = await $fetch(
-                    `${nrdbBaseUrl}/packs`,
+          `${nrdbBaseUrl}/packs`,
         ) as any
 
         this.packs = (data?.data ?? [])
